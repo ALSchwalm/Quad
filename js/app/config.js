@@ -1,15 +1,33 @@
+/**
+ * General configuration information
+ * @module app/config
+ */
 define(function(){
-    return {
+    "use strict"
+
+    /**
+     * @alias module:app/config
+     * @namespace
+     * @property {object}  config                   - Configuration options
+     * @property {number}  config.game              - General game configuration
+     * @property {string}  config.game.width        - Width of the canvas in px
+     * @property {object}  config.game.height       - Height of the canvas in px
+     * @property {number}  config.grid              - Grid settings
+     * @property {number}  config.grid.size         - Width/Height of the grid in px
+     * @property {number}  config.grid.numCells     - Number of cells per row/column
+     * @property {number}  config.grid.linesVisible - Hide/show grid lines
+     */
+    var config = {
         game : {
             width : 800,
-            height : 600
+            height : 800
         },
-
         grid : {
-            size : 500,    // Size of the grid in px
-            numCells : 25, // The number of cells in a row or column,
-                           // this should evenly divide the size
-            linesVisible : true // Hide/show the grid lines
+            size : 500,
+            numCells : 25,
+            linesVisible : true
         }
     };
+
+    return config;
 })

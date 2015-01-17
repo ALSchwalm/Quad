@@ -11,4 +11,4 @@ Documentation is generated with [JSDoc][jsdoc] and may be found [here][docs]. It
 [phaser]: http://phaser.io/
 [live]: http://alschwalm.github.io/Quad
 [jsdoc]: http://usejsdoc.org/
-[docs]: http://alschwalm.github.io/Quad/docs/index.html
+[docs]: http://alschwalm.github.io/Quad/docs/html/index.html

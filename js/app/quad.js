@@ -48,8 +48,8 @@ function(config, Phaser, Block, color){
         // Sort the blocks so the 'lowest' are dropped first
         var center = {x: config.game.width/2, y: config.game.height/2};
         this.blocks.sort(function(block1, block2){
-            var distance1 = Phaser.Point.distance(block1, center);
-            var distance2 = Phaser.Point.distance(block2, center);
+            var distance1 = Phaser.Point.distance(block1.point, center);
+            var distance2 = Phaser.Point.distance(block2.point, center);
             if (distance1 < distance2) return -1;
             if (distance1 > distance2) return 1;
             return 0;

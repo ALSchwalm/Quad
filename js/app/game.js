@@ -1,6 +1,6 @@
 /**
  * Module defining the Phaser game object.
- * NOTE: This module should probably not be 'required' as it will likely create
+ * @note This module should probably not be 'required' as it will likely create
  *       a dependency cycle
  * @module app/game
  */

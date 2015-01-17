@@ -11,10 +11,12 @@ define(["app/config", "Phaser", "app/block"], function(config, Phaser, Block){
      * @alias module:app/quad
      *
      * @param {Phaser.Game} game - The game object
-     * @param {string} direction - One of "left", "right", "top", or "bottom"
-     * @param {number} position - Column or row of the quad
+     * @param {string} [direction="top"] - One of "left", "right", "top", or "bottom"
+     * @param {number} [position=0] - Column or row of the quad
      */
     var Quad = function(game, direction, position) {
+        var direction = direction || "top";
+        var position = position || 0;
         this.blocks = [
             new Block(game, direction, position, 1),
             new Block(game, direction, position+1, 1),
@@ -51,6 +53,19 @@ define(["app/config", "Phaser", "app/block"], function(config, Phaser, Block){
         });
 
         this.blocks.map(function(block){block.drop()});
+        return this;
+    }
+
+    /**
+     * Place the quad at 'coord' on the grid (without any animation)
+     *
+     * @param {object} coord - x, y coordinate to place the quad at
+     */
+    Quad.prototype.positionAt = function(coord) {
+        this.blocks[0].positionAt(coord);
+        this.blocks[1].positionAt({x: coord.x, y:coord.y+1});
+        this.blocks[1].positionAt({x: coord.x+1, y:coord.y});
+        this.blocks[1].positionAt({x: coord.x+1, y:coord.y+1});
         return this;
     }
 

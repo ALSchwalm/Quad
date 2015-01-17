@@ -3,7 +3,7 @@
  * phase of Phaser js startup
  * @module app/state/create
  */
-define(["app/grid"], function(grid){
+define(["app/grid", "app/generator"], function(grid, generator){
     "use strict"
 
     /**
@@ -14,6 +14,7 @@ define(["app/grid"], function(grid){
      */
     var create = function(game){
         grid.display(game);
+        generator.start(game);
     };
     return create;
 });

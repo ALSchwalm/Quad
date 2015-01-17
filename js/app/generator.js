@@ -57,7 +57,7 @@ function(config, Quad){
         var centerQuad = new Quad(game).positionAt({
             x: self.centerCell,
             y: self.centerCell
-        }).unbreakable();
+        }).unbreakable().display();
 
         // Simple, temporary logic. Spawn a new quad every 3 seconds, wait for 1
         // second before dropping

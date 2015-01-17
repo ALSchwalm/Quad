@@ -2,7 +2,7 @@
  * A module which exposes the Block type
  * @module app/block
  */
-define(["app/grid"], function(grid){
+define(["app/config", "app/grid"], function(config, grid){
     "use strict"
 
     /**
@@ -24,7 +24,7 @@ define(["app/grid"], function(grid){
         this.direction = direction;
         this.position = position;
         this.offset = offset+3;
-        this.color = color || 0xFFFFFF;
+        this.color = color || config.color.unbreakable;
         this.point = grid.directionToPoint(this.direction, this.position, this.offset);
     }
 
@@ -35,7 +35,7 @@ define(["app/grid"], function(grid){
      */
     Block.prototype.display = function(position) {
         var position = position || this.point
-        this.graphics = this.game.add.graphics(position.x, position.y);
+        this.graphics = this.graphics || this.game.add.graphics(position.x, position.y);
         this.graphics.lineStyle(0);
         this.graphics.beginFill(this.color, 1);
         this.graphics.drawRect(0, 0, grid.cellSize, grid.cellSize);
@@ -48,8 +48,10 @@ define(["app/grid"], function(grid){
      * displayed.
      *
      * @param {object} [coord] - Optional x, y coordinate to drop to
+     * @param {bool} [noAnimate=false] - Do not animate the drop
      */
-    Block.prototype.drop = function(coord) {
+    Block.prototype.drop = function(coord, noAnimate) {
+        var noAnimate = noAnimate || false;
         if (typeof(this.graphics) === "undefined") {
             throw("Attempt to drop a block which has not been displayed");
         }
@@ -59,9 +61,11 @@ define(["app/grid"], function(grid){
         //TODO: Do this when the animation is finished?
         grid.contents[coord.y][coord.x] = this;
 
-        var tween = this.game.add.tween(this.graphics);
-        tween.to(grid.coordToPoint(coord), 200);
-        tween.start();
+        if (!noAnimate) {
+            var tween = this.game.add.tween(this.graphics);
+            tween.to(grid.coordToPoint(coord), 200);
+            tween.start();
+        }
         return this;
     }
 
@@ -72,7 +76,20 @@ define(["app/grid"], function(grid){
      */
     Block.prototype.positionAt = function(coord) {
         this.display(grid.coordToPoint(coord));
-        this.drop(coord);
+        this.drop(coord, true);
+        return this;
+    }
+
+    /**
+     * Make the current quad unbreakable
+     */
+    Block.prototype.unbreakable = function() {
+        this.color = config.color.unbreakable;
+
+        // If the block has already been drawn, force a redraw
+        if (this.graphics) {
+            this.display(this.graphics.position);
+        }
         return this;
     }
 

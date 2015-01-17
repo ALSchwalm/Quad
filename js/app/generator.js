@@ -41,7 +41,7 @@ function(config, Quad){
      * @param {Phaser.Game} game - Reference to the current game
      */
     Generator.prototype.genRandomQuad = function(game){
-        return new Quad(game, "top", this.centerCell);
+        return new Quad(game, "top", this.centerCell, this.level);
     };
 
     /**
@@ -57,7 +57,7 @@ function(config, Quad){
         var centerQuad = new Quad(game).positionAt({
             x: self.centerCell,
             y: self.centerCell
-        });
+        }).unbreakable();
 
         // Simple, temporary logic. Spawn a new quad every 3 seconds, wait for 1
         // second before dropping

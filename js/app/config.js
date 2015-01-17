@@ -23,8 +23,8 @@ define(function(){
             height : 800
         },
         grid : {
-            size : 500,
-            numCells : 25,
+            size : 520,
+            numCells : 26,
             linesVisible : true
         }
     };

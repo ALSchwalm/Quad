@@ -30,7 +30,8 @@ function(config, Quad){
             "bottom",
         ];
 
-        this.centerCell = Math.floor(config.grid.numCells/2);
+        // Minus 1 because the cells are 0 index
+        this.centerCell = Math.floor(config.grid.numCells/2)-1;
     }
 
     /**

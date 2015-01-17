@@ -2,7 +2,8 @@
  * A module which exposes the Quad type
  * @module app/quad
  */
-define(["app/config", "Phaser", "app/block"], function(config, Phaser, Block){
+define(["app/config", "Phaser", "app/block", "app/color"],
+function(config, Phaser, Block, color){
     "use strict"
 
     /**
@@ -13,15 +14,17 @@ define(["app/config", "Phaser", "app/block"], function(config, Phaser, Block){
      * @param {Phaser.Game} game - The game object
      * @param {string} [direction="top"] - One of "left", "right", "top", or "bottom"
      * @param {number} [position=0] - Column or row of the quad
+     * @param {number} [level=1] - Current game level (influences 'difficulty of quad')
      */
-    var Quad = function(game, direction, position) {
+    var Quad = function(game, direction, position, level) {
         var direction = direction || "top";
         var position = position || 0;
+        var level = level || 1;
         this.blocks = [
-            new Block(game, direction, position, 1),
-            new Block(game, direction, position+1, 1),
-            new Block(game, direction, position, 0),
-            new Block(game, direction, position+1, 0)
+            new Block(game, direction, position,   1, color.genRandomColor(level)),
+            new Block(game, direction, position+1, 1, color.genRandomColor(level)),
+            new Block(game, direction, position,   0, color.genRandomColor(level)),
+            new Block(game, direction, position+1, 0, color.genRandomColor(level))
         ];
     }
 
@@ -45,8 +48,8 @@ define(["app/config", "Phaser", "app/block"], function(config, Phaser, Block){
         // Sort the blocks so the 'lowest' are dropped first
         var center = {x: config.game.width/2, y: config.game.height/2};
         this.blocks.sort(function(block1, block2){
-            var distance1 = Phaser.Point.distance(block1, center);
-            var distance2 = Phaser.Point.distance(block2, center);
+            var distance1 = Phaser.Point.distance(block1.point, center);
+            var distance2 = Phaser.Point.distance(block2.point, center);
             if (distance1 < distance2) return -1;
             if (distance1 > distance2) return 1;
             return 0;
@@ -64,8 +67,16 @@ define(["app/config", "Phaser", "app/block"], function(config, Phaser, Block){
     Quad.prototype.positionAt = function(coord) {
         this.blocks[0].positionAt(coord);
         this.blocks[1].positionAt({x: coord.x, y:coord.y+1});
-        this.blocks[1].positionAt({x: coord.x+1, y:coord.y});
-        this.blocks[1].positionAt({x: coord.x+1, y:coord.y+1});
+        this.blocks[2].positionAt({x: coord.x+1, y:coord.y});
+        this.blocks[3].positionAt({x: coord.x+1, y:coord.y+1});
+        return this;
+    }
+
+    /**
+     * Make the current quad unbreakable
+     */
+    Quad.prototype.unbreakable = function(){
+        this.blocks.map(function(block){block.unbreakable()});
         return this;
     }
 

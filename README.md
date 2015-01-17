@@ -6,7 +6,7 @@ Quad is a puzzle game written using [Phaser][phaser]. The game may be played in 
 Documentation
 =============
 
-Documentation is generated with [JSDoc][jsdoc] and may be found [here][docs]. It may be built by executing `make docs` in the project root.
+Documentation is generated with [JSDoc][jsdoc] and may be found [here][docs]. It may be built by installing jsdoc and the theme `npm install jsdoc ink-docstrap`. Build the docs with `make docs` in the project root. The generated documentation will be placed in 'docs/html'.
 
 [phaser]: http://phaser.io/
 [live]: http://alschwalm.github.io/Quad

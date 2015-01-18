@@ -80,22 +80,23 @@ define(["app/config", "Phaser"], function(config, Phaser){
     Grid.prototype.directionToPoint = function(direction, position, offset) {
         var offset = offset || 0;
         switch(direction.toLowerCase()) {
-        case "left":
-            return this.coordToPoint({x: -1*offset, y: position});
+        case "top":
+            return this.coordToPoint({x: position, y: -1*offset});
             break;
         case "right":
             return this.coordToPoint({x: config.grid.numCells-1+offset,
                                       y: position});
             break;
-        case "top":
-            return this.coordToPoint({x: position, y: -1*offset});
-            break;
         case "bottom":
-            return this.coordToPoint({x: position,
+            return this.coordToPoint({x: config.grid.numCells-1-position,
                                       y: config.grid.numCells-1+offset});
             break;
+        case "left":
+            return this.coordToPoint({x: -1*offset,
+                                      y: config.grid.numCells-1-position});
+            break;
         default:
-            throw("Invalid argument to 'directinoToPoint': " + direction);
+            throw("Invalid argument to 'directionToPoint': " + direction);
         }
     }
 
@@ -112,10 +113,10 @@ define(["app/config", "Phaser"], function(config, Phaser){
     Grid.prototype.getFirstAvailable = function(direction, position) {
         var coord;
         switch(direction.toLowerCase()) {
-        case "left":
+        case "top":
             for (var i=0; i < config.grid.numCells; ++i) {
-                if (this.contents[position][i]) {
-                    coord = {x: i-1, y: position};
+                if (this.contents[i][position]) {
+                    coord = {x: position, y: i-1};
                     break;
                 }
             }
@@ -128,18 +129,18 @@ define(["app/config", "Phaser"], function(config, Phaser){
                 }
             }
             break;
-        case "top":
-            for (var i=0; i < config.grid.numCells; ++i) {
-                if (this.contents[i][position]) {
-                    coord = {x: position, y: i-1};
+        case "bottom":
+            for (var i=config.grid.numCells-1; i >= 0; --i) {
+                if (this.contents[i][config.grid.numCells-1-position]) {
+                    coord = {x: config.grid.numCells-1-position, y: i+1};
                     break;
                 }
             }
             break;
-        case "bottom":
-            for (var i=config.grid.numCells-1; i >= 0; --i) {
-                if (this.contents[i][position]) {
-                    coord = {x: position, y: i+1};
+        case "left":
+            for (var i=0; i < config.grid.numCells; ++i) {
+                if (this.contents[config.grid.numCells-1-position][i]) {
+                    coord = {x: i-1, y: config.grid.numCells-1-position};
                     break;
                 }
             }

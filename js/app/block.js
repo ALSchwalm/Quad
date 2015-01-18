@@ -26,7 +26,9 @@ define(["app/config", "app/grid"], function(config, grid){
         this.offset = offset+3;
         this.color = color || config.color.unbreakable;
         this.visible = false;
-        this.point = grid.directionToPoint(this.direction, this.position, this.offset);
+        this.manualPosition = false;
+        var point = grid.directionToPoint(this.direction, this.position, this.offset);
+        this.graphics = this.game.add.graphics(point.x, point.y);
     }
 
     /**
@@ -35,12 +37,11 @@ define(["app/config", "app/grid"], function(config, grid){
      * @param {Phaser.Point} [position] - Optional position on canvas to display at
      */
     Block.prototype.display = function(position) {
-        var position = position || this.point
-        if (this.graphics) {
+        var position = position ||
+            grid.directionToPoint(this.direction, this.position, this.offset);
+        if (!this.manualPosition) {
             this.graphics.x = position.x;
             this.graphics.y = position.y;
-        } else {
-            this.graphics = this.game.add.graphics(position.x, position.y);
         }
         this.graphics.lineStyle(0);
         this.graphics.beginFill(this.color, 1);
@@ -64,13 +65,14 @@ define(["app/config", "app/grid"], function(config, grid){
         //TODO: Do this when the animation is finished?
         grid.contents[coord.y][coord.x] = this;
 
-        if (!noAnimate) {
-            if (typeof(this.graphics) === "undefined") {
-                throw("Attempt to animate a block which has not been displayed");
-            }
+        if (!noAnimate && this.visible) {
             var tween = this.game.add.tween(this.graphics);
             tween.to(grid.coordToPoint(coord), 200);
             tween.start();
+        } else {
+            var point = grid.coordToPoint(coord);
+            this.graphics.position.x = point.x;
+            this.graphics.position.y = point.y;
         }
         return this;
     }
@@ -81,7 +83,7 @@ define(["app/config", "app/grid"], function(config, grid){
      * @param {object} coord - x, y coordinate to place the block
      */
     Block.prototype.positionAt = function(coord) {
-        this.point = grid.coordToPoint(coord);
+        this.manualPosition = true;
         this.drop(coord, true);
         if (this.visible) {
             this.display();
@@ -97,7 +99,7 @@ define(["app/config", "app/grid"], function(config, grid){
 
         // If the block has already been drawn, force a redraw
         if (this.visible) {
-            this.display(this.graphics.position);
+            this.display();
         }
         return this;
     }

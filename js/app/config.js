@@ -24,8 +24,8 @@ define(function(){
      */
     var config = {
         game : {
-            width : 800,
-            height : 800
+            width : 700,
+            height : 700
         },
         grid : {
             size : 520,

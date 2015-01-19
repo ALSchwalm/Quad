@@ -72,18 +72,25 @@ function(config, Quad){
             this.waitingQuads.push(quad);
             quad.display();
             setTimeout(function(){
-                // the (no joke) correct way to remove an item from a list in js
-                var index = this.waitingQuads.indexOf(quad);
-                this.waitingQuads.splice(index, 1);
-                this.fallingQuads.push(quad);
-                quad.drop();
-
-                quad.onDropComplete.push(function(){
-                    var index = this.fallingQuads.indexOf(quad);
-                    this.fallingQuads.splice(index, 1);
-                }.bind(this));
+                this.drop();
             }.bind(this), 4000);
         }.bind(this), 5000);
+        return this;
+    }
+
+    /**
+     * Drop all waiting quads onto the game grid
+     */
+    Generator.prototype.drop = function() {
+        this.waitingQuads.map(function(quad){
+            this.fallingQuads.push(quad);
+            quad.drop();
+            quad.onDropComplete.push(function(){
+                var index = this.fallingQuads.indexOf(quad);
+                this.fallingQuads.splice(index, 1);
+            }.bind(this));
+        }.bind(this));
+        this.waitingQuads = [];
         return this;
     }
 

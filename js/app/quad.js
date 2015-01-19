@@ -69,6 +69,11 @@ function(config, Phaser, Block, color){
     }
 
 
+    /**
+     * Rotate an un-dropped quad
+     *
+     * @param {string} direction - One of "clockwise" or "counter-clockwise"
+     */
     Quad.prototype.rotate = function(direction) {
         switch(direction.toLowerCase()){
         case "clockwise":
@@ -91,6 +96,18 @@ function(config, Phaser, Block, color){
             }
         }.bind(this));
         return this;
+    }
+
+    /** Alias for Quad.rotate("clockwise")
+     */
+    Quad.prototype.rotateCW = function() {
+        return this.rotate("clockwise");
+    }
+
+    /** Alias for Quad.rotate("counter-clockwise")
+     */
+    Quad.prototype.rotateCCW = function() {
+        return this.rotate("counter-clockwise");
     }
 
     /**

@@ -84,6 +84,24 @@ function(config, Quad){
         return this;
     }
 
+    /**
+     * Rotate all un-dropped quads clockwise
+     */
+    Generator.prototype.rotateCW = function() {
+        this.waitingQuads.map(function(quad){
+            quad.rotateCW();
+        })
+    }
+
+    /**
+     * Rotate all un-dropped quads counter-clockwise
+     */
+    Generator.prototype.rotateCCW = function() {
+        this.waitingQuads.map(function(quad){
+            quad.rotateCCW();
+        })
+    }
+
     var generator = new Generator();
     return generator;
 });

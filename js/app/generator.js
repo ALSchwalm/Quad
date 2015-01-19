@@ -57,7 +57,7 @@ function(config, Quad){
         var centerQuad = new Quad(game).positionAt({
             x: self.centerCell,
             y: self.centerCell
-        }).unbreakable();
+        }).unbreakable().display();
 
         // Simple, temporary logic. Spawn a new quad every 3 seconds, wait for 1
         // second before dropping
@@ -82,6 +82,24 @@ function(config, Quad){
     Generator.prototype.stop = function() {
         clearInterval(this.intervalID);
         return this;
+    }
+
+    /**
+     * Rotate all un-dropped quads clockwise
+     */
+    Generator.prototype.rotateCW = function() {
+        this.waitingQuads.map(function(quad){
+            quad.rotateCW();
+        })
+    }
+
+    /**
+     * Rotate all un-dropped quads counter-clockwise
+     */
+    Generator.prototype.rotateCCW = function() {
+        this.waitingQuads.map(function(quad){
+            quad.rotateCCW();
+        })
     }
 
     var generator = new Generator();

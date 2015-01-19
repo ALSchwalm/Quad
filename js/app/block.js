@@ -48,6 +48,7 @@ define(["app/config", "app/grid"], function(config, grid){
         this.graphics.drawRect(0, 0, grid.cellSize, grid.cellSize);
         this.graphics.endFill();
         this.visible = true;
+        this.falling = false;
         return this;
     }
 
@@ -66,7 +67,12 @@ define(["app/config", "app/grid"], function(config, grid){
         grid.contents[coord.y][coord.x] = this;
 
         if (!noAnimate && this.visible) {
+            this.falling = true;
             var tween = this.game.add.tween(this.graphics);
+            tween.onComplete.add(function(){
+                this.falling = false;
+                this.onDropComplete && this.onDropComplete();
+            }.bind(this));
             tween.to(grid.coordToPoint(coord), 200);
             tween.start();
         } else {
@@ -76,6 +82,13 @@ define(["app/config", "app/grid"], function(config, grid){
         }
         return this;
     }
+
+    /**
+     * Callback executed when the block lands
+     *
+     * @type {function}
+     */
+    Block.prototype.onDropComplete = function(){}
 
     /**
      * Position the block at a specific coordinate (without animation)

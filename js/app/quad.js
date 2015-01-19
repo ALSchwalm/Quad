@@ -33,6 +33,17 @@ function(config, Phaser, Block, color){
             "bottom",
             "left",
         ];
+
+        // fire this.onDropComplete when all blocks have been dropped
+        this.dropped = 0;
+        var dropComplete = function(){
+            this.dropped += 1;
+            if (this.dropped === this.blocks.length)
+                this.onDropComplete && this.onDropComplete();
+        }.bind(this);
+        this.blocks.map(function(block){
+            block.onDropComplete = dropComplete;
+        })
     }
 
     /**
@@ -122,6 +133,25 @@ function(config, Phaser, Block, color){
         this.blocks[3].positionAt({x: coord.x+1, y:coord.y+1});
         return this;
     }
+
+
+    /**
+     * Returns true if any block is currently falling
+     *
+     * @returns bool
+     */
+    Quad.prototype.falling = function() {
+        return this.blocks.some(function(block){
+            return block.falling;
+        });
+    }
+
+    /**
+     * Callback executed when all blocks of the quad have landed
+     *
+     * @type {function}
+     */
+    Quad.prototype.onDropComplete = function(){}
 
     /**
      * Make the current quad unbreakable

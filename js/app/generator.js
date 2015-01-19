@@ -65,8 +65,8 @@ function(config, Quad){
             y: self.centerCell
         }).unbreakable().display();
 
-        // Simple, temporary logic. Spawn a new quad every 3 seconds, wait for 1
-        // second before dropping
+        // Simple, temporary logic. Spawn a new quad at the top every few seconds
+        // and wait a short time before dropping
         this.intervalID = setInterval(function(){
             var quad = this.genRandomQuad(game);
             this.waitingQuads.push(quad);
@@ -82,8 +82,8 @@ function(config, Quad){
                     var index = this.fallingQuads.indexOf(quad);
                     this.fallingQuads.splice(index, 1);
                 }.bind(this));
-            }.bind(this), 1000);
-        }.bind(this), 3000);
+            }.bind(this), 4000);
+        }.bind(this), 5000);
         return this;
     }
 

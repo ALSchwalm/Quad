@@ -174,7 +174,7 @@ define(["app/config", "Phaser"], function(config, Phaser){
             temporary.map(function(row){
                 row.map(function(block){
                     if (block)
-                        block.graphics.y -= this.cellSize;
+                        block.slide("top");
                 }.bind(this));
             }.bind(this));
 
@@ -199,7 +199,7 @@ define(["app/config", "Phaser"], function(config, Phaser){
             temporary.map(function(row){
                 row.map(function(block){
                     if (block)
-                        block.graphics.y += this.cellSize;
+                        block.slide("bottom");
                 }.bind(this));
             }.bind(this));
 
@@ -221,7 +221,7 @@ define(["app/config", "Phaser"], function(config, Phaser){
             temporary.map(function(row){
                 row.map(function(block){
                     if (block)
-                        block.graphics.x -= this.cellSize;
+                        block.slide("left");
                 }.bind(this));
             }.bind(this));
 
@@ -242,12 +242,14 @@ define(["app/config", "Phaser"], function(config, Phaser){
             temporary.map(function(row){
                 row.map(function(block){
                     if (block)
-                        block.graphics.x += this.cellSize;
+                        block.slide("right");
                 }.bind(this));
             }.bind(this));
 
             this.contents = temporary;
             return true;
+        default:
+            throw("Invalid argument to Quad.slide: " + direction)
         }
     }
 

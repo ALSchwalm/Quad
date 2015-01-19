@@ -23,6 +23,12 @@ function(config, Quad){
          */
         this.waitingQuads = [];
 
+        /**
+         * A list of quads currently falling
+         * @type {Quad[]}
+         */
+        this.fallingQuads = [];
+
         this.directions = [
             "top",
             "left",
@@ -62,17 +68,22 @@ function(config, Quad){
         // Simple, temporary logic. Spawn a new quad every 3 seconds, wait for 1
         // second before dropping
         this.intervalID = setInterval(function(){
-            var quad = self.genRandomQuad(game);
-            self.waitingQuads.push(quad);
+            var quad = this.genRandomQuad(game);
+            this.waitingQuads.push(quad);
             quad.display();
             setTimeout(function(){
                 // the (no joke) correct way to remove an item from a list in js
-                var index = self.waitingQuads.indexOf(quad);
-                self.waitingQuads.splice(index, 1);
-
+                var index = this.waitingQuads.indexOf(quad);
+                this.waitingQuads.splice(index, 1);
+                this.fallingQuads.push(quad);
                 quad.drop();
-            }, 1000);
-        }, 3000);
+
+                quad.onDropComplete.push(function(){
+                    var index = this.fallingQuads.indexOf(quad);
+                    this.fallingQuads.splice(index, 1);
+                }.bind(this));
+            }.bind(this), 1000);
+        }.bind(this), 3000);
         return this;
     }
 

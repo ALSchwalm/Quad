@@ -151,6 +151,122 @@ define(["app/config", "Phaser"], function(config, Phaser){
         return coord;
     }
 
+    Grid.prototype.slide = function(direction) {
+        var temporary = new Array(config.grid.numCells);
+        for (var i=0; i < config.grid.numCells; ++i) {
+            temporary[i] = new Array(config.grid.numCells);
+        }
+        switch(direction.toLowerCase()){
+        case "top":
+            var invalid = this.contents[0].some(function(val){
+                return typeof(val) !== "undefined";
+            });
+
+            if (invalid) {
+                return false;
+            }
+
+            this.contents.map(function(val, index){
+                if (index != 0)
+                    temporary[index-1] = val;
+            }.bind(this));
+
+            temporary.map(function(row){
+                row.map(function(block){
+                    if (block)
+                        block.graphics.y -= this.cellSize;
+                }.bind(this));
+            }.bind(this));
+
+            this.contents = temporary;
+            return true;
+
+        case "bottom":
+            var invalid = this.contents[config.grid.numCells-1]
+                .some(function(val){
+                    return typeof(val) !== "undefined";
+                });
+
+            if (invalid) {
+                return false;
+            }
+
+            this.contents.map(function(val, index){
+                if (index != config.grid.numCells-1)
+                    temporary[index+1] = val;
+            }.bind(this));
+
+            temporary.map(function(row){
+                row.map(function(block){
+                    if (block)
+                        block.graphics.y += this.cellSize;
+                }.bind(this));
+            }.bind(this));
+
+            this.contents = temporary;
+            return true;
+
+        case "left":
+            for (var i=0; i < config.grid.numCells; ++i){
+                if (typeof(this.contents[i][0]) !== "undefined")
+                    return false;
+            }
+
+            this.contents.map(function(row, y){
+                row.map(function(val, x){
+                    temporary[y][x-1] = val;
+                }.bind(this));
+            }.bind(this));
+
+            temporary.map(function(row){
+                row.map(function(block){
+                    if (block)
+                        block.graphics.x -= this.cellSize;
+                }.bind(this));
+            }.bind(this));
+
+            this.contents = temporary;
+            return true;
+        case "right":
+            for (var i=0; i < config.grid.numCells; ++i){
+                if (typeof(this.contents[i][config.grid.numCells-1]) !== "undefined")
+                    return false;
+            }
+
+            this.contents.map(function(row, y){
+                row.map(function(val, x){
+                    temporary[y][x+1] = val;
+                }.bind(this));
+            }.bind(this));
+
+            temporary.map(function(row){
+                row.map(function(block){
+                    if (block)
+                        block.graphics.x += this.cellSize;
+                }.bind(this));
+            }.bind(this));
+
+            this.contents = temporary;
+            return true;
+        }
+    }
+
+    Grid.prototype.slideUp = function(){
+        return this.slide("top");
+    }
+
+    Grid.prototype.slideDown = function(){
+        return this.slide("bottom");
+    }
+
+    Grid.prototype.slideLeft = function(){
+        return this.slide("left");
+    }
+
+    Grid.prototype.slideRight = function(){
+        return this.slide("right");
+    }
+
     /**
      * The singleton gameplay grid
      * @type {Grid}

@@ -38,11 +38,14 @@ function(config, Phaser, Block, color){
         this.dropped = 0;
         var dropComplete = function(){
             this.dropped += 1;
-            if (this.dropped === this.blocks.length)
-                this.onDropComplete && this.onDropComplete();
+            if (this.dropped === this.blocks.length) {
+                this.onDropComplete.map(function(callback){
+                    callback();
+                })
+            }
         }.bind(this);
         this.blocks.map(function(block){
-            block.onDropComplete = dropComplete;
+            block.onDropComplete.push(dropComplete);
         })
     }
 
@@ -147,11 +150,11 @@ function(config, Phaser, Block, color){
     }
 
     /**
-     * Callback executed when all blocks of the quad have landed
+     * Callbacks to be executed when all blocks of the quad have landed
      *
-     * @type {function}
+     * @type {function[]}
      */
-    Quad.prototype.onDropComplete = function(){}
+    Quad.prototype.onDropComplete = []
 
     /**
      * Make the current quad unbreakable

@@ -78,10 +78,10 @@ function(config, Quad){
                 this.fallingQuads.push(quad);
                 quad.drop();
 
-                quad.onDropComplete = function(){
+                quad.onDropComplete.push(function(){
                     var index = this.fallingQuads.indexOf(quad);
                     this.fallingQuads.splice(index, 1);
-                }.bind(this);
+                }.bind(this));
             }.bind(this), 1000);
         }.bind(this), 3000);
         return this;

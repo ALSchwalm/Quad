@@ -71,7 +71,9 @@ define(["app/config", "app/grid"], function(config, grid){
             var tween = this.game.add.tween(this.graphics);
             tween.onComplete.add(function(){
                 this.falling = false;
-                this.onDropComplete && this.onDropComplete();
+                this.onDropComplete.map(function(callback){
+                    callback();
+                })
             }.bind(this));
             tween.to(grid.coordToPoint(coord), 200);
             tween.start();
@@ -84,11 +86,11 @@ define(["app/config", "app/grid"], function(config, grid){
     }
 
     /**
-     * Callback executed when the block lands
+     * Callbacks to be executed when the block lands
      *
-     * @type {function}
+     * @type {function[]}
      */
-    Block.prototype.onDropComplete = function(){}
+    Block.prototype.onDropComplete = [];
 
     /**
      * Position the block at a specific coordinate (without animation)

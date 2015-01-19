@@ -29,6 +29,13 @@ define(["app/config", "app/grid"], function(config, grid){
         this.manualPosition = false;
         var point = grid.directionToPoint(this.direction, this.position, this.offset);
         this.graphics = this.game.add.graphics(point.x, point.y);
+
+        /**
+         * Callbacks to be executed when the block lands
+         *
+         * @type {function[]}
+         */
+        this.onDropComplete = [this.clear.bind(this)];
     }
 
     /**
@@ -82,15 +89,9 @@ define(["app/config", "app/grid"], function(config, grid){
             this.graphics.position.x = point.x;
             this.graphics.position.y = point.y;
         }
+        this.coord = coord;
         return this;
     }
-
-    /**
-     * Callbacks to be executed when the block lands
-     *
-     * @type {function[]}
-     */
-    Block.prototype.onDropComplete = [];
 
     /**
      * Position the block at a specific coordinate (without animation)
@@ -102,6 +103,98 @@ define(["app/config", "app/grid"], function(config, grid){
         this.drop(coord, true);
         if (this.visible) {
             this.display();
+        }
+        return this;
+    }
+
+    /**
+     * Clear surrounding blocks in the following way. If the block does not form
+     * a square of blocks of the same color, do nothing. Otherwise, clear all
+     * adjacent blocks (not counting diagonals) recursively.
+     */
+    Block.prototype.clear = function() {
+        var matchingColor = function(block){
+            return block && (block.color == this.color);
+        }.bind(this);
+
+        // Is there a square of blocks of the same color with 'coord' at the
+        // bottom left?
+        var checkForClear = function(coord){
+            return matchingColor(grid.contents[coord.y][coord.x]) &&
+                matchingColor(grid.contents[coord.y+1][coord.x]) &&
+                matchingColor(grid.contents[coord.y][coord.x+1]) &&
+                matchingColor(grid.contents[coord.y+1][coord.x+1])
+        }
+
+        // Check whether this block has formed a square of blocks of the same
+        // color
+        var doClear = checkForClear({x:this.coord.x, y:this.coord.y}) ||
+            checkForClear({x:this.coord.x-1, y:this.coord.y})         ||
+            checkForClear({x:this.coord.x, y:this.coord.y-1})         ||
+            checkForClear({x:this.coord.x-1, y:this.coord.y-1});
+
+        // Recursively remove all connected blocks of the same color
+        var destroyed = [];
+        var eraseBlocks = function(block) {
+            if (destroyed.indexOf(block) != -1)
+                return;
+            var tween = this.game.add.tween(block.graphics.scale);
+            tween.to({ x: 0, y: 0}, 50);
+            tween.start();
+            tween.onComplete.add(function(){
+                block.graphics.destroy();
+            });
+            grid.contents[block.coord.y][block.coord.x] = undefined;
+            destroyed.push(block);
+
+            // below
+            if (matchingColor(grid.contents[block.coord.y+1][block.coord.x]))
+                eraseBlocks(grid.contents[block.coord.y+1][block.coord.x]);
+
+            // above
+            if (matchingColor(grid.contents[block.coord.y-1][block.coord.x]))
+                eraseBlocks(grid.contents[block.coord.y-1][block.coord.x]);
+
+            // right
+            if (matchingColor(grid.contents[block.coord.y][block.coord.x+1]))
+                eraseBlocks(grid.contents[block.coord.y][block.coord.x+1]);
+
+            // left
+            if (matchingColor(grid.contents[block.coord.y][block.coord.x-1]))
+                eraseBlocks(grid.contents[block.coord.y][block.coord.x-1]);
+        }.bind(this);
+
+        if (doClear)
+            eraseBlocks(this);
+
+        return this;
+    }
+
+    /**
+     * Slide the block in 'direction' on the game grid
+     *
+     * @param {string} direction - One of "top", "bottom", "left", or "right"
+     */
+    Block.prototype.slide = function(direction) {
+        switch(direction.toLowerCase()) {
+        case "top":
+            this.coord.y -= 1;
+            this.graphics.y -= grid.cellSize;
+            break;
+        case "bottom":
+            this.coord.y += 1;
+            this.graphics.y += grid.cellSize;
+            break;
+        case "left":
+            this.coord.x -= 1;
+            this.graphics.x -= grid.cellSize;
+            break;
+        case "right":
+            this.coord.x += 1;
+            this.graphics.x += grid.cellSize;
+            break;
+        default:
+            throw("Invalid argument to Block.slide: " + direction)
         }
         return this;
     }

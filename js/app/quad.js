@@ -34,6 +34,14 @@ function(config, Phaser, Block, color){
             "left",
         ];
 
+
+        /**
+         * Callbacks to be executed when all blocks of the quad have landed
+         *
+         * @type {function[]}
+         */
+        this.onDropComplete = []
+
         // fire this.onDropComplete when all blocks have been dropped
         this.dropped = 0;
         var dropComplete = function(){
@@ -148,13 +156,6 @@ function(config, Phaser, Block, color){
             return block.falling;
         });
     }
-
-    /**
-     * Callbacks to be executed when all blocks of the quad have landed
-     *
-     * @type {function[]}
-     */
-    Quad.prototype.onDropComplete = []
 
     /**
      * Make the current quad unbreakable

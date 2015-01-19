@@ -62,6 +62,10 @@ function(config, generator, Phaser, grid){
                     controls.shifting = false;
                 }, 100);
             }
+            else if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+                console.log("dropped");
+                generator.drop();
+            }
         }
     };
 

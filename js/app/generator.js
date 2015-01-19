@@ -65,25 +65,32 @@ function(config, Quad){
             y: self.centerCell
         }).unbreakable().display();
 
-        // Simple, temporary logic. Spawn a new quad every 3 seconds, wait for 1
-        // second before dropping
+        // Simple, temporary logic. Spawn a new quad at the top every few seconds
+        // and wait a short time before dropping
         this.intervalID = setInterval(function(){
             var quad = this.genRandomQuad(game);
             this.waitingQuads.push(quad);
             quad.display();
             setTimeout(function(){
-                // the (no joke) correct way to remove an item from a list in js
-                var index = this.waitingQuads.indexOf(quad);
-                this.waitingQuads.splice(index, 1);
-                this.fallingQuads.push(quad);
-                quad.drop();
+                this.drop();
+            }.bind(this), 4000);
+        }.bind(this), 5000);
+        return this;
+    }
 
-                quad.onDropComplete.push(function(){
-                    var index = this.fallingQuads.indexOf(quad);
-                    this.fallingQuads.splice(index, 1);
-                }.bind(this));
-            }.bind(this), 1000);
-        }.bind(this), 3000);
+    /**
+     * Drop all waiting quads onto the game grid
+     */
+    Generator.prototype.drop = function() {
+        this.waitingQuads.map(function(quad){
+            this.fallingQuads.push(quad);
+            quad.drop();
+            quad.onDropComplete.push(function(){
+                var index = this.fallingQuads.indexOf(quad);
+                this.fallingQuads.splice(index, 1);
+            }.bind(this));
+        }.bind(this));
+        this.waitingQuads = [];
         return this;
     }
 

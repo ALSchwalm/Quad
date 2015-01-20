@@ -270,6 +270,23 @@ define(["app/config", "Phaser"], function(config, Phaser){
     }
 
     /**
+     * Remove any 'floating' single blocks
+     */
+    Grid.prototype.cleanup = function(){
+        for (var i=1; i < config.grid.numCells-1; ++i) {
+            for (var j=1; j < config.grid.numCells-1; ++j) {
+                if (this.contents[i][j] &&
+                    !this.contents[i+1][j] &&
+                    !this.contents[i][j+1] &&
+                    !this.contents[i-1][j] &&
+                    !this.contents[i][j-1]) {
+                    this.contents[i][j].destroy();
+                }
+            }
+        }
+    }
+
+    /**
      * The singleton gameplay grid
      * @type {Grid}
      */

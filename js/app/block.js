@@ -138,14 +138,7 @@ define(["app/config", "app/grid"], function(config, grid){
         var eraseBlocks = function(block) {
             if (destroyed.indexOf(block) != -1)
                 return;
-            var tween = this.game.add.tween(block.graphics.scale);
-            tween.to({ x: 0, y: 0}, 50);
-            tween.start();
-            tween.onComplete.add(function(){
-                block.graphics.destroy();
-            });
-            grid.contents[block.coord.y][block.coord.x] = undefined;
-            destroyed.push(block);
+            destroyed.push(block.destroy());
 
             // below
             if (matchingColor(grid.contents[block.coord.y+1][block.coord.x]))
@@ -167,6 +160,17 @@ define(["app/config", "app/grid"], function(config, grid){
         if (doClear)
             eraseBlocks(this);
 
+        return this;
+    }
+
+    Block.prototype.destroy = function(){
+        var tween = this.game.add.tween(this.graphics.scale);
+        tween.to({ x: 0, y: 0}, 50);
+        tween.start();
+        tween.onComplete.add(function(){
+            this.graphics.destroy();
+        }.bind(this));
+        grid.contents[this.coord.y][this.coord.x] = undefined;
         return this;
     }
 

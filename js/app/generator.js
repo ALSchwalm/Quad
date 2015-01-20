@@ -2,8 +2,8 @@
  * A singleton which spawns quads at random times and locations
  * @module app/generator
  */
-define(["app/config", "app/quad"],
-function(config, Quad){
+define(["app/config", "app/quad", "app/grid"],
+function(config, Quad, grid){
     "use strict"
 
     /**
@@ -96,6 +96,7 @@ function(config, Quad){
                 var index = this.fallingQuads.indexOf(quad);
                 this.fallingQuads.splice(index, 1);
                 this.spawn();
+                grid.cleanup();
             }.bind(this));
         }.bind(this));
         this.waitingQuads = [];

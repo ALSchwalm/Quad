@@ -185,7 +185,9 @@ define(["app/config", "app/grid"], function(config, grid){
         // Is there a square of blocks of the same color with 'coord' at the
         // bottom left?
         var checkForClear = function(coord){
-            return matchingColor(grid.contents[coord.y][coord.x]) &&
+            return grid.contents[coord.y] &&
+                grid.contents[coord.y+1] &&
+                matchingColor(grid.contents[coord.y][coord.x]) &&
                 matchingColor(grid.contents[coord.y+1][coord.x]) &&
                 matchingColor(grid.contents[coord.y][coord.x+1]) &&
                 matchingColor(grid.contents[coord.y+1][coord.x+1])
@@ -206,20 +208,28 @@ define(["app/config", "app/grid"], function(config, grid){
             destroyed.push(block.destroy());
 
             // below
-            if (matchingColor(grid.contents[block.coord.y+1][block.coord.x]))
+            if (grid.contents[block.coord.y+1] &&
+                matchingColor(grid.contents[block.coord.y+1][block.coord.x])) {
                 eraseBlocks(grid.contents[block.coord.y+1][block.coord.x]);
+            }
 
             // above
-            if (matchingColor(grid.contents[block.coord.y-1][block.coord.x]))
+            if (grid.contents[block.coord.y-1] &&
+                matchingColor(grid.contents[block.coord.y-1][block.coord.x])) {
                 eraseBlocks(grid.contents[block.coord.y-1][block.coord.x]);
+            }
 
             // right
-            if (matchingColor(grid.contents[block.coord.y][block.coord.x+1]))
+            if (grid.contents[block.coord.y] &&
+                matchingColor(grid.contents[block.coord.y][block.coord.x+1])) {
                 eraseBlocks(grid.contents[block.coord.y][block.coord.x+1]);
+            }
 
             // left
-            if (matchingColor(grid.contents[block.coord.y][block.coord.x-1]))
+            if (grid.contents[block.coord.y] &&
+                matchingColor(grid.contents[block.coord.y][block.coord.x-1])) {
                 eraseBlocks(grid.contents[block.coord.y][block.coord.x-1]);
+            }
         }.bind(this);
 
         if (doClear)

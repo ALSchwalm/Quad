@@ -31,8 +31,8 @@ define(function(){
             height : 700
         },
         grid : {
-            size : 520,
-            numCells : 26,
+            size : 480,
+            numCells : 20,
             linesVisible : true
         },
         color : {

@@ -51,9 +51,22 @@ define(["app/config", "app/grid"], function(config, grid){
             this.graphics.x = position.x;
             this.graphics.y = position.y;
         }
-        this.graphics.lineStyle(0);
+        // Main block body
+        this.graphics.lineStyle(1, 0x222222, 0.4);
         this.graphics.beginFill(this.color, 1);
-        this.graphics.drawRect(0, 0, grid.cellSize, grid.cellSize);
+        this.graphics.drawRoundedRect(0, 0, grid.cellSize, grid.cellSize, 1);
+        this.graphics.endFill();
+
+        // Inner shaded region
+        this.graphics.lineStyle(1, 0xCCCCCC, 0.2);
+        this.graphics.beginFill(0xAAAAAA, 0.2);
+        this.graphics.drawRoundedRect(1, 1, grid.cellSize-4, grid.cellSize-4, 2);
+        this.graphics.endFill();
+
+        // 'light' at top left corner
+        this.graphics.lineStyle(0);
+        this.graphics.beginFill(0xFFFFFF, 0.4);
+        this.graphics.drawRect(1, 1, 2, 2);
         this.graphics.endFill();
         this.visible = true;
         this.falling = false;
@@ -77,8 +90,15 @@ define(["app/config", "app/grid"], function(config, grid){
         var coord = grid.getFirstAvailable(this.direction,
                                            this.position,
                                            this.offset-3);
+        // remove any tint
+        this.highlightGraphics.tint = 0xFFFFFF;
         if (!coord) {
-            this.highlightGraphics.position = {x:-100, y:-100};
+            var point = grid.directionToPoint(this.direction,
+                                              this.position,
+                                              -config.grid.numCells+(this.offset-2));
+            // tint 'missed' blocks
+            this.highlightGraphics.tint = 0xAA55CC;
+            this.highlightGraphics.position = point;
             return this;
         }
         var point = grid.coordToPoint(coord);

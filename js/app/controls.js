@@ -9,10 +9,11 @@ function(config, generator, Phaser, grid){
     var controls = {
         rotating : false,
         shifting : false,
-        postUpdate : function() {
-            generator.highlightPath();
-        },
+        postMove : function() {},
         update : function(game) {
+            // TODO: maybe move this to postMove for performance (causes issues)
+            generator.highlightPath();
+
             if (!controls.rotating &&
                 game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
                 controls.rotating = true;
@@ -20,7 +21,7 @@ function(config, generator, Phaser, grid){
                 setTimeout(function(){
                     controls.rotating = false;
                 }, 100);
-                controls.postUpdate();
+                controls.postMove();
             }
             else if (!controls.rotating &&
                      game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
@@ -29,7 +30,7 @@ function(config, generator, Phaser, grid){
                 setTimeout(function(){
                     controls.rotating = false;
                 }, 100);
-                controls.postUpdate();
+                controls.postMove();
             }
             else if (!controls.shifting &&
                      game.input.keyboard.isDown(Phaser.Keyboard.W) &&
@@ -39,7 +40,7 @@ function(config, generator, Phaser, grid){
                 setTimeout(function(){
                     controls.shifting = false;
                 }, 100);
-                controls.postUpdate();
+                controls.postMove();
             }
             else if (!controls.shifting &&
                      game.input.keyboard.isDown(Phaser.Keyboard.S) &&
@@ -49,7 +50,7 @@ function(config, generator, Phaser, grid){
                 setTimeout(function(){
                     controls.shifting = false;
                 }, 100);
-                controls.postUpdate();
+                controls.postMove();
             }
             else if (!controls.shifting &&
                      game.input.keyboard.isDown(Phaser.Keyboard.A) &&
@@ -59,7 +60,7 @@ function(config, generator, Phaser, grid){
                 setTimeout(function(){
                     controls.shifting = false;
                 }, 100);
-                controls.postUpdate();
+                controls.postMove();
             }
             else if (!controls.shifting &&
                      game.input.keyboard.isDown(Phaser.Keyboard.D) &&
@@ -69,11 +70,11 @@ function(config, generator, Phaser, grid){
                 setTimeout(function(){
                     controls.shifting = false;
                 }, 100);
-                controls.postUpdate();
+                controls.postMove();
             }
             else if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
                 generator.drop();
-                controls.postUpdate();
+                controls.postMove();
             }
         }
     };

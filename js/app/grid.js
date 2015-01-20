@@ -124,7 +124,7 @@ define(["app/config", "Phaser"], function(config, Phaser){
             }
             break;
         case "right":
-            for (var i=config.grid.numCells-1; i >= 0; --i) {
+            for (var i=config.grid.numCells; i >= 0; --i) {
                 if (this.contents[position][i]) {
                     coord = {x: i+1+offset, y: position};
                     break;

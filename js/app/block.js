@@ -118,8 +118,6 @@ define(["app/config", "app/grid"], function(config, grid){
         var noAnimate = noAnimate || false;
         var coord = coord || grid.getFirstAvailable(this.direction, this.position);
 
-        console.log(coord);
-
         // FIXME Temporary logic, add actual game over screen
         if (!coord                           ||
             coord.x < 0                      ||

@@ -153,6 +153,11 @@ define(["app/config", "Phaser"], function(config, Phaser){
         return coord;
     }
 
+    /**
+     * Slide the contents of the grid in 'direction'
+     *
+     * @param {string} direction - One of "top", "bottom", "left", or "right"
+     */
     Grid.prototype.slide = function(direction) {
         var temporary = new Array(config.grid.numCells);
         for (var i=0; i < config.grid.numCells; ++i) {
@@ -255,18 +260,30 @@ define(["app/config", "Phaser"], function(config, Phaser){
         }
     }
 
+    /**
+     * Alias for Grid.slide("top")
+     */
     Grid.prototype.slideUp = function(){
         return this.slide("top");
     }
 
+    /**
+     * Alias for Grid.slide("bottom")
+     */
     Grid.prototype.slideDown = function(){
         return this.slide("bottom");
     }
 
+    /**
+     * Alias for Grid.slide("left")
+     */
     Grid.prototype.slideLeft = function(){
         return this.slide("left");
     }
 
+    /**
+     * Alias for Grid.slide("right")
+     */
     Grid.prototype.slideRight = function(){
         return this.slide("right");
     }

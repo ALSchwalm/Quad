@@ -118,6 +118,22 @@ define(["app/config", "app/grid"], function(config, grid){
         var noAnimate = noAnimate || false;
         var coord = coord || grid.getFirstAvailable(this.direction, this.position);
 
+        console.log(coord);
+
+        // FIXME Temporary logic, add actual game over screen
+        if (!coord                           ||
+            coord.x < 0                      ||
+            coord.x > config.grid.numCells-1 ||
+            coord.y < 0                      ||
+            coord.y > config.grid.numCells-1 ||
+            !grid.contents[coord.y]) {
+            this.game.paused=true;
+            var text = "Game Over";
+            var style = { font: "65px Arial", fill: "#ff0044", align: "center" };
+            var t = this.game.add.text(this.game.world.centerX-300, 0, text, style);
+            return this;
+        }
+
         //TODO: Do this when the animation is finished?
         grid.contents[coord.y][coord.x] = this;
 

@@ -77,8 +77,15 @@ define(["app/config", "app/grid"], function(config, grid){
         var coord = grid.getFirstAvailable(this.direction,
                                            this.position,
                                            this.offset-3);
+        // remove any tint
+        this.highlightGraphics.tint = 0xFFFFFF;
         if (!coord) {
-            this.highlightGraphics.position = {x:-100, y:-100};
+            var point = grid.directionToPoint(this.direction,
+                                              this.position,
+                                              -config.grid.numCells+(this.offset-2));
+            // tint 'missed' blocks
+            this.highlightGraphics.tint = 0xAA55CC;
+            this.highlightGraphics.position = point;
             return this;
         }
         var point = grid.coordToPoint(coord);

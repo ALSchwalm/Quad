@@ -29,6 +29,7 @@ define(["app/config", "app/grid"], function(config, grid){
         this.manualPosition = false;
         var point = grid.directionToPoint(this.direction, this.position, this.offset);
         this.graphics = this.game.add.graphics(point.x, point.y);
+        this.highlightGraphics = this.game.add.graphics();
 
         /**
          * Callbacks to be executed when the block lands
@@ -60,6 +61,33 @@ define(["app/config", "app/grid"], function(config, grid){
     }
 
     /**
+     * Show where this block would be placed if it were dropped
+     */
+    Block.prototype.highlightPath = function() {
+        if (!this.visible)
+            return this;
+        if (!this.highlighted){
+            this.highlightGraphics.lineStyle(0);
+            this.highlightGraphics.beginFill(this.color, 0.5);
+            this.highlightGraphics.drawRect(0, 0, grid.cellSize, grid.cellSize);
+            this.highlightGraphics.endFill();
+            this.highlighted = true;
+        }
+
+        var coord = grid.getFirstAvailable(this.direction,
+                                           this.position,
+                                           this.offset-3);
+        if (!coord) {
+            this.highlightGraphics.position = {x:-100, y:-100};
+            return this;
+        }
+        var point = grid.coordToPoint(coord);
+        this.highlightGraphics.position = point;
+        return this;
+    }
+
+
+    /**
      * 'drop' the block onto the grid. The block must have been previously
      * displayed.
      *
@@ -89,6 +117,7 @@ define(["app/config", "app/grid"], function(config, grid){
             this.graphics.position.x = point.x;
             this.graphics.position.y = point.y;
         }
+        this.highlightGraphics.destroy();
         this.coord = coord;
         return this;
     }
@@ -169,6 +198,7 @@ define(["app/config", "app/grid"], function(config, grid){
         tween.start();
         tween.onComplete.add(function(){
             this.graphics.destroy();
+            this.highlightGraphics.destroy();
         }.bind(this));
         grid.contents[this.coord.y][this.coord.x] = undefined;
         return this;

@@ -82,6 +82,7 @@ function(config, Quad, grid){
         this.dropTimeout = setTimeout(function(){
             this.drop();
         }.bind(this), config.generator.defaultWait*1000);
+        this.highlightPath();
     }
 
     /**
@@ -100,6 +101,16 @@ function(config, Quad, grid){
             }.bind(this));
         }.bind(this));
         this.waitingQuads = [];
+        return this;
+    }
+
+    /**
+     * Show where waiting blocks would be placed
+     */
+    Generator.prototype.highlightPath = function() {
+        this.waitingQuads.map(function(quad){
+            quad.highlightPath();
+        })
         return this;
     }
 

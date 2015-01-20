@@ -90,6 +90,16 @@ function(config, Phaser, Block, color){
         return this;
     }
 
+    /**
+     * Show where this quad would be placed if it were dropped
+     */
+    Quad.prototype.highlightPath = function() {
+        this.blocks.map(function(block){
+            block.highlightPath();
+        });
+
+        return this;
+    }
 
     /**
      * Rotate an un-dropped quad

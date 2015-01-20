@@ -2,8 +2,8 @@
  * A singleton which spawns quads at random times and locations
  * @module app/generator
  */
-define(["app/config", "app/quad"],
-function(config, Quad){
+define(["app/config", "app/quad", "app/grid"],
+function(config, Quad, grid){
     "use strict"
 
     /**
@@ -38,6 +38,7 @@ function(config, Quad){
 
         // Minus 1 because the cells are 0 index
         this.centerCell = Math.floor(config.grid.numCells/2)-1;
+        this.dropTimeout;
     }
 
     /**
@@ -57,6 +58,7 @@ function(config, Quad){
      * @todo This function is largely a placeholder
      */
     Generator.prototype.start = function(game) {
+        this.game = game;
         var self=this;
 
         //TODO: This should probably go somewhere else
@@ -65,32 +67,50 @@ function(config, Quad){
             y: self.centerCell
         }).unbreakable().display();
 
-        // Simple, temporary logic. Spawn a new quad at the top every few seconds
-        // and wait a short time before dropping
-        this.intervalID = setInterval(function(){
-            var quad = this.genRandomQuad(game);
-            this.waitingQuads.push(quad);
-            quad.display();
-            setTimeout(function(){
-                this.drop();
-            }.bind(this), 4000);
-        }.bind(this), 5000);
+        this.spawn();
         return this;
+    }
+
+    /**
+     * Spawn a new quad (or group of quads)
+     */
+    Generator.prototype.spawn = function() {
+        // Simple, temporary logic. Spawn a new quad every few seconds
+        var quad = this.genRandomQuad(this.game);
+        this.waitingQuads.push(quad);
+        quad.display();
+        this.dropTimeout = setTimeout(function(){
+            this.drop();
+        }.bind(this), config.generator.defaultWait*1000);
+        this.highlightPath();
     }
 
     /**
      * Drop all waiting quads onto the game grid
      */
     Generator.prototype.drop = function() {
+        clearTimeout(this.dropTimeout);
         this.waitingQuads.map(function(quad){
             this.fallingQuads.push(quad);
             quad.drop();
             quad.onDropComplete.push(function(){
                 var index = this.fallingQuads.indexOf(quad);
                 this.fallingQuads.splice(index, 1);
+                this.spawn();
+                grid.cleanup();
             }.bind(this));
         }.bind(this));
         this.waitingQuads = [];
+        return this;
+    }
+
+    /**
+     * Show where waiting blocks would be placed
+     */
+    Generator.prototype.highlightPath = function() {
+        this.waitingQuads.map(function(quad){
+            quad.highlightPath();
+        })
         return this;
     }
 

@@ -106,17 +106,19 @@ define(["app/config", "Phaser"], function(config, Phaser){
      * 'dropped'.
      *
      * @param {string} direction - One of "left", "right", "top", or "bottom"
-     * @position {number} position - The index of the row or column of the block
+     * @param {number} position - The index of the row or column of the block
      *                               being 'dropped'
+     * @param {number} offset - Offset the returned coordinate by this value
      * @returns - The first free position when comming from `direction` at `position`
      */
-    Grid.prototype.getFirstAvailable = function(direction, position) {
+    Grid.prototype.getFirstAvailable = function(direction, position, offset) {
         var coord;
+        var offset = offset || 0;
         switch(direction.toLowerCase()) {
         case "top":
             for (var i=0; i < config.grid.numCells; ++i) {
                 if (this.contents[i][position]) {
-                    coord = {x: position, y: i-1};
+                    coord = {x: position, y: i-1-offset};
                     break;
                 }
             }
@@ -124,7 +126,7 @@ define(["app/config", "Phaser"], function(config, Phaser){
         case "right":
             for (var i=config.grid.numCells-1; i >= 0; --i) {
                 if (this.contents[position][i]) {
-                    coord = {x: i+1, y: position};
+                    coord = {x: i+1+offset, y: position};
                     break;
                 }
             }
@@ -132,7 +134,7 @@ define(["app/config", "Phaser"], function(config, Phaser){
         case "bottom":
             for (var i=config.grid.numCells-1; i >= 0; --i) {
                 if (this.contents[i][config.grid.numCells-1-position]) {
-                    coord = {x: config.grid.numCells-1-position, y: i+1};
+                    coord = {x: config.grid.numCells-1-position, y: i+1+offset};
                     break;
                 }
             }
@@ -140,7 +142,7 @@ define(["app/config", "Phaser"], function(config, Phaser){
         case "left":
             for (var i=0; i < config.grid.numCells; ++i) {
                 if (this.contents[config.grid.numCells-1-position][i]) {
-                    coord = {x: i-1, y: config.grid.numCells-1-position};
+                    coord = {x: i-1-offset, y: config.grid.numCells-1-position};
                     break;
                 }
             }
@@ -267,6 +269,23 @@ define(["app/config", "Phaser"], function(config, Phaser){
 
     Grid.prototype.slideRight = function(){
         return this.slide("right");
+    }
+
+    /**
+     * Remove any 'floating' single blocks
+     */
+    Grid.prototype.cleanup = function(){
+        for (var i=1; i < config.grid.numCells-1; ++i) {
+            for (var j=1; j < config.grid.numCells-1; ++j) {
+                if (this.contents[i][j] &&
+                    !this.contents[i+1][j] &&
+                    !this.contents[i][j+1] &&
+                    !this.contents[i-1][j] &&
+                    !this.contents[i][j-1]) {
+                    this.contents[i][j].destroy();
+                }
+            }
+        }
     }
 
     /**

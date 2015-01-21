@@ -29,6 +29,13 @@ function(config, Quad, grid){
          */
         this.fallingQuads = [];
 
+        /**
+         * Timer which causes the waiting quads to drop when fired
+         *
+         * @type {Phaser.Timer}
+         */
+        this.dropTimer = null;
+
         this.directions = [
             "top",
             "left",
@@ -38,7 +45,6 @@ function(config, Quad, grid){
 
         // Minus 1 because the cells are 0 index
         this.centerCell = Math.floor(config.grid.numCells/2)-1;
-        this.dropTimeout;
     }
 
     /**
@@ -59,6 +65,9 @@ function(config, Quad, grid){
      */
     Generator.prototype.start = function(game) {
         this.game = game;
+        this.dropTimer = this.game.time.create(false);
+        this.dropTimer.loop(config.generator.defaultWait*Phaser.Timer.SECOND,
+                            this.drop.bind(this));
         var self=this;
 
         //TODO: This should probably go somewhere else
@@ -79,17 +88,14 @@ function(config, Quad, grid){
         var quad = this.genRandomQuad(this.game);
         this.waitingQuads.push(quad);
         quad.display();
-        this.dropTimeout = setTimeout(function(){
-            this.drop();
-        }.bind(this), config.generator.defaultWait*1000);
-        this.highlightPath();
+        this.dropTimer.start();
     }
 
     /**
      * Drop all waiting quads onto the game grid
      */
     Generator.prototype.drop = function() {
-        clearTimeout(this.dropTimeout);
+        this.dropTimer.stop(false);
         this.waitingQuads.map(function(quad){
             this.fallingQuads.push(quad);
             quad.drop();

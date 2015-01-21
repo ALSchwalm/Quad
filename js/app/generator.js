@@ -36,6 +36,8 @@ function(config, Quad, grid){
          */
         this.dropTimer = null;
 
+        this.timerGraphic = null;
+
         this.directions = [
             "top",
             "left",
@@ -68,6 +70,7 @@ function(config, Quad, grid){
         this.dropTimer = this.game.time.create(false);
         this.dropTimer.loop(config.generator.defaultWait*Phaser.Timer.SECOND,
                             this.drop.bind(this));
+        this.timerGraphic = this.game.add.graphics();
         var self=this;
 
         //TODO: This should probably go somewhere else
@@ -121,10 +124,43 @@ function(config, Quad, grid){
     }
 
     /**
+     * Update the generator graphics. This should be called from the
+     * Phaser update callback function.
+     */
+    Generator.prototype.update = function() {
+        this.drawTimerGraphics();
+    }
+
+    /**
+     * Draw the graphics showing the time remaining before the next drop
+     * @todo This is a temporary graphic, but the timing logic is correct
+     */
+    Generator.prototype.drawTimerGraphics = function() {
+        this.timerGraphic.clear();
+        var percentElapsed =
+                this.dropTimer.ms/(config.generator.defaultWait*1000)
+        if (percentElapsed > 1)
+            percentElapsed = 1;
+
+        this.timerGraphic.lineStyle(1, 0xFFFFFF, 1);
+        this.timerGraphic.drawCircle(this.game.width-50,
+                                     this.game.height-50,
+                                     40);
+
+        this.timerGraphic.lineStyle(1, 0xAAAAAA);
+        this.timerGraphic.beginFill(0xFFFFFF, 1);
+
+        this.timerGraphic.drawCircle(this.game.width-50,
+                                     this.game.height-50,
+                                     40*(1-percentElapsed));
+        this.timerGraphic.endFill();
+    }
+
+    /**
      * Stop 'dropping' quads
      */
     Generator.prototype.stop = function() {
-        clearInterval(this.intervalID);
+        this.dropTimer.stop(false);
         return this;
     }
 

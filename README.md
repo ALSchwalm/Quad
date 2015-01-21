@@ -8,12 +8,13 @@ TODO
 
 - [x] define and display grid
 - [x] define quad (group of 4 blocks)
-- [ ] allow clearing of blocks
+- [x] allow clearing of blocks
 - [ ] generator logic (don't allow overlapping quads, etc)
-- [ ] allow shifting of blocks
+- [x] allow shifting of blocks
 - [ ] sounds
 - [ ] score/level system
 - [ ] graphics (possibly sprites for blocks)
+- [ ] rest of page HTML
 
 Documentation
 =============

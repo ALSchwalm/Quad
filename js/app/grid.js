@@ -67,6 +67,29 @@ define(["app/config", "Phaser"], function(config, Phaser){
     }
 
     /**
+     * Utility function to retrieve item from grid.
+     *
+     * @param {number|object} x - The x coordinate or x, y object
+     * @param {number} y - The y coordinate
+     *
+     * @returns {Block|null} The Block located at {x, y} or null if none exists
+     */
+    Grid.prototype.at = function(x, y) {
+        var coord;
+        if (typeof(x) == "object") {
+            coord = x;
+        } else {
+            coord = {x: x, y:y};
+        }
+
+        if (!this.contents[coord.y]) {
+            return null;
+        } else {
+            return this.contents[coord.y][coord.x];
+        }
+    }
+
+    /**
      * Convert a direction and a position to a point on the canvas. The returned
      * position is the top left corner of the cell within the grid that is positioned
      * as far as possible in `direction` along column/row `position`.
@@ -117,7 +140,7 @@ define(["app/config", "Phaser"], function(config, Phaser){
         switch(direction.toLowerCase()) {
         case "top":
             for (var i=0; i < config.grid.numCells; ++i) {
-                if (this.contents[i][position]) {
+                if (this.at(position, i)) {
                     coord = {x: position, y: i-1-offset};
                     break;
                 }
@@ -125,7 +148,7 @@ define(["app/config", "Phaser"], function(config, Phaser){
             break;
         case "right":
             for (var i=config.grid.numCells; i >= 0; --i) {
-                if (this.contents[position][i]) {
+                if (this.at(i, position)) {
                     coord = {x: i+1+offset, y: position};
                     break;
                 }
@@ -133,7 +156,7 @@ define(["app/config", "Phaser"], function(config, Phaser){
             break;
         case "bottom":
             for (var i=config.grid.numCells-1; i >= 0; --i) {
-                if (this.contents[i][config.grid.numCells-1-position]) {
+                if (this.at(config.grid.numCells-1-position, i)) {
                     coord = {x: config.grid.numCells-1-position, y: i+1+offset};
                     break;
                 }
@@ -141,7 +164,7 @@ define(["app/config", "Phaser"], function(config, Phaser){
             break;
         case "left":
             for (var i=0; i < config.grid.numCells; ++i) {
-                if (this.contents[config.grid.numCells-1-position][i]) {
+                if (this.at(i, config.grid.numCells-1-position)) {
                     coord = {x: i-1-offset, y: config.grid.numCells-1-position};
                     break;
                 }
@@ -215,7 +238,7 @@ define(["app/config", "Phaser"], function(config, Phaser){
 
         case "left":
             for (var i=0; i < config.grid.numCells; ++i){
-                if (typeof(this.contents[i][0]) !== "undefined")
+                if (this.at(0, i))
                     return false;
             }
 
@@ -236,7 +259,7 @@ define(["app/config", "Phaser"], function(config, Phaser){
             return true;
         case "right":
             for (var i=0; i < config.grid.numCells; ++i){
-                if (typeof(this.contents[i][config.grid.numCells-1]) !== "undefined")
+                if (this.at(config.grid.numCells-1, i))
                     return false;
             }
 
@@ -294,12 +317,10 @@ define(["app/config", "Phaser"], function(config, Phaser){
     Grid.prototype.cleanup = function(){
         for (var i=1; i < config.grid.numCells-1; ++i) {
             for (var j=1; j < config.grid.numCells-1; ++j) {
-                if (this.contents[i][j] &&
-                    !this.contents[i+1][j] &&
-                    !this.contents[i][j+1] &&
-                    !this.contents[i-1][j] &&
-                    !this.contents[i][j-1]) {
-                    this.contents[i][j].destroy();
+                if (this.at(i, j) &&
+                    !this.at(i+1, j) && !this.at(i, j+1) &&
+                    !this.at(i-1, j) && !this.at(i, j-1)) {
+                    this.at(i, j).destroy();
                 }
             }
         }

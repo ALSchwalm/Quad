@@ -30,6 +30,7 @@ define(["app/config", "app/grid"], function(config, grid){
         var point = grid.directionToPoint(this.direction, this.position, this.offset);
         this.graphics = this.game.add.graphics(point.x, point.y);
         this.highlightGraphics = this.game.add.graphics();
+        this._unbreakable = (this.color == config.color.unbreakable);
 
         /**
          * Callbacks to be executed when the block lands
@@ -182,21 +183,19 @@ define(["app/config", "app/grid"], function(config, grid){
 
         // Is there a square of blocks of the same color with 'coord' at the
         // bottom left?
-        var checkForClear = function(coord){
-            return grid.contents[coord.y] &&
-                grid.contents[coord.y+1] &&
-                matchingColor(grid.contents[coord.y][coord.x]) &&
-                matchingColor(grid.contents[coord.y+1][coord.x]) &&
-                matchingColor(grid.contents[coord.y][coord.x+1]) &&
-                matchingColor(grid.contents[coord.y+1][coord.x+1])
+        var checkForClear = function(x, y){
+            return matchingColor(grid.at(x, y)) &&
+                matchingColor(grid.at(x, y+1)) &&
+                matchingColor(grid.at(x+1, y)) &&
+                matchingColor(grid.at(x+1, y+1));
         }
 
         // Check whether this block has formed a square of blocks of the same
         // color
-        var doClear = checkForClear({x:this.coord.x, y:this.coord.y}) ||
-            checkForClear({x:this.coord.x-1, y:this.coord.y})         ||
-            checkForClear({x:this.coord.x, y:this.coord.y-1})         ||
-            checkForClear({x:this.coord.x-1, y:this.coord.y-1});
+        var doClear = checkForClear(this.coord.x, this.coord.y) ||
+            checkForClear(this.coord.x-1, this.coord.y)         ||
+            checkForClear(this.coord.x, this.coord.y-1)         ||
+            checkForClear(this.coord.x-1, this.coord.y-1);
 
         // Recursively remove all connected blocks of the same color
         var destroyed = [];
@@ -206,27 +205,23 @@ define(["app/config", "app/grid"], function(config, grid){
             destroyed.push(block.destroy());
 
             // below
-            if (grid.contents[block.coord.y+1] &&
-                matchingColor(grid.contents[block.coord.y+1][block.coord.x])) {
-                eraseBlocks(grid.contents[block.coord.y+1][block.coord.x]);
+            if (matchingColor(grid.at(block.coord.x, block.coord.y+1))) {
+                eraseBlocks(grid.at(block.coord.x, block.coord.y+1));
             }
 
             // above
-            if (grid.contents[block.coord.y-1] &&
-                matchingColor(grid.contents[block.coord.y-1][block.coord.x])) {
-                eraseBlocks(grid.contents[block.coord.y-1][block.coord.x]);
+            if (matchingColor(grid.at(block.coord.x, block.coord.y-1))) {
+                eraseBlocks(grid.at(block.coord.x, block.coord.y-1));
             }
 
             // right
-            if (grid.contents[block.coord.y] &&
-                matchingColor(grid.contents[block.coord.y][block.coord.x+1])) {
-                eraseBlocks(grid.contents[block.coord.y][block.coord.x+1]);
+            if (matchingColor(grid.at(block.coord.x+1, block.coord.y))) {
+                eraseBlocks(grid.at(block.coord.x+1, block.coord.y));
             }
 
             // left
-            if (grid.contents[block.coord.y] &&
-                matchingColor(grid.contents[block.coord.y][block.coord.x-1])) {
-                eraseBlocks(grid.contents[block.coord.y][block.coord.x-1]);
+            if (matchingColor(grid.at(block.coord.x-1, block.coord.y))) {
+                eraseBlocks(grid.at(block.coord.x-1, block.coord.y));
             }
         }.bind(this);
 
@@ -237,6 +232,9 @@ define(["app/config", "app/grid"], function(config, grid){
     }
 
     Block.prototype.destroy = function(){
+        if (this._unbreakable)
+            return this;
+
         var tween = this.game.add.tween(this.graphics.scale);
         tween.to({ x: 0, y: 0}, 50);
         tween.start();
@@ -282,6 +280,7 @@ define(["app/config", "app/grid"], function(config, grid){
      */
     Block.prototype.unbreakable = function() {
         this.color = config.color.unbreakable;
+        this._unbreakable = true;
 
         // If the block has already been drawn, force a redraw
         if (this.visible) {

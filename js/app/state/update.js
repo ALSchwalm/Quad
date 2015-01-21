@@ -2,7 +2,8 @@
  * A module returning a function which will be executed during each frame
  * @module app/state/update
  */
-define(["app/controls"], function(controls){
+define(["app/controls", "app/generator"],
+function(controls, generator){
     "use strict"
 
     /**
@@ -13,6 +14,7 @@ define(["app/controls"], function(controls){
      */
     var update = function(game) {
         controls.update(game);
+        generator.update();
     }
 
     return update;

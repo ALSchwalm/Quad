@@ -30,6 +30,7 @@ define(["app/config", "app/grid"], function(config, grid){
         var point = grid.directionToPoint(this.direction, this.position, this.offset);
         this.graphics = this.game.add.graphics(point.x, point.y);
         this.highlightGraphics = this.game.add.graphics();
+        this._unbreakable = (this.color == config.color.unbreakable);
 
         /**
          * Callbacks to be executed when the block lands
@@ -237,6 +238,9 @@ define(["app/config", "app/grid"], function(config, grid){
     }
 
     Block.prototype.destroy = function(){
+        if (this._unbreakable)
+            return this;
+
         var tween = this.game.add.tween(this.graphics.scale);
         tween.to({ x: 0, y: 0}, 50);
         tween.start();
@@ -282,6 +286,7 @@ define(["app/config", "app/grid"], function(config, grid){
      */
     Block.prototype.unbreakable = function() {
         this.color = config.color.unbreakable;
+        this._unbreakable = true;
 
         // If the block has already been drawn, force a redraw
         if (this.visible) {

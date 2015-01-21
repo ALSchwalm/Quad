@@ -1,83 +1,91 @@
-/**
- * A module which defines controls for the game
- * @module app/controls
- */
 define(["app/config", "app/generator", "Phaser", "app/grid"],
 function(config, generator, Phaser, grid){
     "use strict"
 
+    /**
+     * A module which defines controls for the game
+     * @exports app/controls
+     */
     var controls = {
         rotating : false,
         shifting : false,
         postMove : function() {},
+        keys : [],
+
+        /**
+         * Register a key to be used by the game
+         *
+         * @param {number} key - The keycode to watch
+         * @param {function} func - Callback to execute when the key is pressed
+         * @param {object} context - Context for the callback
+         * @param {number} delayBetween - Time (in ms) between callback executions
+         */
+        registerControl : function(key, func, context, delayBetween) {
+            var delayBetween = delayBetween || 100;
+            var func = func.bind(context);
+            var keyObj = {
+                key: key,
+                callback : func,
+                delay: delayBetween,
+                active: false,
+                press : function() {
+                    if (!keyObj.active) {
+                        keyObj.callback();
+                        keyObj.active = true;
+                        setTimeout(function(){
+                            keyObj.active = false;
+                        }, keyObj.delay);
+                        controls.postMove();
+                    }
+                }
+            };
+            controls.keys.push(keyObj);
+        },
+
         update : function(game) {
             // TODO: maybe move this to postMove for performance (causes issues)
             generator.highlightPath();
 
-            if (!controls.rotating &&
-                game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
-                controls.rotating = true;
-                generator.rotateCCW();
-                setTimeout(function(){
-                    controls.rotating = false;
-                }, 100);
-                controls.postMove();
-            }
-            else if (!controls.rotating &&
-                     game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
-                controls.rotating = true;
-                generator.rotateCW();
-                setTimeout(function(){
-                    controls.rotating = false;
-                }, 100);
-                controls.postMove();
-            }
-            else if (!controls.shifting &&
-                     game.input.keyboard.isDown(Phaser.Keyboard.W) &&
-                     generator.fallingQuads.length == 0) {
-                controls.shifting = true;
-                grid.slideUp();
-                setTimeout(function(){
-                    controls.shifting = false;
-                }, 100);
-                controls.postMove();
-            }
-            else if (!controls.shifting &&
-                     game.input.keyboard.isDown(Phaser.Keyboard.S) &&
-                     generator.fallingQuads.length == 0) {
-                controls.shifting = true;
-                grid.slideDown();
-                setTimeout(function(){
-                    controls.shifting = false;
-                }, 100);
-                controls.postMove();
-            }
-            else if (!controls.shifting &&
-                     game.input.keyboard.isDown(Phaser.Keyboard.A) &&
-                     generator.fallingQuads.length == 0) {
-                controls.shifting = true;
-                grid.slideLeft();
-                setTimeout(function(){
-                    controls.shifting = false;
-                }, 100);
-                controls.postMove();
-            }
-            else if (!controls.shifting &&
-                     game.input.keyboard.isDown(Phaser.Keyboard.D) &&
-                     generator.fallingQuads.length == 0) {
-                controls.shifting = true;
-                grid.slideRight();
-                setTimeout(function(){
-                    controls.shifting = false;
-                }, 100);
-                controls.postMove();
-            }
-            else if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
-                generator.drop();
-                controls.postMove();
+            for (var i=0; i < controls.keys.length; ++i) {
+                if (game.input.keyboard.isDown(controls.keys[i].key)) {
+                    controls.keys[i].press();
+                }
             }
         }
     };
+
+    // Register some default keys
+    controls.registerControl(Phaser.Keyboard.LEFT, generator.rotateCCW, generator);
+    controls.registerControl(Phaser.Keyboard.RIGHT, generator.rotateCW, generator);
+    controls.registerControl(Phaser.Keyboard.W, function(){
+        if(generator.fallingQuads.length == 0)
+            grid.slideUp();
+    }, grid);
+    controls.registerControl(Phaser.Keyboard.S, function(){
+        if(generator.fallingQuads.length == 0)
+            grid.slideDown();
+    }, grid);
+    controls.registerControl(Phaser.Keyboard.A, function(){
+        if(generator.fallingQuads.length == 0)
+            grid.slideLeft();
+    }, grid);
+    controls.registerControl(Phaser.Keyboard.D, function(){
+        if(generator.fallingQuads.length == 0)
+            grid.slideRight();
+    }, grid);
+    controls.registerControl(Phaser.Keyboard.SPACEBAR, generator.drop, generator);
+
+    // Prevent the browser from taking the normal action (scrolling, etc)
+    window.addEventListener("keydown", function(e) {
+        var codes = [];
+        controls.keys.map(function(keyObj){
+            codes.push(keyObj.key);
+        })
+
+        if(codes.indexOf(e.keyCode) > -1) {
+            e.preventDefault();
+        }
+    }, false);
 
     return controls;
 });

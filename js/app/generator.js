@@ -77,7 +77,7 @@ function(config, Quad, grid){
         var centerQuad = new Quad(game).positionAt({
             x: self.centerCell,
             y: self.centerCell
-        }).unbreakable().display();
+        }).unbreakable();
 
         this.spawn();
         return this;
@@ -136,23 +136,29 @@ function(config, Quad, grid){
      * @todo This is a temporary graphic, but the timing logic is correct
      */
     Generator.prototype.drawTimerGraphics = function() {
+        this.game.world.bringToTop(this.timerGraphic);
         this.timerGraphic.clear();
         var percentElapsed =
                 this.dropTimer.ms/(config.generator.defaultWait*1000)
         if (percentElapsed > 1)
             percentElapsed = 1;
+        else if (percentElapsed < 0)
+            percentElapsed = 0;
 
-        this.timerGraphic.lineStyle(1, 0xFFFFFF, 1);
-        this.timerGraphic.drawCircle(this.game.width-50,
-                                     this.game.height-50,
-                                     40);
+        var percentRemaining = 1-percentElapsed;
+        var point = grid.coordToPoint(grid.middle);
 
-        this.timerGraphic.lineStyle(1, 0xAAAAAA);
+        this.timerGraphic.lineStyle(1, 0x333333, 1);
+        this.timerGraphic.beginFill(0x000000, 0.3);
+        this.timerGraphic.drawRect(point.x-grid.cellSize, point.y-grid.cellSize,
+                                   grid.cellSize*2, grid.cellSize*2);
+        this.timerGraphic.endFill();
+
         this.timerGraphic.beginFill(0xFFFFFF, 1);
-
-        this.timerGraphic.drawCircle(this.game.width-50,
-                                     this.game.height-50,
-                                     40*(1-percentElapsed));
+        this.timerGraphic.drawRect(point.x-(grid.cellSize*percentRemaining),
+                                   point.y-(grid.cellSize*percentRemaining),
+                                   grid.cellSize*2*percentRemaining,
+                                   grid.cellSize*2*percentRemaining);
         this.timerGraphic.endFill();
     }
 

@@ -21,7 +21,7 @@ function(config, Phaser, preload, update, create){
         preload : preload,
         update  : update,
         create  : create,
-    });
+    }, true);
 
     return game;
 });

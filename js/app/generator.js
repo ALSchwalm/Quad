@@ -106,7 +106,6 @@ function(config, Quad, grid){
                 var index = this.fallingQuads.indexOf(quad);
                 this.fallingQuads.splice(index, 1);
                 this.spawn();
-                grid.cleanup();
             }.bind(this));
         }.bind(this));
         this.waitingQuads = [];
@@ -133,10 +132,8 @@ function(config, Quad, grid){
 
     /**
      * Draw the graphics showing the time remaining before the next drop
-     * @todo This is a temporary graphic, but the timing logic is correct
      */
     Generator.prototype.drawTimerGraphics = function() {
-        this.game.world.bringToTop(this.timerGraphic);
         this.timerGraphic.clear();
         var percentElapsed =
                 this.dropTimer.ms/(config.generator.defaultWait*1000)

@@ -199,49 +199,100 @@ define(["app/config", "app/grid"], function(config, grid){
 
         // Recursively remove all connected blocks of the same color
         var destroyed = [];
-        var eraseBlocks = function(block) {
+        var eraseBlocks = function(block, count) {
+            var totalCleared = 1;
+            var count = count || 0;
             if (destroyed.indexOf(block) != -1)
                 return;
-            destroyed.push(block.destroy());
+            destroyed.push(block.destroy(count));
 
             // below
             if (matchingColor(grid.at(block.coord.x, block.coord.y+1))) {
-                eraseBlocks(grid.at(block.coord.x, block.coord.y+1));
+                totalCleared += eraseBlocks(grid.at(block.coord.x, block.coord.y+1),
+                                            count+1);
             }
 
             // above
             if (matchingColor(grid.at(block.coord.x, block.coord.y-1))) {
-                eraseBlocks(grid.at(block.coord.x, block.coord.y-1));
+                totalCleared += eraseBlocks(grid.at(block.coord.x, block.coord.y-1),
+                                            count+1);
             }
 
             // right
             if (matchingColor(grid.at(block.coord.x+1, block.coord.y))) {
-                eraseBlocks(grid.at(block.coord.x+1, block.coord.y));
+                totalCleared += eraseBlocks(grid.at(block.coord.x+1, block.coord.y),
+                                            count+1);
             }
 
             // left
             if (matchingColor(grid.at(block.coord.x-1, block.coord.y))) {
-                eraseBlocks(grid.at(block.coord.x-1, block.coord.y));
+                totalCleared += eraseBlocks(grid.at(block.coord.x-1, block.coord.y),
+                                            count+1);
             }
+            return totalCleared;
         }.bind(this);
 
-        if (doClear)
-            eraseBlocks(this);
+        if (doClear) {
+            var totalCleared = eraseBlocks(this) + grid.cleanup();
+            this.displayClearedCount(totalCleared);
+        }
 
         return this;
     }
 
-    Block.prototype.destroy = function(){
+    Block.prototype.displayClearedCount = function(count) {
+        if (count <= 6) return this;
+        var fontSize = function(count) {
+            if (count > 15) return "45px Arial";
+            else return (2*count+15).toString() + "px Arial";
+        };
+        var text = count.toString();
+        var style = {
+            font: fontSize(count),
+            fill: "#FFFFFF",
+            align: "center",
+            shadowColor: "#000000",
+            shadowOffsetX: 3,
+            shadowOffsetY: 3,
+        };
+        var point = grid.coordToPoint(this.coord);
+        var graphic = this.game.add.text(point.x, point.y, text, style);
+        // graphic.alpha = 0.6;
+        graphic.scale = {x: 0, y:0};
+
+        var scaleTween = this.game.add.tween(graphic.scale);
+        scaleTween.to({ x: 1, y: 1}, 300, Phaser.Easing.Quadratic.InOut, true);
+        scaleTween.onComplete.add(function(){
+            graphic.destroy();
+        });
+        return this;
+    }
+
+    /**
+     * Destroy a breakable block, with animation
+     */
+    Block.prototype.destroy = function(delay){
         if (this._unbreakable)
             return this;
 
-        var tween = this.game.add.tween(this.graphics.scale);
-        tween.to({ x: 0, y: 0}, 50);
-        tween.start();
-        tween.onComplete.add(function(){
-            this.graphics.destroy();
-            this.highlightGraphics.destroy();
-        }.bind(this));
+        setTimeout(function(){
+            // Move the block to the center of its cell as it shrinks
+            var point = grid.coordToPoint(this.coord);
+            var locationTween = this.game.add.tween(this.graphics);
+            locationTween.to({ x: point.x+grid.cellSize/2,
+                               y: point.y+grid.cellSize/2,
+                               angle: 60}, 50);
+            locationTween.start();
+
+            // Shrink the block over time
+            var scaleTween = this.game.add.tween(this.graphics.scale);
+            scaleTween.to({ x: 0, y: 0}, 50);
+            scaleTween.start();
+            scaleTween.onComplete.add(function(){
+                this.graphics.destroy();
+                this.highlightGraphics.destroy();
+            }.bind(this));
+        }.bind(this), delay*25);
         grid.contents[this.coord.y][this.coord.x] = undefined;
         return this;
     }

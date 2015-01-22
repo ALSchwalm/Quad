@@ -176,7 +176,7 @@ define(["app/config", "app/grid"], function(config, grid){
      * a square of blocks of the same color, do nothing. Otherwise, clear all
      * adjacent blocks (not counting diagonals) recursively.
      */
-    Block.prototype.clear = function() {
+    Block.prototype.clear = function(game) {
         var matchingColor = function(block){
             return block && (block.color == this.color);
         }.bind(this);
@@ -235,6 +235,7 @@ define(["app/config", "app/grid"], function(config, grid){
         if (doClear) {
             var totalCleared = eraseBlocks(this) + grid.cleanup();
             this.displayClearedCount(totalCleared);
+            this.game.add.audio('destroy').play();
         }
 
         return this;

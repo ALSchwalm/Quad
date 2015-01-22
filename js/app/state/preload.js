@@ -13,6 +13,7 @@ define(['app/game'], function(game){
      */
     var preload = function(game){
         game.load.audio('attach', 'sounds/attach.wav');
+        game.load.audio('destroy', 'sounds/destroy.wav');
     };
 
     return preload;

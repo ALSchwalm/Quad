@@ -20,6 +20,14 @@ define(["app/config", "Phaser"], function(config, Phaser){
         }
 
         /**
+         * The coordinate of the middle of the indestructible quad
+         *
+         * @type {object}
+         */
+        this.middle = {x: config.grid.numCells/2,
+                       y: config.grid.numCells/2};
+
+        /**
          * The contents of the grid
          * @type {Block[][]}
          */
@@ -207,7 +215,7 @@ define(["app/config", "Phaser"], function(config, Phaser){
                         block.slide("top");
                 }.bind(this));
             }.bind(this));
-
+            this.middle.y -= 1;
             this.contents = temporary;
             return true;
 
@@ -232,7 +240,7 @@ define(["app/config", "Phaser"], function(config, Phaser){
                         block.slide("bottom");
                 }.bind(this));
             }.bind(this));
-
+            this.middle.y += 1;
             this.contents = temporary;
             return true;
 
@@ -254,7 +262,7 @@ define(["app/config", "Phaser"], function(config, Phaser){
                         block.slide("left");
                 }.bind(this));
             }.bind(this));
-
+            this.middle.x -= 1;
             this.contents = temporary;
             return true;
         case "right":
@@ -275,7 +283,7 @@ define(["app/config", "Phaser"], function(config, Phaser){
                         block.slide("right");
                 }.bind(this));
             }.bind(this));
-
+            this.middle.x += 1;
             this.contents = temporary;
             return true;
         default:
@@ -313,17 +321,22 @@ define(["app/config", "Phaser"], function(config, Phaser){
 
     /**
      * Remove any 'floating' single blocks
+     *
+     * @returns the number of blocks destoyed
      */
     Grid.prototype.cleanup = function(){
+        var totalCleared = 0;
         for (var i=1; i < config.grid.numCells-1; ++i) {
             for (var j=1; j < config.grid.numCells-1; ++j) {
                 if (this.at(i, j) &&
                     !this.at(i+1, j) && !this.at(i, j+1) &&
                     !this.at(i-1, j) && !this.at(i, j-1)) {
                     this.at(i, j).destroy();
+                    totalCleared += 1;
                 }
             }
         }
+        return totalCleared;
     }
 
     /**

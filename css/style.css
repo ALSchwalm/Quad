@@ -2,26 +2,7 @@
 body {
     background: -webkit-linear-gradient(left, #0193CD 30%, #66D4E5 80%, #0193CD 100%) repeat;
     background: -moz-linear-gradient(left, #0193CD 30%, #66D4E5 80%, #0193CD 100%) repeat;
-    -webkit-background-size: 50% 100%;
-    -webkit-animation-name: moving-gradient;
-    -webkit-animation-duration: 20s;
-    -webkit-animation-iteration-count: infinite;
-    -webkit-animation-timing-function: linear;
     background-size: 50% 100%;
-    animation-name: moving-gradient;
-    animation-duration: 20s;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
-}
-
-@-webkit-keyframes moving-gradient {
-    0% { background-position: left bottom; }
-    100% { background-position: right bottom; }
-}
-
-@-moz-keyframes moving-gradient {
-    0% { background-position: left bottom; }
-    100% { background-position: right bottom;}
 }
 
 #phaser-container {

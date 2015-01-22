@@ -17,9 +17,11 @@ function(config, Phaser, Block, color){
      * @param {number} [level=1] - Current game level (influences 'difficulty of quad')
      */
     var Quad = function(game, direction, position, level) {
+        this.game = game;
         this.direction = direction || "top";
         this.position = position || 0;
         this.level = level || 1;
+        this.visible = false;
         this.blocks = [
             new Block(game, this.direction, this.position,   1, color.genRandomColor(this.level)),
             new Block(game, this.direction, this.position+1, 1, color.genRandomColor(this.level)),
@@ -63,15 +65,27 @@ function(config, Phaser, Block, color){
 
     /**
      * Show the quad outside of the grid.
-     *
-     * @returns - A list of the graphics objects of the underlying blocks
      */
-    Quad.prototype.display = function() {
-        var graphics = [];
+    Quad.prototype.display = function(position) {
+        this.visible = true;
         for (var i=0; i < this.blocks.length; ++i) {
-            graphics.push(this.blocks[i].display().graphics);
+            if (position) {
+                var right = false;
+                var up = this.blocks[i].offset
+                if (this.blocks[i].position != this.position)
+                    right = true;
+
+                var cellSize = config.grid.size / config.grid.numCells;
+                var offsetPosition = {
+                    x: position.x + right*cellSize,
+                    y: position.y - up*cellSize
+                };
+                this.blocks[i].display(offsetPosition);
+            } else {
+                this.blocks[i].display(position);
+            }
         }
-        return graphics;
+        return this;
     }
 
     /**

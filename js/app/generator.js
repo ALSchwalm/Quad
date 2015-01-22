@@ -24,6 +24,12 @@ function(config, Quad, grid){
         this.waitingQuads = [];
 
         /**
+         * A list of quads which will be spawned in the future
+         * @type {Quad[]}
+         */
+        this.futureQuads = [];
+
+        /**
          * A list of quads currently falling
          * @type {Quad[]}
          */
@@ -73,6 +79,14 @@ function(config, Quad, grid){
         this.timerGraphic = this.game.add.graphics();
         var self=this;
 
+        // Show the next 4 moves
+        this.futureQuads = [
+            this.genRandomQuad(this.game),
+            this.genRandomQuad(this.game),
+            this.genRandomQuad(this.game),
+            this.genRandomQuad(this.game),
+        ];
+
         //TODO: This should probably go somewhere else
         var centerQuad = new Quad(game).positionAt({
             x: self.centerCell,
@@ -88,10 +102,39 @@ function(config, Quad, grid){
      */
     Generator.prototype.spawn = function() {
         // Simple, temporary logic. Spawn a new quad every few seconds
-        var quad = this.genRandomQuad(this.game);
+        var quad = this.futureQuads.pop();
         this.waitingQuads.push(quad);
-        quad.display();
+        quad.display().blocks.map(function(block){
+            block.graphics.alpha = 1.0;
+        })
+
+        // The (no lie) best way to prepend an element to an array
+        var newQuad = this.genRandomQuad(this.game);
+        this.futureQuads.unshift(newQuad);
+        this.showFutureQuads();
+
         this.dropTimer.start();
+        return this;
+    }
+
+    /**
+     * Display the next few quads which will be spawned
+     */
+    Generator.prototype.showFutureQuads = function(){
+        var futurePosition = {
+            x: grid.offsets.x - 100,
+            y: grid.offsets.y
+        };
+        for (var i=0; i < this.futureQuads.length; ++i) {
+            this.futureQuads[i].display({
+                x: futurePosition.x + grid.cellSize*2.5*i,
+                y: futurePosition.y
+            });
+            this.futureQuads[i].blocks.map(function(block){
+                block.graphics.alpha = 0.5;
+            });
+        }
+        return this;
     }
 
     /**

@@ -2,7 +2,7 @@
  * A module returning a function which will be executed to load game assets
  * @module app/state/preload
  */
-define(function(){
+define(['app/game'], function(game){
     "use strict"
 
     /**
@@ -12,6 +12,7 @@ define(function(){
      * @param {Phaser.Game} game - The current game object
      */
     var preload = function(game){
+        game.load.audio('attach', 'sounds/attach.wav');
     };
 
     return preload;

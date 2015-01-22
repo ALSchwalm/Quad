@@ -52,23 +52,26 @@ define(["app/config", "app/grid"], function(config, grid){
             this.graphics.x = position.x;
             this.graphics.y = position.y;
         }
-        // Main block body
-        this.graphics.lineStyle(1, 0x222222, 0.4);
-        this.graphics.beginFill(this.color, 1);
-        this.graphics.drawRoundedRect(0, 0, grid.cellSize, grid.cellSize, 1);
-        this.graphics.endFill();
 
-        // Inner shaded region
-        this.graphics.lineStyle(1, 0xCCCCCC, 0.2);
-        this.graphics.beginFill(0xAAAAAA, 0.2);
-        this.graphics.drawRoundedRect(1, 1, grid.cellSize-4, grid.cellSize-4, 2);
-        this.graphics.endFill();
+        if (!this.visible) {
+            // Main block body
+            this.graphics.lineStyle(1, 0x222222, 0.4);
+            this.graphics.beginFill(this.color, 1);
+            this.graphics.drawRoundedRect(0, 0, grid.cellSize, grid.cellSize, 1);
+            this.graphics.endFill();
 
-        // 'light' at top left corner
-        this.graphics.lineStyle(0);
-        this.graphics.beginFill(0xFFFFFF, 0.4);
-        this.graphics.drawRect(1, 1, 2, 2);
-        this.graphics.endFill();
+            // Inner shaded region
+            this.graphics.lineStyle(1, 0xCCCCCC, 0.2);
+            this.graphics.beginFill(0xAAAAAA, 0.2);
+            this.graphics.drawRoundedRect(1, 1, grid.cellSize-4, grid.cellSize-4, 2);
+            this.graphics.endFill();
+
+            // 'light' at top left corner
+            this.graphics.lineStyle(0);
+            this.graphics.beginFill(0xFFFFFF, 0.4);
+            this.graphics.drawRect(1, 1, 2, 2);
+            this.graphics.endFill();
+        }
         this.visible = true;
         this.falling = false;
         return this;
@@ -257,7 +260,6 @@ define(["app/config", "app/grid"], function(config, grid){
         };
         var point = grid.coordToPoint(this.coord);
         var graphic = this.game.add.text(point.x, point.y, text, style);
-        // graphic.alpha = 0.6;
         graphic.scale = {x: 0, y:0};
 
         var scaleTween = this.game.add.tween(graphic.scale);
@@ -281,7 +283,8 @@ define(["app/config", "app/grid"], function(config, grid){
             var locationTween = this.game.add.tween(this.graphics);
             locationTween.to({ x: point.x+grid.cellSize/2,
                                y: point.y+grid.cellSize/2,
-                               angle: 60}, 50);
+                               angle: 60,
+                               alpha: 0.1}, 50);
             locationTween.start();
 
             // Shrink the block over time

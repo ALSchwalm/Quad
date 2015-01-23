@@ -176,7 +176,7 @@ define(["app/config", "app/grid"], function(config, grid){
      * a square of blocks of the same color, do nothing. Otherwise, clear all
      * adjacent blocks (not counting diagonals) recursively.
      */
-    Block.prototype.clear = function(game) {
+    Block.prototype.clear = function() {
         var matchingColor = function(block){
             return block && (block.color == this.color);
         }.bind(this);

@@ -2,7 +2,7 @@
  * A module returning a function which will be executed to load game assets
  * @module app/state/preload
  */
-define(['app/game'], function(game){
+define(function(){
     "use strict"
 
     /**

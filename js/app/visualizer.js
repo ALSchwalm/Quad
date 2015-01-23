@@ -31,8 +31,8 @@ define(["app/config"], function(config){
      */
     function Visualizer(game, music) {
         this.game = game;
-        this.bmd = this.game.make.bitmapData(config.game.width, config.game.height);
-        this.bmd.addToWorld();
+        this.bmd = this.game.make.bitmapData(config.game.width, config.game.height/2);
+        this.bmd.addToWorld(0, config.game.height/2);
 
         this.analyser = this.game.sound.context.createAnalyser();
 
@@ -41,6 +41,7 @@ define(["app/config"], function(config){
         this.analyser.fftSize = 2048;
 
         this.freqs = new Uint8Array(this.analyser.frequencyBinCount);
+        this.times = new Uint8Array(this.analyser.frequencyBinCount);
 
         this.canvas = this.bmd.canvas;
         this.drawContext = this.bmd.context;
@@ -69,6 +70,7 @@ define(["app/config"], function(config){
     Visualizer.prototype.draw = function() {
         // Get the frequency data from the currently playing music
         this.analyser.getByteFrequencyData(this.freqs);
+        this.analyser.getByteTimeDomainData(this.times);
         this.bmd.cls();
         // Draw the frequency domain chart.
         for (var i = 0; i < this.analyser.frequencyBinCount; ++i) {
@@ -79,6 +81,15 @@ define(["app/config"], function(config){
             var barWidth = this.canvas.width/this.analyser.frequencyBinCount;
 
             this.bmd.rect(i * barWidth, offset, barWidth, height, "rgba(0, 0, 0, 0.5)");
+        }
+
+        for (var i = 0; i < this.analyser.frequencyBinCount; i++) {
+            var value = this.times[i];
+            var percent = value / 256 /4;
+            var height = this.canvas.height * percent;
+            var offset = this.canvas.height - height - this.canvas.height/4;
+            var barWidth = this.canvas.width/this.analyser.frequencyBinCount;
+            this.bmd.rect(i * barWidth, offset, 1, 2, "rgba(255, 255, 255, 0.8)");
         }
     }
 

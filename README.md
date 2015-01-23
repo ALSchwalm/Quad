@@ -32,4 +32,4 @@ Attributions
 [jsdoc]: http://usejsdoc.org/
 [docs]: http://alschwalm.github.io/Quad/docs/html/index.html
 [junggle]: http://www.freesound.org/people/junggle/sounds/29294/
-[greencouch]: http://www.freesound.org/people/junggle/sounds/29294/
+[greencouch]: http://www.freesound.org/people/junggle/sounds/124906/

@@ -326,8 +326,8 @@ define(["app/config", "Phaser"], function(config, Phaser){
      */
     Grid.prototype.cleanup = function(){
         var totalCleared = 0;
-        for (var i=1; i < config.grid.numCells-1; ++i) {
-            for (var j=1; j < config.grid.numCells-1; ++j) {
+        for (var i=0; i < config.grid.numCells; ++i) {
+            for (var j=0; j < config.grid.numCells; ++j) {
                 if (this.at(i, j) &&
                     !this.at(i+1, j) && !this.at(i, j+1) &&
                     !this.at(i-1, j) && !this.at(i, j-1)) {

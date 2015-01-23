@@ -42,7 +42,11 @@ function(config, Phaser, Block, color){
          *
          * @type {function[]}
          */
-        this.onDropComplete = []
+        this.onDropComplete = [
+            function () {
+                game.add.audio('attach').play();
+            }
+        ]
 
         // fire this.onDropComplete when all blocks have been dropped
         this.dropped = 0;

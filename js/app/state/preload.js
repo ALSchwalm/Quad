@@ -12,6 +12,7 @@ define(function(){
      * @param {Phaser.Game} game - The current game object
      */
     var preload = function(game){
+        game.load.audio('background1', 'assets/sounds/background1.mp3');
     };
 
     return preload;

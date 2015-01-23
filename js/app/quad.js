@@ -20,7 +20,7 @@ function(config, Phaser, Block, color){
         this.game = game;
         this.direction = direction || "top";
         this.position = position || 0;
-        this.level = level || 1;
+        this.level = level || 0;
         this.visible = false;
         this.blocks = [
             new Block(game, this.direction, this.position,   1, color.genRandomColor(this.level)),

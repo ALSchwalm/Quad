@@ -21,7 +21,15 @@ Documentation
 
 Documentation is generated with [JSDoc][jsdoc] and may be found [here][docs]. It may be built by installing jsdoc and the theme `npm install jsdoc ink-docstrap`. Build the docs with `make docs` in the project root. The generated documentation will be placed in 'docs/html'.
 
+Attributions
+============
+
+* Sound for blocks landing from [junggle][junggle].
+* Sound for block destruction from [Greencouch][greencouch].
+
 [phaser]: http://phaser.io/
 [live]: http://alschwalm.github.io/Quad
 [jsdoc]: http://usejsdoc.org/
 [docs]: http://alschwalm.github.io/Quad/docs/html/index.html
+[junggle]: http://www.freesound.org/people/junggle/sounds/29294/
+[greencouch]: http://www.freesound.org/people/junggle/sounds/29294/

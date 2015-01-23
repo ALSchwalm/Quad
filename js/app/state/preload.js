@@ -12,6 +12,8 @@ define(function(){
      * @param {Phaser.Game} game - The current game object
      */
     var preload = function(game){
+        game.load.audio('attach', 'sounds/attach.wav');
+        game.load.audio('destroy', 'sounds/destroy.wav');
     };
 
     return preload;

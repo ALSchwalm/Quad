@@ -15,6 +15,13 @@ define(["app/grid", "app/generator"], function(grid, generator){
     var create = function(game){
         grid.display(game);
         generator.start(game);
-    };
+     
+        var text = "Score: 0";
+        var style = { font: "20px Arial", fill: "#fff", align: "center" };
+
+        this.game.score = 0;
+        this.game.scoreBoard = this.game.add.text(this.game.world.centerX + 150, 27, text, style);
+
+   };
     return create;
 });

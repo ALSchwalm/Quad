@@ -237,6 +237,9 @@ define(["app/config", "app/grid"], function(config, grid){
 
         if (doClear) {
             var totalCleared = eraseBlocks(this) + grid.cleanup();
+            this.game.score += totalCleared;
+            this.game.scoreBoard.text = "Score: " + this.game.score;
+
             this.displayClearedCount(totalCleared);
             this.game.add.audio('destroy').play();
         }

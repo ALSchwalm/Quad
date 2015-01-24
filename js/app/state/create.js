@@ -4,20 +4,27 @@
  * @module app/state/create
  */
 define(["app/grid", "app/generator", "app/background"],
-function(grid, generator, background){
-    "use strict"
+    function(grid, generator, background){
+        "use strict"
 
-    /**
-     * Function which will be executed by Phaser after 'preload' is finished
-     * @alias module:app/state/create
-     *
-     * @param {Phaser.Game} game - The current game object
-     */
-    var create = function(game){
-        background.start(game);
-        grid.display(game);
-        generator.start(game);
+        /**
+         * Function which will be executed by Phaser after 'preload' is finished
+         * @alias module:app/state/create
+         *
+         * @param {Phaser.Game} game - The current game object
+         */
+        var create = function(game){
+            background.start(game);
+            grid.display(game);
+            generator.start(game);
 
-    };
-    return create;
+            var text = "Score: 0";
+            var style = { font: "20px Arial", fill: "#fff", align: "center" };
+
+            this.game.score = 0;
+            this.game.scoreBoard = this.game.add.text(this.game.world.centerX + 150, 27, text, style);
+
+        };
+
+        return create;
 });

@@ -2,8 +2,8 @@
  * A module returning a function which will be executed during each frame
  * @module app/state/update
  */
-define(["app/controls", "app/generator", "app/background"],
-function(controls, generator, background){
+define(["app/controls", "app/generator", "app/background", "app/music"],
+function(controls, generator, background, music){
     "use strict"
 
     /**
@@ -13,6 +13,7 @@ function(controls, generator, background){
      * @param {Phaser.Game} game - The current game object
      */
     var update = function(game) {
+        music.update();
         controls.update(game);
         generator.update();
         background.update();

@@ -18,7 +18,7 @@
  * A module which displays a visualization of background music
  * @module app/visualizer
  */
-define(["app/config"], function(config){
+define(["app/config", "app/music"], function(config, music){
     "use strict"
 
     /**
@@ -27,41 +27,15 @@ define(["app/config"], function(config){
      * @alias module:app/visualizer
      *
      * @param {Phaser.Game} game - A reference to the current game
-     * @param {Phaser.Sound} [music] - Initial background music
      */
-    function Visualizer(game, music) {
+    var Visualizer = function(game) {
         this.game = game;
-        this.bmd = this.game.make.bitmapData(config.game.width, config.game.height/2);
+        this.bmd = this.game.make.bitmapData(config.game.width,
+                                             config.game.height/2);
         this.bmd.addToWorld(0, config.game.height/2);
-
-        this.analyser = this.game.sound.context.createAnalyser();
-
-        this.analyser.minDecibels = -140;
-        this.analyser.maxDecibels = 0;
-        this.analyser.fftSize = 2048;
-
-        this.freqs = new Uint8Array(this.analyser.frequencyBinCount);
-        this.times = new Uint8Array(this.analyser.frequencyBinCount);
 
         this.canvas = this.bmd.canvas;
         this.drawContext = this.bmd.context;
-        this.analyser.smoothingTimeConstant = 0.8;
-
-        if (music) {
-            this.setMusic(music);
-        }
-    }
-
-    /**
-     * Set the visualizer to display the given sound
-     *
-     * @param {Phaser.Sound} music - New sound to display
-     * @note This does not start playing the music
-     */
-    Visualizer.prototype.setMusic = function(music) {
-        this.music = music;
-        this.music.externalNode = this.analyser;
-        this.analyser.connect(this.music.masterGainNode);
     }
 
     /**
@@ -69,34 +43,30 @@ define(["app/config"], function(config){
      */
     Visualizer.prototype.draw = function() {
         // Get the frequency data from the currently playing music
-        this.analyser.getByteFrequencyData(this.freqs);
-        this.analyser.getByteTimeDomainData(this.times);
+        music.analyser.getByteFrequencyData(music.freqs);
+        music.analyser.getByteTimeDomainData(music.times);
         this.bmd.cls();
         // Draw the frequency domain chart.
-        for (var i = 0; i < this.analyser.frequencyBinCount; ++i) {
-            var value = this.freqs[i];
+        for (var i = 0; i < music.analyser.frequencyBinCount; ++i) {
+            var value = music.freqs[i];
             var percent = value / 256;
             var height = this.canvas.height * percent;
             var offset = this.canvas.height - height;
-            var barWidth = this.canvas.width/this.analyser.frequencyBinCount;
+            var barWidth = this.canvas.width/music.analyser.frequencyBinCount;
 
             this.bmd.rect(i * barWidth, offset, barWidth, height, "rgba(0, 0, 0, 0.5)");
         }
 
-        for (var i = 0; i < this.analyser.frequencyBinCount; i++) {
-            var value = this.times[i];
+        for (var i = 0; i < music.analyser.frequencyBinCount; i++) {
+            var value = music.times[i];
             var percent = value / 256 /4;
             var height = this.canvas.height * percent;
             var offset = this.canvas.height - height - this.canvas.height/4;
-            var barWidth = this.canvas.width/this.analyser.frequencyBinCount;
+            var barWidth = this.canvas.width/music.analyser.frequencyBinCount;
             this.bmd.rect(i * barWidth, offset, 1, 2, "rgba(255, 255, 255, 0.8)");
         }
-    }
 
-    Visualizer.prototype.getFrequencyValue = function(freq) {
-        var nyquist = this.game.sound.context.sampleRate/2;
-        var index = Math.round(freq/nyquist * this.freqs.length);
-        return this.freqs[index];
+        return this;
     }
 
     return Visualizer;

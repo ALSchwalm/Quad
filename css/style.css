@@ -3,9 +3,6 @@ body {
     background: -webkit-linear-gradient(left, #0193CD 30%, #66D4E5 80%, #0193CD 100%) repeat;
     background: -moz-linear-gradient(left, #0193CD 30%, #66D4E5 80%, #0193CD 100%) repeat;
     background-size: 50% 100%;
-}
-
-#phaser-container {
-    width: 50%;
-    margin: 0 auto;
+    margin: 0px;
+    padding: 0px;
 }

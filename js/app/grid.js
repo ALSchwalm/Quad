@@ -43,20 +43,17 @@ define(["app/config", "Phaser"], function(config, Phaser){
     Grid.prototype.display = function(game) {
         this.graphics = game.add.graphics(this.offsets.x, this.offsets.y);
         this.graphics.lineStyle(1, 0xFFFFFF, 0.2);
+        this.graphics.beginFill(0x666666, 0.1);
 
         if (config.grid.linesVisible) {
-            // Draw rows and columns (start from one so the top and left aren't drawn twice)
-            for (var i=1; i < config.grid.numCells; ++i) {
-                this.graphics.drawRect(0, i*this.cellSize, config.grid.size, 1);
-                this.graphics.drawRect(i*this.cellSize, 0, 1, config.grid.size);
+            for (var i=0; i < config.grid.numCells; ++i) {
+                for (var j=0; j < config.grid.numCells; ++j) {
+                    this.graphics.drawRect(i*this.cellSize, j*this.cellSize,
+                                           this.cellSize, this.cellSize);
+                }
             }
         }
-
-        // Draw a border around the grid area
-        this.graphics.drawRect(0, 0, config.grid.size, 1);
-        this.graphics.drawRect(0, 0, 1, config.grid.size);
-        this.graphics.drawRect(0, config.grid.size, config.grid.size, 1);
-        this.graphics.drawRect(config.grid.size, 0, 1, config.grid.size);
+        this.graphics.endFill();
         return this;
     }
 
@@ -326,8 +323,8 @@ define(["app/config", "Phaser"], function(config, Phaser){
      */
     Grid.prototype.cleanup = function(){
         var totalCleared = 0;
-        for (var i=1; i < config.grid.numCells-1; ++i) {
-            for (var j=1; j < config.grid.numCells-1; ++j) {
+        for (var i=0; i < config.grid.numCells; ++i) {
+            for (var j=0; j < config.grid.numCells; ++j) {
                 if (this.at(i, j) &&
                     !this.at(i+1, j) && !this.at(i, j+1) &&
                     !this.at(i-1, j) && !this.at(i, j-1)) {

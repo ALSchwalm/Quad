@@ -15,7 +15,7 @@ function(config, Quad, grid){
          * The current level of the game
          * @type {number}
          */
-        this.level = 1;
+        this.level = 0;
 
         /**
          * A list of quads currently 'waiting' (that is, which have not been dropped)

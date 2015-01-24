@@ -14,6 +14,7 @@ define(function(){
     var preload = function(game){
         game.load.audio('attach', 'assets/sounds/attach.wav');
         game.load.audio('destroy', 'assets/sounds/destroy.wav');
+        game.load.audio('background1', 'assets/sounds/background1.mp3');
     };
 
     return preload;

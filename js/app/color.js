@@ -17,14 +17,9 @@ function(config){
          * @returns - A random color value
          */
         genRandomColor : function(level) {
-            var max;
-            if (level > config.color.available.length-1) {
-                max = config.color.available.length-1;
-            } else {
-                max = level;
-            }
-            var index = Math.round(Math.random()*max);
-            return config.color.available[index];
+            var levelColors = config.color.available[level];
+            var index = Math.floor(Math.random()*levelColors.length);
+            return levelColors[index];
         }
     };
 

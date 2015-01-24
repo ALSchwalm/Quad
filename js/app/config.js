@@ -27,8 +27,8 @@ define(function(){
      */
     var config = {
         game : {
-            width : 700,
-            height : 700
+            width : window.innerWidth,
+            height : window.innerHeight
         },
         grid : {
             size : 480,
@@ -37,7 +37,9 @@ define(function(){
         },
         color : {
             unbreakable : 0xFFFFFF,
-            available : [0xFF8C00, 0x00008B]
+            available : [
+                [0xFF8C00, 0x00008B],
+            ]
         },
         generator : {
             defaultWait : 4

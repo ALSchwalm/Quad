@@ -13,6 +13,7 @@ function(controls, generator, background){
      * @param {Phaser.Game} game - The current game object
      */
     var update = function(game) {
+
         controls.update(game);
         generator.update();
         background.update();

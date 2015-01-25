@@ -193,5 +193,15 @@ function(config, Phaser, Block, color){
         return this;
     }
 
+    /**
+     * Update a quad to comply with new level
+     */
+    Quad.prototype.updateLevel = function(level) {
+        this.blocks.map(function(block) {
+            block.setColor(color.genRandomColor(level));
+            block.redraw();
+        });
+    }
+
     return Quad;
 });

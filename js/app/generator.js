@@ -72,10 +72,13 @@ function(config, Quad, grid){
      * @todo This function is largely a placeholder
      */
     Generator.prototype.start = function(game) {
+
+        var speed = config.speeds[this.level];
+
         this.game = game;
         this.dropTimer = this.game.time.create(false);
-        this.dropTimer.loop(config.generator.defaultWait*Phaser.Timer.SECOND,
-                            this.drop.bind(this));
+        this.dropTimer.loop(speed * Phaser.Timer.SECOND,
+            this.drop.bind(this));
         this.timerGraphic = this.game.add.graphics();
         var self=this;
 
@@ -121,6 +124,7 @@ function(config, Quad, grid){
      * Display the next few quads which will be spawned
      */
     Generator.prototype.showFutureQuads = function(){
+
         var futurePosition = {
             x: grid.offsets.x - 100,
             y: grid.offsets.y
@@ -174,12 +178,24 @@ function(config, Quad, grid){
     }
 
     /**
+     * Set the current level.
+     */
+    Generator.prototype.setLevel = function(level) {
+        this.level = level;
+
+        var speed = config.speeds[this.level];
+        this.dropTimer.loop(speed * Phaser.Timer.SECOND, this.drop.bind(this));
+    }
+
+    /**
      * Draw the graphics showing the time remaining before the next drop
      */
     Generator.prototype.drawTimerGraphics = function() {
+        var speed = config.speeds[this.level];
+
         this.timerGraphic.clear();
         var percentElapsed =
-                this.dropTimer.ms/(config.generator.defaultWait*1000)
+                this.dropTimer.ms/(speed * 1000)
         if (percentElapsed > 1)
             percentElapsed = 1;
         else if (percentElapsed < 0)
@@ -227,6 +243,26 @@ function(config, Quad, grid){
             quad.rotateCCW();
         })
     }
+
+    /**
+     * Update the existing quads levels
+     */
+    Generator.prototype.updateCurrentQuadLevel = function(level) {
+
+        this.waitingQuads.map(function(quad) {
+            quad.updateLevel(level);
+        });
+
+        this.fallingQuads.map(function(quad) {
+            quad.updateLevel(level);
+        });
+
+        this.futureQuads.map(function(quad) {
+            quad.updateLevel(level);
+        });
+
+    }
+
 
     var generator = new Generator();
     return generator;

@@ -2,7 +2,8 @@
  * Exposes a singleton Grid which defines the main gameplay field
  * @module app/grid
  */
-define(["app/config", "Phaser"], function(config, Phaser){
+define(["app/config", "Phaser", "app/music"],
+function(config, Phaser, music){
     "use strict"
 
     /**
@@ -41,6 +42,22 @@ define(["app/config", "Phaser"], function(config, Phaser){
      * Show the grid of 'cells' that the blocks can be moved around on
      */
     Grid.prototype.display = function(game) {
+        this.outerGraphic = game.add.graphics(this.offsets.x, this.offsets.y);
+        this.outerGraphic.lineStyle(1, 0xFFFFFF, 0.6);
+        this.outerGraphic.drawRect(0, 0, config.grid.size, config.grid.size);
+
+        music.onBeat.push(function(){
+            var tween = game.add.tween(this.outerGraphic.scale);
+            tween.to({x: 1.1, y:1.1}, 75).to({x:1, y:1}, 100).start();
+
+            var locationTween = game.add.tween(this.outerGraphic);
+            locationTween.to({
+                x: this.offsets.x - config.grid.size*0.05,
+                y: this.offsets.y - config.grid.size*0.05
+            }, 75).to({x: this.offsets.x, y: this.offsets.y}, 100).start();
+        }.bind(this));
+
+
         this.graphics = game.add.graphics(this.offsets.x, this.offsets.y);
         this.graphics.lineStyle(1, 0xFFFFFF, 0.2);
         this.graphics.beginFill(0x666666, 0.1);

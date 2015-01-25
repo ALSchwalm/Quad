@@ -3,8 +3,8 @@
  * phase of Phaser js startup
  * @module app/state/create
  */
-define(["app/grid", "app/generator", "app/background"],
-function(grid, generator, background){
+define(["app/grid", "app/generator", "app/background", "app/music"],
+function(grid, generator, background, music){
     "use strict"
 
     /**
@@ -14,10 +14,10 @@ function(grid, generator, background){
      * @param {Phaser.Game} game - The current game object
      */
     var create = function(game){
+        music.start(game, 'background1');
         background.start(game);
         grid.display(game);
         generator.start(game);
-
     };
     return create;
 });

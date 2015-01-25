@@ -19,18 +19,18 @@ function(config, Visualizer){
      */
     Background.prototype.start = function(game) {
         this.game = game;
-
-        this.music = this.game.add.audio('background1', 1, true);
-        this.music.play();
-
-        this.visualizer = new Visualizer(game, this.music);
+        if (this.game.sound.usingWebAudio) {
+            this.visualizer = new Visualizer(game);
+        }
     }
 
     /**
      * Update the background
      */
     Background.prototype.update = function(){
-        this.visualizer.draw();
+        if (this.visualizer) {
+            this.visualizer.draw();
+        }
     }
 
     return new Background();

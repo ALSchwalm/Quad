@@ -2,7 +2,7 @@
  * A module which exposes the Block type
  * @module app/block
  */
-define(["app/config", "app/grid"], function(config, grid){
+define(["app/config", "Phaser", "app/grid"], function(config, Phaser, grid){
     "use strict"
 
     /**
@@ -140,6 +140,14 @@ define(["app/config", "app/grid"], function(config, grid){
         grid.contents[coord.y][coord.x] = this;
 
         if (!noAnimate && this.visible) {
+            var point = grid.coordToPoint(coord);
+            var distance = Phaser.Point.distance(this.graphics.position, point);
+
+            // animation time is a function of distance, so the block won't fall
+            // slower when its destination is nearby
+            var cells = distance/grid.cellSize;
+            var time = config.game.dropSpeed*cells;
+
             this.falling = true;
             var tween = this.game.add.tween(this.graphics);
             tween.onComplete.add(function(){
@@ -148,7 +156,7 @@ define(["app/config", "app/grid"], function(config, grid){
                     callback();
                 })
             }.bind(this));
-            tween.to(grid.coordToPoint(coord), 200);
+            tween.to(point, time);
             tween.start();
         } else {
             var point = grid.coordToPoint(coord);

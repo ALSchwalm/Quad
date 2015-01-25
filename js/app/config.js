@@ -12,6 +12,7 @@ define(function(){
      * @property {object}  config.game              - General game configuration
      * @property {number}  config.game.width        - Width of the canvas in px
      * @property {number}  config.game.height       - Height of the canvas in px
+     * @property {number}  config.game.dropSpeed    - Speed (in ms/cell) blocks fall at
      *
      * @property {object}  config.grid              - Grid settings
      * @property {number}  config.grid.size         - Width/Height of the grid in px
@@ -34,7 +35,8 @@ define(function(){
     var config = {
         game : {
             width : window.innerWidth,
-            height : window.innerHeight
+            height : window.innerHeight,
+            dropSpeed : 18
         },
         grid : {
             size : 480,

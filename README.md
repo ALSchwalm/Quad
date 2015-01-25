@@ -9,9 +9,8 @@ TODO
 - [x] define and display grid
 - [x] define quad (group of 4 blocks)
 - [x] allow clearing of blocks
-- [ ] generator logic (don't allow overlapping quads, etc)
 - [x] allow shifting of blocks
-- [ ] sounds
+- [x] sounds
 - [ ] score/level system
 - [ ] graphics (possibly sprites for blocks)
 - [ ] rest of page HTML
@@ -25,7 +24,9 @@ Attributions
 ============
 
 * Sound for blocks landing from [junggle][junggle] (unmodified).
-* Sound for block destruction from [Greencouch][greencouch] (unmodified).
+* Sound for block destruction from [Sergenious][sergenious] (unmodified)
+* Sound for rotation of blocks from [MissCellany][misscellany] (unmodified)
+* Sound for grid movement from [Greencouch][greencouch] (converted to wav).
 * Background music by DST available at [nosoapradio][nosoap] (unmodified).
 
 [phaser]: http://phaser.io/
@@ -33,5 +34,7 @@ Attributions
 [jsdoc]: http://usejsdoc.org/
 [docs]: http://alschwalm.github.io/Quad/docs/html/index.html
 [junggle]: http://www.freesound.org/people/junggle/sounds/29294/
-[greencouch]: http://www.freesound.org/people/junggle/sounds/124906/
+[sergenious]: http://www.freesound.org/people/Sergenious/sounds/55816/
+[greencouch]: http://www.freesound.org/people/Greencouch/sounds/124909/
+[misscellany]: http://www.freesound.org/people/MissCellany/sounds/240640/
 [nosoap]: http://www.nosoapradio.us/

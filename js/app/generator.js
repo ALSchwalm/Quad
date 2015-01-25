@@ -214,6 +214,7 @@ function(config, Quad, grid){
      * Rotate all un-dropped quads clockwise
      */
     Generator.prototype.rotateCW = function() {
+        this.game.add.audio('rotate', 0.5).play();
         this.waitingQuads.map(function(quad){
             quad.rotateCW();
         })
@@ -223,6 +224,7 @@ function(config, Quad, grid){
      * Rotate all un-dropped quads counter-clockwise
      */
     Generator.prototype.rotateCCW = function() {
+        this.game.add.audio('rotate', 0.5).play();
         this.waitingQuads.map(function(quad){
             quad.rotateCCW();
         })

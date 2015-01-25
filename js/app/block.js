@@ -246,7 +246,6 @@ define(["app/config", "Phaser", "app/grid"], function(config, Phaser, grid){
         if (doClear) {
             var totalCleared = eraseBlocks(this) + grid.cleanup();
             this.displayClearedCount(totalCleared);
-            this.game.add.audio('destroy').play();
         }
 
         return this;
@@ -303,6 +302,7 @@ define(["app/config", "Phaser", "app/grid"], function(config, Phaser, grid){
             scaleTween.onComplete.add(function(){
                 this.graphics.destroy();
                 this.highlightGraphics.destroy();
+                this.game.add.audio('destroy', 0.3).play();
             }.bind(this));
         }.bind(this), delay*25);
         grid.contents[this.coord.y][this.coord.x] = undefined;

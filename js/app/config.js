@@ -31,6 +31,9 @@ define(function(){
      * @property {number}  config.sound.beat.delay        - Minimum frames between beats
      * @property {number}  config.sound.beat.decayRate    - Decay rate of beat threshold
      * @property {number}  config.sound.beat.minThreshold - Minimum volume of beat
+     *
+     * @property {object}  config.visualizer                 - Visualizer settings
+     * @property {object}  config.visualizer.frequencyBound  - Ignore frequencies beyond this fraction
      */
     var config = {
         game : {
@@ -57,6 +60,9 @@ define(function(){
                 delay : 45,
                 decayRate : 0.95,
                 minThreshold : 60
+            },
+            visualizer : {
+                frequencyBound : 0.8
             }
         }
     };

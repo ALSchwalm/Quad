@@ -33,7 +33,7 @@ define(["app/config"], function(config){
         this.freqs = new Uint8Array(this.analyser.frequencyBinCount);
         this.times = new Uint8Array(this.analyser.frequencyBinCount);
 
-        this.beatThreshold = 0;
+        this.beatThreshold = 50000; // large value prevents beat at the start
         this.beatCounter = 0;
 
         /**

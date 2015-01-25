@@ -46,17 +46,21 @@ define(["app/config", "app/music"], function(config, music){
         music.analyser.getByteFrequencyData(music.freqs);
         music.analyser.getByteTimeDomainData(music.times);
         this.bmd.cls();
-        // Draw the frequency domain chart.
-        for (var i = 0; i < music.analyser.frequencyBinCount; ++i) {
+
+        // Draw the frequency domain chart. Ignore the upper frequencies when drawing
+        var visualFrequencyBinCount =
+            music.analyser.frequencyBinCount * config.sound.visualizer.frequencyBound;
+        for (var i = 0; i < visualFrequencyBinCount; ++i) {
             var value = music.freqs[i];
             var percent = value / 256;
             var height = this.canvas.height * percent;
             var offset = this.canvas.height - height;
-            var barWidth = this.canvas.width/music.analyser.frequencyBinCount;
+            var barWidth = this.canvas.width/visualFrequencyBinCount;
 
             this.bmd.rect(i * barWidth, offset, barWidth, height, "rgba(0, 0, 0, 0.5)");
         }
 
+        // Draw the time domain chart
         for (var i = 0; i < music.analyser.frequencyBinCount; i++) {
             var value = music.times[i];
             var percent = value / 256 /4;

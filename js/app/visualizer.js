@@ -30,44 +30,50 @@ define(["app/config", "app/music"], function(config, music){
      */
     var Visualizer = function(game) {
         this.game = game;
-        this.bmd = this.game.make.bitmapData(config.game.width,
-                                             config.game.height/2);
-        this.bmd.addToWorld(0, config.game.height/2);
 
-        this.canvas = this.bmd.canvas;
-        this.drawContext = this.bmd.context;
+        this.canvas = this.game.canvas;
+        this.drawContext = this.game.context;
+
+        this.visualFrequencyBinCount =
+            music.analyser.frequencyBinCount * config.sound.visualizer.frequencyBound;
+
+        this.graphics = game.add.graphics(0, 0);
+        this.barWidth = Math.round(this.canvas.width/this.visualFrequencyBinCount);
+        if (this.barWidth < 2) this.barWidth = 2;
     }
 
     /**
      * Draw the visualization
      */
     Visualizer.prototype.draw = function() {
-        // Get the frequency data from the currently playing music
+        // Get the frequency/time data from the currently playing music
         music.analyser.getByteFrequencyData(music.freqs);
         music.analyser.getByteTimeDomainData(music.times);
-        this.bmd.cls();
 
-        // Draw the frequency domain chart. Ignore the upper frequencies when drawing
-        var visualFrequencyBinCount =
-            music.analyser.frequencyBinCount * config.sound.visualizer.frequencyBound;
-        for (var i = 0; i < visualFrequencyBinCount; ++i) {
+        this.graphics.clear();
+
+        //Draw the frequency domain chart. Ignore the upper frequencies when drawing
+        for (var i = 0; i < this.visualFrequencyBinCount; ++i) {
             var value = music.freqs[i];
             var percent = value / 256;
-            var height = this.canvas.height * percent;
-            var offset = this.canvas.height - height;
-            var barWidth = this.canvas.width/visualFrequencyBinCount;
+            var height = this.canvas.height/2 * percent;
 
-            this.bmd.rect(i * barWidth, offset, barWidth, height, "rgba(0, 0, 0, 0.5)");
+            this.graphics.beginFill(0x777777, percent);
+            this.graphics.drawRect(i*this.barWidth, this.canvas.height,
+                                   this.barWidth-1, -height/2);
+            this.graphics.endFill();
         }
 
         // Draw the time domain chart
-        for (var i = 0; i < music.analyser.frequencyBinCount; i++) {
+        for (var i = 0; i < this.visualFrequencyBinCount; i++) {
             var value = music.times[i];
             var percent = value / 256 /4;
-            var height = this.canvas.height * percent;
-            var offset = this.canvas.height - height - this.canvas.height/4;
-            var barWidth = this.canvas.width/music.analyser.frequencyBinCount;
-            this.bmd.rect(i * barWidth, offset, 1, 2, "rgba(255, 255, 255, 0.8)");
+            var height = this.canvas.height * (1 - percent);
+
+            this.graphics.beginFill(0xFFFFFF, 0.6);
+            this.graphics.drawRect(i*this.barWidth, height,
+                                   this.barWidth-1, 2);
+            this.graphics.endFill();
         }
 
         return this;

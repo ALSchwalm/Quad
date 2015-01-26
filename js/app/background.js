@@ -93,7 +93,7 @@ function(config, Visualizer, music){
 
         this.blocks = [];
 
-        for (var i=0; i < 5; ++i) {
+        for (var i=0; i < 7; ++i) {
             var block = new BackgroundBlock(this.game);
             this.blocks.push(block);
         }

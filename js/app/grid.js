@@ -63,7 +63,7 @@ function(config, Phaser, music){
 
         this.graphics = game.add.graphics(this.offsets.x, this.offsets.y);
         this.graphics.lineStyle(1, 0xFFFFFF, 0.2);
-        this.graphics.beginFill(0x666666, 0.1);
+        this.graphics.beginFill(0x666666, 0.3);
 
         if (config.grid.linesVisible) {
             for (var i=0; i < config.grid.numCells; ++i) {

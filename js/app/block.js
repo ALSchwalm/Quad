@@ -249,8 +249,7 @@ define(["app/config", "app/grid", "app/score"], function(config, grid, score){
             this.displayClearedCount(totalCleared);
             this.game.add.audio('destroy').play();
             this.game.scoreboard.update(totalCleared);
-            this.game.scoreboard.currentLevel = this.game.scoreboard.calcLevel();
-            this.game.generator.setLevel(this.game.scoreboard.currentLevel);
+            this.game.generator.setLevel(this.game.scoreboard.getLevel());
         }
 
 

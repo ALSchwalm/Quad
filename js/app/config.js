@@ -61,8 +61,8 @@ define(function(){
             }
         },
         points : [ 1.5, 2, 2.5, 3 ],
-        checkpoints : [ 100, 500, 5000 ],
-        speeds : [ 4, 3, 2, 1 ]
+        checkpoints : [ 1000, 5000, 10000 ],
+        speeds : [ 4, 3, 2, 1.5 ]
     };
 
     return config;

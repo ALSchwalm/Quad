@@ -194,8 +194,7 @@ function(config, Quad, grid){
         var speed = config.speeds[this.level];
 
         this.timerGraphic.clear();
-        var percentElapsed =
-                this.dropTimer.ms/(speed * 1000)
+        var percentElapsed = this.dropTimer.ms/(speed * Phaser.Time.SECOND)
         if (percentElapsed > 1)
             percentElapsed = 1;
         else if (percentElapsed < 0)

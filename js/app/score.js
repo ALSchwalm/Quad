@@ -39,6 +39,13 @@ define(['app/config'], function(config){
     }
 
     /**
+     * Get current level.
+     */
+    Score.prototype.getLevel = function() {
+        return this.level;
+    }
+
+    /**
      * Update the scoreboard and level.
      */
     Score.prototype.update = function(clearCount) {
@@ -46,6 +53,7 @@ define(['app/config'], function(config){
         var levelDisplay = this.level + 1;
         this.current += Math.floor(points);
         this.board.text = "Level: " + levelDisplay + "\nScore: " + this.current;
+        this.calcLevel();
     }
 
     /**
@@ -58,7 +66,6 @@ define(['app/config'], function(config){
                     this.level = i + 1;
                     this.generator.updateCurrentQuadLevel(this.level);
                     this.update(0, this.level);
-                    console.log('hit');
                     this.grid.clearAll();
                 }
                 return this.level;

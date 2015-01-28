@@ -57,22 +57,42 @@ function(config, generator, Phaser, grid){
     // Register some default keys
     controls.registerControl(Phaser.Keyboard.LEFT, generator.rotateCCW, generator);
     controls.registerControl(Phaser.Keyboard.RIGHT, generator.rotateCW, generator);
+
     controls.registerControl(Phaser.Keyboard.W, function(){
         if(generator.fallingQuads.length == 0)
             grid.slideUp();
     }, grid);
+
+    controls.registerControl(188, function(){
+        if(generator.fallingQuads.length == 0)
+            grid.slideUp();
+    }, grid);
+
     controls.registerControl(Phaser.Keyboard.S, function(){
         if(generator.fallingQuads.length == 0)
             grid.slideDown();
     }, grid);
+
+    controls.registerControl(Phaser.Keyboard.O, function(){
+        if(generator.fallingQuads.length == 0)
+            grid.slideDown();
+    }, grid);
+
     controls.registerControl(Phaser.Keyboard.A, function(){
         if(generator.fallingQuads.length == 0)
             grid.slideLeft();
     }, grid);
+
     controls.registerControl(Phaser.Keyboard.D, function(){
         if(generator.fallingQuads.length == 0)
             grid.slideRight();
     }, grid);
+
+    controls.registerControl(Phaser.Keyboard.E, function(){
+        if(generator.fallingQuads.length == 0)
+            grid.slideRight();
+    }, grid);
+
     controls.registerControl(Phaser.Keyboard.SPACEBAR, generator.drop, generator);
 
     // Prevent the browser from taking the normal action (scrolling, etc)

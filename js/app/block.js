@@ -2,7 +2,7 @@
  * A module which exposes the Block type
  * @module app/block
  */
-define(["app/config", "app/grid"], function(config, grid){
+define(["app/config", "app/grid", "app/score"], function(config, grid, score){
     "use strict"
 
     /**
@@ -41,6 +41,29 @@ define(["app/config", "app/grid"], function(config, grid){
     }
 
     /**
+     * Draw a block
+     */
+    Block.prototype.draw = function() {
+        // Main block body
+        this.graphics.lineStyle(1, 0x222222, 0.4);
+        this.graphics.beginFill(this.color, 1);
+        this.graphics.drawRoundedRect(0, 0, grid.cellSize, grid.cellSize, 1);
+        this.graphics.endFill();
+
+        // Inner shaded region
+        this.graphics.lineStyle(1, 0xCCCCCC, 0.2);
+        this.graphics.beginFill(0xAAAAAA, 0.2);
+        this.graphics.drawRoundedRect(1, 1, grid.cellSize-4, grid.cellSize-4, 2);
+        this.graphics.endFill();
+
+        // 'light' at top left corner
+        this.graphics.lineStyle(0);
+        this.graphics.beginFill(0xFFFFFF, 0.4);
+        this.graphics.drawRect(1, 1, 2, 2);
+        this.graphics.endFill();
+    }
+
+    /**
      * Show the block outside the grid.
      *
      * @param {Phaser.Point} [position] - Optional position on canvas to display at
@@ -48,30 +71,16 @@ define(["app/config", "app/grid"], function(config, grid){
     Block.prototype.display = function(position) {
         var position = position ||
             grid.directionToPoint(this.direction, this.position, this.offset);
+
         if (!this.manualPosition) {
             this.graphics.x = position.x;
             this.graphics.y = position.y;
         }
 
         if (!this.visible) {
-            // Main block body
-            this.graphics.lineStyle(1, 0x222222, 0.4);
-            this.graphics.beginFill(this.color, 1);
-            this.graphics.drawRoundedRect(0, 0, grid.cellSize, grid.cellSize, 1);
-            this.graphics.endFill();
-
-            // Inner shaded region
-            this.graphics.lineStyle(1, 0xCCCCCC, 0.2);
-            this.graphics.beginFill(0xAAAAAA, 0.2);
-            this.graphics.drawRoundedRect(1, 1, grid.cellSize-4, grid.cellSize-4, 2);
-            this.graphics.endFill();
-
-            // 'light' at top left corner
-            this.graphics.lineStyle(0);
-            this.graphics.beginFill(0xFFFFFF, 0.4);
-            this.graphics.drawRect(1, 1, 2, 2);
-            this.graphics.endFill();
+            this.draw();
         }
+
         this.visible = true;
         this.falling = false;
         return this;
@@ -239,11 +248,17 @@ define(["app/config", "app/grid"], function(config, grid){
             var totalCleared = eraseBlocks(this) + grid.cleanup();
             this.displayClearedCount(totalCleared);
             this.game.add.audio('destroy').play();
+            this.game.scoreboard.update(totalCleared);
+            this.game.generator.setLevel(this.game.scoreboard.getLevel());
         }
+
 
         return this;
     }
 
+    /**
+     * Display how many blocks are cleared.
+     */
     Block.prototype.displayClearedCount = function(count) {
         if (count <= 6) return this;
         var fontSize = function(count) {
@@ -342,6 +357,24 @@ define(["app/config", "app/grid"], function(config, grid){
             this.display();
         }
         return this;
+    }
+
+    /**
+     * Set the color of a block
+     */
+    Block.prototype.setColor = function(color) {
+        this.color = color;
+    }
+
+    /**
+     * Redraw a block.
+     */
+    Block.prototype.redraw = function() {
+        this.graphics.destroy();
+        var point = grid.directionToPoint(this.direction, this.position, this.offset);
+        this.graphics = this.game.add.graphics(point.x, point.y);
+        this.highlightGraphics = this.game.add.graphics();
+        this.draw();
     }
 
     return Block;

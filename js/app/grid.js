@@ -342,15 +342,32 @@ function(config, Phaser, music){
         var totalCleared = 0;
         for (var i=0; i < config.grid.numCells; ++i) {
             for (var j=0; j < config.grid.numCells; ++j) {
-                if (this.at(i, j) &&
-                    !this.at(i+1, j) && !this.at(i, j+1) &&
-                    !this.at(i-1, j) && !this.at(i, j-1)) {
+
+                if (this.at(i, j)
+                    && !this.at(i+1, j) && !this.at(i, j+1)
+                    && !this.at(i-1, j) && !this.at(i, j-1))
+                {
                     this.at(i, j).destroy();
                     totalCleared += 1;
                 }
+
             }
         }
         return totalCleared;
+    }
+
+    /**
+     * Clear all blocks on the grid.
+     */
+    Grid.prototype.clearAll = function() {
+        for (var i = 0; i < this.contents.length; i++) {
+            var obj = this.contents[i];
+            for (var key in obj) {
+                if (typeof obj[key] == 'object') {
+                    obj[key].destroy();
+                }
+            }
+        }
     }
 
     /**

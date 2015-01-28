@@ -3,8 +3,8 @@
  * phase of Phaser js startup
  * @module app/state/create
  */
-define(["app/grid", "app/generator", "app/background", "app/music"],
-function(grid, generator, background, music){
+define(["app/grid", "app/generator", "app/background", "app/music", "app/score"],
+function(grid, generator, background, music, score){
     "use strict"
 
     /**
@@ -18,6 +18,10 @@ function(grid, generator, background, music){
         background.start(game);
         grid.display(game);
         generator.start(game);
+        score.init(game, grid, generator);
+        
+        game.scoreboard = score;
+        game.generator = generator;
     };
     return create;
 });

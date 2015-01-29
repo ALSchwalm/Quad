@@ -91,10 +91,7 @@ function(config, Phaser, Quad, grid){
         ];
 
         //TODO: This should probably go somewhere else
-        var centerQuad = new Quad(game).positionAt({
-            x: self.centerCell,
-            y: self.centerCell
-        }).unbreakable();
+        this.centerQuad = new Quad(game).toCenter().unbreakable();
 
         this.spawn();
         return this;
@@ -278,7 +275,6 @@ function(config, Phaser, Quad, grid){
         });
 
     }
-
 
     var generator = new Generator();
     return generator;

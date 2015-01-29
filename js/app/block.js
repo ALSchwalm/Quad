@@ -356,13 +356,25 @@ function(config, Phaser, grid, score){
     }
 
     /**
-     * Make the current quad unbreakable
+     * Make the current block unbreakable
      */
     Block.prototype.unbreakable = function() {
         this.color = config.color.unbreakable;
         this._unbreakable = true;
 
         // If the block has already been drawn, force a redraw
+        if (this.visible) {
+            this.display();
+        }
+        return this;
+    }
+
+    /**
+     * Make the current block breakable
+     */
+    Block.prototype.breakable = function() {
+        this._unbreakable = false;
+
         if (this.visible) {
             this.display();
         }

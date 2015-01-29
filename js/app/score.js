@@ -1,7 +1,8 @@
 /**
  * @module app/score
  */
-define(['app/config'], function(config){
+define(['app/config', 'app/music', 'app/background'],
+function(config, music, background){
     "use strict"
 
     /**
@@ -43,9 +44,18 @@ define(['app/config'], function(config){
         var newLevel = this.calcLevel();
         if (this.level < newLevel) {
             this.level = newLevel;
-            this.generator.setLevel(this.level);
-            this.grid.clearAll();
+            this.newLevel();
         }
+    }
+
+    /**
+     * Transition to a new level
+     */
+    Score.prototype.newLevel = function(){
+        this.generator.setLevel(this.level);
+        this.grid.clearAll();
+        music.play("background" + (this.level+1));
+        background.newColor(config.color.available[this.level][0]);
     }
 
     /**

@@ -25,6 +25,11 @@ define(["app/config"], function(config){
          */
         this.analyser = this.game.sound.context.createAnalyser();
 
+        /**
+         * WebAudio node which is used to crossfade
+         */
+        this.gain = this.game.sound.context.createGain();
+
         this.analyser.minDecibels = -140;
         this.analyser.maxDecibels = 0;
         this.analyser.fftSize = 2048;
@@ -35,6 +40,9 @@ define(["app/config"], function(config){
 
         this.beatThreshold = 50000; // large value prevents beat at the start
         this.beatCounter = 0;
+        this.crossfadeDuration = 2000;
+
+        this.gain.connect(this.analyser);
 
         /**
          * Callbacks to be executed on a beat
@@ -53,20 +61,47 @@ define(["app/config"], function(config){
      */
     MusicManager.prototype.play = function(music) {
         var oldMusic = this.music;
+        this.fade("out", this.crossfadeDuration/2);
 
-        if (oldMusic) {
-            oldMusic.externalNode = null;
-            this.analyser.disconnect();
-            oldMusic.destroy();
+        var playNew = function(){
+            if (oldMusic) {
+                oldMusic.externalNode = null;
+                this.analyser.disconnect();
+                oldMusic.destroy();
+            }
+
+            this.music = this.game.add.audio(music, 1, true);
+            this.music.externalNode = this.gain;
+            this.analyser.connect(this.music.masterGainNode);
+            this.music.play();
+
+            this.fade("in", this.crossfadeDuration/2);
+        }.bind(this);
+
+        // Only crossfade if there is an already playing song
+        if (this.music){
+            setTimeout(playNew, this.crossfadeDuration);
+        } else {
+            playNew();
         }
 
-        this.music = this.game.add.audio(music, 1, true);
-
-        this.music.externalNode = this.analyser;
-        this.analyser.connect(this.music.masterGainNode);
-        this.music.play();
-
         return this;
+    }
+
+    MusicManager.prototype.fade = function(direction, duration, steps) {
+        var steps = steps || 100;
+        var outInterval = setInterval(function(){
+            if (this.music) {
+                if (direction === "out")
+                    this.gain.gain.value -= 1/100;
+                else
+                    this.gain.gain.value += 1/100;
+            }
+        }.bind(this), duration/100);
+
+        setTimeout(function(){
+            clearInterval(outInterval);
+        }, duration);
     }
 
     /**

@@ -2,8 +2,8 @@
  * A module which displays a background for the game
  * @module app/background
  */
-define(["app/config", "app/visualizer", "app/music"],
-function(config, Visualizer, music){
+define(["app/config", "Phaser", "app/visualizer", "app/music"],
+function(config, Phaser, Visualizer, music){
 
     var BackgroundBlock = function(game) {
         this.game = game;
@@ -110,6 +110,23 @@ function(config, Visualizer, music){
         this.blocks.map(function(block){
             block.update();
         })
+    }
+
+    /**
+     * Switch to using 'color' as a basis for a new background
+     *
+     * @param {number} color - Color to use as a base for the background
+     */
+    Background.prototype.newColor = function(color) {
+        //TODO gradual transition
+        var color = Phaser.Color.interpolateColor(color, 0xEEEEEE, 5, 2);
+        color = Phaser.Color.componentToHex(Math.abs(color));
+
+        //TODO make this work in non-webkit browsers
+        var newColor = "-webkit-radial-gradient(white, #" + color + ", #" + color + ")";
+        var body = document.getElementsByTagName("body")[0];
+        body.style["background"] = newColor;
+        body.style["background-size"] = "200% 200%";
     }
 
     return new Background();

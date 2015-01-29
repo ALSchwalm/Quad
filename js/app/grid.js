@@ -385,7 +385,7 @@ function(config, Phaser, music){
             var obj = this.contents[i];
             for (var key in obj) {
                 if (typeof obj[key] == 'object') {
-                    obj[key].destroy();
+                    obj[key].destroy(0, true);
                 }
             }
         }

@@ -52,7 +52,7 @@ define(function(){
                 [0xFF8C00, 0x00008B],
                 [0x24ed00, 0xed009a],
                 [0x666666, 0xbc0f0f],
-                [0x111111, 0x333333],
+                [0x111111, 0xEEEEEE],
             ]
         },
         generator : {

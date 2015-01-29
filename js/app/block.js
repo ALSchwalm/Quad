@@ -293,8 +293,11 @@ function(config, Phaser, grid, score){
 
     /**
      * Destroy a breakable block, with animation
+     *
+     * @param {boolean} [mute=false] - Do not play a sound on destruction
      */
-    Block.prototype.destroy = function(delay){
+    Block.prototype.destroy = function(delay, mute){
+        var mute = mute || false;
         if (this._unbreakable)
             return this;
 
@@ -315,7 +318,8 @@ function(config, Phaser, grid, score){
             scaleTween.onComplete.add(function(){
                 this.graphics.destroy();
                 this.highlightGraphics.destroy();
-                this.game.add.audio('destroy', 0.3).play();
+                if (!mute)
+                    this.game.add.audio('destroy', 0.3).play();
             }.bind(this));
         }.bind(this), delay*25);
         grid.contents[this.coord.y][this.coord.x] = undefined;

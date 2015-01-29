@@ -9,7 +9,9 @@ function(config, generator, Phaser, grid){
     var controls = {
         rotating : false,
         shifting : false,
-        postMove : function() {},
+        postMove : function() {
+            generator.showLimits();
+        },
         keys : [],
 
         /**

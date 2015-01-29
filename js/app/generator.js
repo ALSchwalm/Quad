@@ -43,6 +43,7 @@ function(config, Phaser, Quad, grid){
         this.dropTimer = null;
 
         this.timerGraphic = null;
+        this.limitGraphic = null;
 
         this.directions = [
             "top",
@@ -80,6 +81,7 @@ function(config, Phaser, Quad, grid){
         this.dropTimer.loop(speed * Phaser.Timer.SECOND,
             this.drop.bind(this));
         this.timerGraphic = this.game.add.graphics();
+        this.limitGraphic = this.game.add.graphics();
         var self=this;
 
         // Show the next 4 moves
@@ -117,6 +119,7 @@ function(config, Phaser, Quad, grid){
         this.showFutureQuads();
 
         this.dropTimer.start();
+        generator.showLimits();
         return this;
     }
 
@@ -181,6 +184,63 @@ function(config, Phaser, Quad, grid){
         this.waitingQuads.map(function(quad){
             quad.highlightPath();
         })
+        return this;
+    }
+
+    /**
+     * Show lines indicating unreachable blocks in the current configuration
+     */
+    Generator.prototype.showLimits = function() {
+        if (!this.waitingQuads.length)
+            return this;
+
+        var direction = this.waitingQuads[0].direction;
+        this.limitGraphic.clear();
+        this.limitGraphic.beginFill(0x222222, 0.2);
+        switch(direction.toLowerCase()) {
+        case "top":
+        case "bottom":
+            var leftLimit = config.grid.numCells/2 - grid.getLimit("right")-1;
+            var rightLimit = config.grid.numCells/2 + grid.getLimit("left")+1;
+
+            // draw left limit
+            if (leftLimit > grid.getLimit("left")) {
+                var top = grid.coordToPoint({x: leftLimit, y: 0});
+                this.limitGraphic.drawRect(top.x, top.y,
+                                           2, config.grid.size);
+            }
+
+            // draw right limit
+            if (rightLimit < config.grid.numCells - grid.getLimit("right")) {
+                top = grid.coordToPoint({x: rightLimit, y: 0});
+                this.limitGraphic.drawRect(top.x, top.y,
+                                           2, config.grid.size);
+            }
+            break;
+        case "left":
+        case "right":
+            var topLimit = config.grid.numCells/2 - grid.getLimit("bottom")-1;
+            var bottomLimit = config.grid.numCells/2 + grid.getLimit("top")+1;
+
+            // draw top limit
+            if (topLimit > grid.getLimit("top")) {
+                var top = grid.coordToPoint({x: 0, y: topLimit});
+                this.limitGraphic.drawRect(top.x, top.y,
+                                           config.grid.size, 2);
+            }
+
+            // draw bottom limit
+            if (bottomLimit < config.grid.numCells - grid.getLimit("bottom")) {
+                top = grid.coordToPoint({x: 0, y: bottomLimit});
+                this.limitGraphic.drawRect(top.x, top.y,
+                                           config.grid.size, 2);
+            }
+            break;
+        default:
+            this.limitGraphic.endFill();
+            throw("Invalid argument to 'showLimits': " + direction);
+        }
+        this.limitGraphic.endFill();
         return this;
     }
 

@@ -149,6 +149,56 @@ function(config, Phaser, music){
     }
 
     /**
+     * Determine the number of cells between the wall in 'direction' and the
+     * furthest block in that direction.
+     *
+     * @param {string} direction - One of 'top', 'right', 'bottom', 'left'
+     */
+    Grid.prototype.getLimit = function(direction) {
+        switch(direction.toLowerCase()) {
+        case "top":
+            for (var i=0; i < config.grid.numCells; ++i) {
+                if (this.contents[i].some(function(cell) {
+                    return typeof(cell) !== "undefined"
+                })) {
+                    return i;
+                }
+            }
+            break;
+        case "right":
+            for (var i=config.grid.numCells-1; i >= 0; --i) {
+                for (var j=0; j < config.grid.numCells; ++j) {
+                    if (this.contents[j][i]) {
+                        return (config.grid.numCells-1)-i;
+                    }
+                }
+            }
+            break;
+        case "bottom":
+            for (var i=config.grid.numCells-1; i >= 0; --i) {
+                if (this.contents[i].some(function(cell) {
+                    return typeof(cell) !== "undefined"
+                })) {
+                    return (config.grid.numCells-1)-i;
+                }
+            }
+            break;
+        case "left":
+            for (var i=0; i < config.grid.numCells; ++i) {
+                for (var j=0; j < config.grid.numCells; ++j) {
+                    if (this.contents[j][i]) {
+                        return i;
+                    }
+                }
+            }
+            break;
+        default:
+            throw("Invalid argument to 'getLimit': " + direction);
+        }
+        return null;
+    }
+
+    /**
      * Get the first free position on the grid when comming from `direction` at
      * `position`. This is the coordinate that a block should take if it is being
      * 'dropped'.

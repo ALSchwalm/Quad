@@ -49,6 +49,8 @@ function(config, generator, Phaser, grid){
             for (var i=0; i < controls.keys.length; ++i) {
                 if (game.input.keyboard.isDown(controls.keys[i].key)) {
                     controls.keys[i].press();
+                } else {
+                    controls.keys[i].active = false;
                 }
             }
         }

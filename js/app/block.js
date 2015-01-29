@@ -2,7 +2,8 @@
  * A module which exposes the Block type
  * @module app/block
  */
-define(["app/config", "app/grid", "app/score"], function(config, grid, score){
+define(["app/config", "Phaser", "app/grid", "app/score"], 
+function(config, Phaser, grid, score){
     "use strict"
 
     /**
@@ -71,7 +72,6 @@ define(["app/config", "app/grid", "app/score"], function(config, grid, score){
     Block.prototype.display = function(position) {
         var position = position ||
             grid.directionToPoint(this.direction, this.position, this.offset);
-
         if (!this.manualPosition) {
             this.graphics.x = position.x;
             this.graphics.y = position.y;
@@ -149,6 +149,14 @@ define(["app/config", "app/grid", "app/score"], function(config, grid, score){
         grid.contents[coord.y][coord.x] = this;
 
         if (!noAnimate && this.visible) {
+            var point = grid.coordToPoint(coord);
+            var distance = Phaser.Point.distance(this.graphics.position, point);
+
+            // animation time is a function of distance, so the block won't fall
+            // slower when its destination is nearby
+            var cells = distance/grid.cellSize;
+            var time = config.game.dropSpeed*cells;
+
             this.falling = true;
             var tween = this.game.add.tween(this.graphics);
             tween.onComplete.add(function(){
@@ -157,7 +165,7 @@ define(["app/config", "app/grid", "app/score"], function(config, grid, score){
                     callback();
                 })
             }.bind(this));
-            tween.to(grid.coordToPoint(coord), 200);
+            tween.to(point, time);
             tween.start();
         } else {
             var point = grid.coordToPoint(coord);
@@ -247,11 +255,9 @@ define(["app/config", "app/grid", "app/score"], function(config, grid, score){
         if (doClear) {
             var totalCleared = eraseBlocks(this) + grid.cleanup();
             this.displayClearedCount(totalCleared);
-            this.game.add.audio('destroy').play();
             this.game.scoreboard.update(totalCleared);
             this.game.generator.setLevel(this.game.scoreboard.getLevel());
         }
-
 
         return this;
     }
@@ -310,6 +316,7 @@ define(["app/config", "app/grid", "app/score"], function(config, grid, score){
             scaleTween.onComplete.add(function(){
                 this.graphics.destroy();
                 this.highlightGraphics.destroy();
+                this.game.add.audio('destroy', 0.3).play();
             }.bind(this));
         }.bind(this), delay*25);
         grid.contents[this.coord.y][this.coord.x] = undefined;

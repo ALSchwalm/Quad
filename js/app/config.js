@@ -12,6 +12,7 @@ define(function(){
      * @property {object}  config.game              - General game configuration
      * @property {number}  config.game.width        - Width of the canvas in px
      * @property {number}  config.game.height       - Height of the canvas in px
+     * @property {number}  config.game.dropSpeed    - Speed (in ms/cell) blocks fall at
      *
      * @property {object}  config.grid              - Grid settings
      * @property {number}  config.grid.size         - Width/Height of the grid in px
@@ -30,11 +31,15 @@ define(function(){
      * @property {number}  config.sound.beat.delay        - Minimum frames between beats
      * @property {number}  config.sound.beat.decayRate    - Decay rate of beat threshold
      * @property {number}  config.sound.beat.minThreshold - Minimum volume of beat
+     *
+     * @property {object}  config.visualizer                 - Visualizer settings
+     * @property {object}  config.visualizer.frequencyBound  - Ignore frequencies beyond this fraction
      */
     var config = {
         game : {
             width : window.innerWidth,
-            height : window.innerHeight
+            height : window.innerHeight,
+            dropSpeed : 18
         },
         grid : {
             size : 480,
@@ -51,18 +56,20 @@ define(function(){
             ]
         },
         generator : {
-            defaultWait : 4
+            speeds : [ 4, 3, 2, 1.5 ]
         },
         sound : {
             beat : {
                 delay : 45,
                 decayRate : 0.95,
                 minThreshold : 60
+            },
+            visualizer : {
+                frequencyBound : 0.8
             }
         },
         points : [ 1.5, 2, 2.5, 3 ],
         checkpoints : [ 1000, 5000, 10000 ],
-        speeds : [ 4, 3, 2, 1.5 ]
     };
 
     return config;

@@ -44,7 +44,7 @@ function(config, Phaser, Block, color){
          */
         this.onDropComplete = [
             function () {
-                game.add.audio('attach').play();
+                game.add.audio('attach', 0.5).play();
             }
         ]
 

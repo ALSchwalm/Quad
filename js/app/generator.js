@@ -2,8 +2,8 @@
  * A singleton which spawns quads at random times and locations
  * @module app/generator
  */
-define(["app/config", "app/quad", "app/grid"],
-function(config, Quad, grid){
+define(["app/config", "Phaser", "app/quad", "app/grid"],
+function(config, Phaser, Quad, grid){
     "use strict"
 
     /**
@@ -73,7 +73,7 @@ function(config, Quad, grid){
      */
     Generator.prototype.start = function(game) {
 
-        var speed = config.speeds[this.level];
+        var speed = config.generator.speeds[this.level];
 
         this.game = game;
         this.dropTimer = this.game.time.create(false);
@@ -183,7 +183,7 @@ function(config, Quad, grid){
     Generator.prototype.setLevel = function(level) {
         this.level = level;
 
-        var speed = config.speeds[this.level];
+        var speed = config.generator.speeds[this.level];
         this.dropTimer.loop(speed * Phaser.Timer.SECOND, this.drop.bind(this));
     }
 
@@ -191,10 +191,10 @@ function(config, Quad, grid){
      * Draw the graphics showing the time remaining before the next drop
      */
     Generator.prototype.drawTimerGraphics = function() {
-        var speed = config.speeds[this.level];
+        var speed = config.generator.speeds[this.level];
 
         this.timerGraphic.clear();
-        var percentElapsed = this.dropTimer.ms/(speed * Phaser.Time.SECOND)
+        var percentElapsed = this.dropTimer.ms/(speed * Phaser.Timer.SECOND)
         if (percentElapsed > 1)
             percentElapsed = 1;
         else if (percentElapsed < 0)
@@ -229,6 +229,7 @@ function(config, Quad, grid){
      * Rotate all un-dropped quads clockwise
      */
     Generator.prototype.rotateCW = function() {
+        this.game.add.audio('rotate', 0.5).play();
         this.waitingQuads.map(function(quad){
             quad.rotateCW();
         })
@@ -238,6 +239,7 @@ function(config, Quad, grid){
      * Rotate all un-dropped quads counter-clockwise
      */
     Generator.prototype.rotateCCW = function() {
+        this.game.add.audio('rotate', 0.5).play();
         this.waitingQuads.map(function(quad){
             quad.rotateCCW();
         })

@@ -42,6 +42,9 @@ function(config, Phaser, music){
      * Show the grid of 'cells' that the blocks can be moved around on
      */
     Grid.prototype.display = function(game) {
+        if (!this.game) {
+            this.game = game;
+        }
         this.outerGraphic = game.add.graphics(this.offsets.x, this.offsets.y);
         this.outerGraphic.lineStyle(1, 0xFFFFFF, 0.6);
         this.outerGraphic.drawRect(0, 0, config.grid.size, config.grid.size);
@@ -60,7 +63,7 @@ function(config, Phaser, music){
 
         this.graphics = game.add.graphics(this.offsets.x, this.offsets.y);
         this.graphics.lineStyle(1, 0xFFFFFF, 0.2);
-        this.graphics.beginFill(0x666666, 0.1);
+        this.graphics.beginFill(0x666666, 0.3);
 
         if (config.grid.linesVisible) {
             for (var i=0; i < config.grid.numCells; ++i) {
@@ -208,6 +211,7 @@ function(config, Phaser, music){
         for (var i=0; i < config.grid.numCells; ++i) {
             temporary[i] = new Array(config.grid.numCells);
         }
+        var retn = null;
         switch(direction.toLowerCase()){
         case "top":
             var invalid = this.contents[0].some(function(val){
@@ -215,7 +219,8 @@ function(config, Phaser, music){
             });
 
             if (invalid) {
-                return false;
+                retn = false;
+                break;
             }
 
             this.contents.map(function(val, index){
@@ -231,7 +236,8 @@ function(config, Phaser, music){
             }.bind(this));
             this.middle.y -= 1;
             this.contents = temporary;
-            return true;
+            retn = true;
+            break;
 
         case "bottom":
             var invalid = this.contents[config.grid.numCells-1]
@@ -240,7 +246,8 @@ function(config, Phaser, music){
                 });
 
             if (invalid) {
-                return false;
+                retn = false;
+                break;
             }
 
             this.contents.map(function(val, index){
@@ -256,13 +263,17 @@ function(config, Phaser, music){
             }.bind(this));
             this.middle.y += 1;
             this.contents = temporary;
-            return true;
+            retn = true;
+            break;
 
         case "left":
             for (var i=0; i < config.grid.numCells; ++i){
-                if (this.at(0, i))
-                    return false;
+                if (this.at(0, i)) {
+                    retn = false;
+                    break;
+                }
             }
+            if (retn == false) break;
 
             this.contents.map(function(row, y){
                 row.map(function(val, x){
@@ -278,12 +289,16 @@ function(config, Phaser, music){
             }.bind(this));
             this.middle.x -= 1;
             this.contents = temporary;
-            return true;
+            retn = true;
+            break;
         case "right":
             for (var i=0; i < config.grid.numCells; ++i){
-                if (this.at(config.grid.numCells-1, i))
-                    return false;
+                if (this.at(config.grid.numCells-1, i)) {
+                    retn = false;
+                    break;
+                }
             }
+            if (retn == false) break;
 
             this.contents.map(function(row, y){
                 row.map(function(val, x){
@@ -299,10 +314,16 @@ function(config, Phaser, music){
             }.bind(this));
             this.middle.x += 1;
             this.contents = temporary;
-            return true;
+            retn = true
+            break;
         default:
             throw("Invalid argument to Quad.slide: " + direction)
         }
+
+        if (retn) {
+            this.game.add.audio('move', 0.15).play();
+        }
+        return retn || false;
     }
 
     /**

@@ -43,15 +43,15 @@ function(config, music, background){
 
         var newLevel = this.calcLevel();
         if (this.level < newLevel) {
-            this.level = newLevel;
-            this.newLevel();
+            this.setLevel(newLevel);
         }
     }
 
     /**
      * Transition to a new level
      */
-    Score.prototype.newLevel = function(){
+    Score.prototype.setLevel = function(level){
+        this.level = level;
         this.generator.setLevel(this.level);
         music.play("background" + (this.level+1));
         background.newColor(config.color.available[this.level][0]);

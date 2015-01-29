@@ -294,10 +294,12 @@ function(config, Phaser, grid, score){
     /**
      * Destroy a breakable block, with animation
      *
+     * @param {number} [delay=0] - Ms to delay before playing the destroy animation
      * @param {boolean} [mute=false] - Do not play a sound on destruction
      */
     Block.prototype.destroy = function(delay, mute){
         var mute = mute || false;
+        var delay = delay || 0;
         if (this._unbreakable)
             return this;
 
@@ -393,6 +395,7 @@ function(config, Phaser, grid, score){
      */
     Block.prototype.redraw = function() {
         this.graphics.destroy();
+        this.highlightGraphics.destroy();
         var point = grid.directionToPoint(this.direction, this.position, this.offset);
         this.graphics = this.game.add.graphics(point.x, point.y);
         this.highlightGraphics = this.game.add.graphics();

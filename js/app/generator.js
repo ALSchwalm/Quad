@@ -143,8 +143,23 @@ function(config, Phaser, Quad, grid){
 
     /**
      * Drop all waiting quads onto the game grid
+     *
+     * @param {boolean} [manual=false] - If true, prevents an invalid drop
      */
-    Generator.prototype.drop = function() {
+    Generator.prototype.drop = function(manual) {
+        var manual = manual || false;
+
+        // Do not allow invalid manual drops
+        if (manual) {
+            var unviable = generator.waitingQuads.some(function(quad){
+                return !grid.getFirstAvailable(quad.direction, quad.position) ||
+                    !grid.getFirstAvailable(quad.direction, quad.position+1)
+            });
+            if (unviable) {
+                return null;
+            }
+        }
+
         this.dropTimer.stop(false);
         this.waitingQuads.map(function(quad){
             this.fallingQuads.push(quad);

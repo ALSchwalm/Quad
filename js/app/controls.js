@@ -95,7 +95,9 @@ function(config, generator, Phaser, grid){
             grid.slideRight();
     }, grid);
 
-    controls.registerControl(Phaser.Keyboard.SPACEBAR, generator.drop, generator);
+    controls.registerControl(Phaser.Keyboard.SPACEBAR, function(){
+        generator.drop(true);
+    }, generator);
 
     // Prevent the browser from taking the normal action (scrolling, etc)
     window.addEventListener("keydown", function(e) {

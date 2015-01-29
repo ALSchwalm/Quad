@@ -2,7 +2,7 @@
  * A module which exposes the Block type
  * @module app/block
  */
-define(["app/config", "Phaser", "app/grid", "app/score"], 
+define(["app/config", "Phaser", "app/grid", "app/score"],
 function(config, Phaser, grid, score){
     "use strict"
 
@@ -255,8 +255,7 @@ function(config, Phaser, grid, score){
         if (doClear) {
             var totalCleared = eraseBlocks(this) + grid.cleanup();
             this.displayClearedCount(totalCleared);
-            this.game.scoreboard.update(totalCleared);
-            this.game.generator.setLevel(this.game.scoreboard.getLevel());
+            score.update(totalCleared);
         }
 
         return this;

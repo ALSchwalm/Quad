@@ -19,9 +19,6 @@ function(grid, generator, background, music, score){
         grid.display(game);
         generator.start(game);
         score.init(game, grid, generator);
-        
-        game.scoreboard = score;
-        game.generator = generator;
     };
     return create;
 });

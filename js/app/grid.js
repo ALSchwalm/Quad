@@ -13,6 +13,7 @@ function(config, Phaser, music){
      */
     var Grid = function(){
         this.cellSize = config.grid.size / config.grid.numCells;
+        this.initCoord = config.grid.numCells / 2;
 
         // Center the grid
         this.offsets = {
@@ -25,8 +26,8 @@ function(config, Phaser, music){
          *
          * @type {object}
          */
-        this.middle = {x: config.grid.numCells/2,
-                       y: config.grid.numCells/2};
+        this.middle = {x: this.initCoord,
+                       y: this.initCoord};
 
         /**
          * The contents of the grid
@@ -37,6 +38,11 @@ function(config, Phaser, music){
             this.contents[i] = new Array(config.grid.numCells);
         }
     };
+
+    Grid.prototype.resetMiddle = function() {
+        this.middle = {x: this.initCoord,
+                       y: this.initCoord};
+    }
 
     /**
      * Show the grid of 'cells' that the blocks can be moved around on

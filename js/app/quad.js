@@ -194,13 +194,45 @@ function(config, Phaser, Block, color){
     }
 
     /**
+     * Make the current quad breakable
+     */
+    Quad.prototype.breakable = function() {
+        this.blocks.map(function(block) {
+            block.breakable();
+        });
+        return this;
+    }
+
+    /**
+     * Redraw a quad.
+     */
+    Quad.prototype.redraw = function() {
+        this.blocks.map(function(block) {
+            block.redraw();
+        });
+        return this;
+    }
+
+    /**
      * Update a quad to comply with new level
      */
     Quad.prototype.updateLevel = function(level) {
         this.blocks.map(function(block) {
             block.setColor(color.genRandomColor(level));
-            block.redraw();
         });
+        this.redraw();
+    }
+
+    /**
+     * Send a quad to the center of the grid.
+     */
+    Quad.prototype.toCenter = function() {
+        var centerCell = Math.floor(config.grid.numCells/2)-1;
+        this.positionAt({
+            x: centerCell,
+            y: centerCell
+        });
+        return this;
     }
 
     return Quad;

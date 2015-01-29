@@ -53,9 +53,13 @@ function(config, music, background){
      */
     Score.prototype.newLevel = function(){
         this.generator.setLevel(this.level);
-        this.grid.clearAll();
         music.play("background" + (this.level+1));
         background.newColor(config.color.available[this.level][0]);
+
+        this.generator.centerQuad.breakable();
+        this.grid.clearAll();
+        this.grid.resetMiddle();
+        this.generator.centerQuad.redraw().toCenter().unbreakable();
     }
 
     /**

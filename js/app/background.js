@@ -78,7 +78,10 @@ function(config, Phaser, Visualizer, music){
      * @constructor
      * @alias module:app/background
      */
-    var Background = function(){}
+    var Background = function(){
+        this.body = document.getElementsByTagName("body")[0];
+        this.color = config.color.background[0];
+    }
 
     /**
      * Start displaying the background
@@ -115,18 +118,32 @@ function(config, Phaser, Visualizer, music){
     /**
      * Switch to using 'color' as a basis for a new background
      *
-     * @param {number} color - Color to use as a base for the background
+     * @param {number} targetColor - Color to use as a base for the background
      */
-    Background.prototype.newColor = function(color) {
-        //TODO gradual transition
-        var color = Phaser.Color.interpolateColor(color, 0xEEEEEE, 5, 2);
-        color = Phaser.Color.componentToHex(Math.abs(color));
+    Background.prototype.newColor = function(targetColor) {
+        var count = 0;
+        var setColor = null;
 
-        //TODO make this work in non-webkit browsers
-        var newColor = "-webkit-radial-gradient(white, #" + color + ", #" + color + ")";
-        var body = document.getElementsByTagName("body")[0];
-        body.style["background"] = newColor;
-        body.style["background-size"] = "200% 200%";
+        var timer = this.game.time.create(false);
+        timer.loop(30,
+            function(){
+                ++count;
+                if (count == 1500/30) {
+                    this.color = setColor;
+                    timer.stop();
+                }
+                setColor = Phaser.Color.interpolateColor(this.color,
+                                                         targetColor,
+                                                         1500/30,
+                                                         count);
+
+                var color = Phaser.Color.getWebRGB(setColor);
+                //TODO make this work in non-webkit browsers
+                var newColor = "-webkit-radial-gradient(white, " + color + ", " + color + ")";
+                this.body.style["background"] = newColor;
+                this.body.style["background-size"] = "200% 200%";
+            }.bind(this));
+        timer.start();
     }
 
     return new Background();

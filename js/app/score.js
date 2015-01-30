@@ -18,6 +18,7 @@ function(config, music, background){
      * Initialize score
      */
     Score.prototype.init = function(game, grid, generator) {
+        this.game = game;
         var text = "Level: 1\nScore: 0";
         var style = {
             font: "20px Arial",
@@ -48,13 +49,41 @@ function(config, music, background){
     }
 
     /**
+     * Show a transition indicating the current level
+     */
+    Score.prototype.showLevel = function() {
+        var text = (this.level+1).toString();
+        var style = {
+            font: "200px Arial",
+            fill: "#fff",
+            shadowColor: "#000000",
+            shadowOffsetX: 1,
+            shadowOffsetY: 1,
+        }
+        var graphics = this.game.add.text(config.game.width/2,
+                                          config.game.height/2,
+                                          text, style);
+        graphics.anchor = {x:0.5, y:0.5};
+        graphics.scale = {x: 0, y: 0};
+        graphics.alpha = 0;
+        this.game.world.bringToTop(graphics);
+
+        var tween = this.game.add.tween(graphics.scale);
+        tween.to({x: 1, y:1}, 1500).to({x:0, y:0}, 2000).start();
+
+        var alphaTween = this.game.add.tween(graphics);
+        alphaTween.to({alpha:1}, 1500).to({alpha:0}, 2000).start();
+    }
+
+    /**
      * Transition to a new level
      */
     Score.prototype.setLevel = function(level){
         this.level = level;
         this.generator.setLevel(this.level);
         music.play("background" + (this.level+1));
-        background.newColor(config.color.available[this.level][0]);
+        background.newColor(config.color.background[this.level]);
+        this.showLevel();
 
         this.generator.centerQuad.breakable();
         this.grid.clearAll();

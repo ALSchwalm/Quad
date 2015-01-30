@@ -78,7 +78,7 @@ define(["app/config"], function(config){
                 oldMusic.destroy();
             }
 
-            this.music = this.game.add.audio(music, 1, true);
+            this.music = this.game.add.audio(music, 0, true);
             this.music.externalNode = this.gain;
             this.analyser.connect(this.music.masterGainNode);
             this.music.play();
@@ -98,18 +98,20 @@ define(["app/config"], function(config){
 
     MusicManager.prototype.fade = function(direction, duration, steps) {
         var steps = steps || 100;
-        var outInterval = setInterval(function(){
-            if (this.music) {
-                if (direction === "out")
-                    this.gain.gain.value -= 1/100;
-                else
-                    this.gain.gain.value += 1/100;
-            }
-        }.bind(this), duration/100);
-
-        setTimeout(function(){
-            clearInterval(outInterval);
-        }, duration);
+        var count = 0;
+        var timer = this.game.time.create(false);
+        timer.loop(duration/100,
+            function(){
+                ++count;
+                if (this.music) {
+                    if (direction === "out")
+                        this.gain.gain.value -= 1/100;
+                    else
+                        this.gain.gain.value += 1/100;
+                }
+                if (count == 100) timer.stop();
+            }.bind(this));
+        timer.start();
     }
 
     /**

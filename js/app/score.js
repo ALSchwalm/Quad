@@ -84,6 +84,7 @@ function(config, music, background){
         music.play("background" + (this.level+1));
         background.newColor(config.color.background[this.level]);
         this.showLevel();
+        this.update(0); // display the new level
 
         this.generator.centerQuad.breakable();
         this.grid.clearAll();

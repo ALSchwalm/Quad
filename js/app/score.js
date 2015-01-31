@@ -1,8 +1,8 @@
 /**
  * @module app/score
  */
-define(['app/config', 'app/music', 'app/background'],
-function(config, music, background){
+define(['app/config', 'app/music', 'app/background', 'app/grid'],
+function(config, music, background, grid){
     "use strict"
 
     /**
@@ -12,6 +12,16 @@ function(config, music, background){
         this.board = 0;
         this.current = 0;
         this.level = 0;
+
+        var combo = 0;
+        Object.defineProperty(this, 'combo', {
+            get: function() {
+                return combo;
+            },
+            set: function(value) {
+                combo = value;
+            }
+        });
     }
 
     /**

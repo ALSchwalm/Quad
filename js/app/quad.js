@@ -2,8 +2,8 @@
  * A module which exposes the Quad type
  * @module app/quad
  */
-define(["app/config", "Phaser", "app/block", "app/color"],
-function(config, Phaser, Block, color){
+define(["app/config", "Phaser", "app/block", "app/color", "app/score"],
+function(config, Phaser, Block, color, score){
     "use strict"
 
     /**
@@ -44,8 +44,13 @@ function(config, Phaser, Block, color){
          */
         this.onDropComplete = [
             function () {
-                game.add.audio('attach', 0.5).play();
-            }
+                this.game.add.audio('attach', 0.5).play();
+                if (this.blocks.some(function(block){ return block.clearedBlocks })) {
+                    ++score.combo;
+                } else {
+                    score.combo = 0;
+                }
+            }.bind(this)
         ]
 
         // fire this.onDropComplete when all blocks have been dropped

@@ -12,6 +12,7 @@ function(config, music, background){
         this.board = 0;
         this.current = 0;
         this.level = 0;
+        this.streak = 0;
     }
 
     /**
@@ -19,18 +20,66 @@ function(config, music, background){
      */
     Score.prototype.init = function(game, grid, generator) {
         this.game = game;
-        var text = "Level: 1\nScore: 0";
-        var style = {
-            font: "20px Arial",
+
+        var stylebig = {
+            font: "40px arial",
             fill: "#fff",
-            align: "left",
-            shadowColor: "#000000",
-            shadowOffsetX: 1,
-            shadowOffsetY: 1
+            align: "center"
         };
-        this.board = game.add.text(game.world.centerX + 150, 27, text, style);
+
+        var stylesmall = {
+            font: "25px arial",
+            fill: "#fff",
+        };
+
+        var offsets = {
+            x : config.game.width/2 + config.grid.size/2,
+            y : config.game.height/2 - config.grid.size/2
+        }
+
+        this.board = game.add.graphics(0, 0);
+        this.board.beginFill(0x333333, .5);
+        this.board.drawRoundedRect(offsets.x + 135, offsets.y, 200, 482, 10);
+
+        this.board.levelbackdrop = game.add.graphics(0, 0);
+        this.board.levelbackdrop.beginFill(0x000000, .5);
+        this.board.levelbackdrop.drawRect(offsets.x + 135, offsets.y + 63, 200, 50, 10);
+
+        this.board.scorebackdrop = game.add.graphics(0, 0);
+        this.board.scorebackdrop.beginFill(0x000000, .5);
+        this.board.scorebackdrop.drawRect(offsets.x + 135, offsets.y + 155, 200, 50, 10);
+
+        this.board.chainbackdrop = game.add.graphics(0, 0);
+        this.board.chainbackdrop.beginFill(0x000000, .5);
+        this.board.chainbackdrop.drawRect(offsets.x + 135, offsets.y + 247, 200, 50, 10);
+
+        this.board.leveltext = game.add.text(offsets.x + 233, offsets.y + 88, "Level", stylebig);
+        this.board.scoretext = game.add.text(offsets.x + 233, offsets.y + 181, "Score", stylebig);
+        this.board.chaintext = game.add.text(offsets.x + 233, offsets.y + 273, "Longest Chain", stylesmall);
+
+        this.board.levelval = game.add.text(offsets.x + 233, offsets.y + 134, "1", stylebig);
+        this.board.scoreval = game.add.text(offsets.x + 233, offsets.y + 226, "0", stylebig);
+        this.board.chainval = game.add.text(offsets.x + 233, offsets.y + 318, "0", stylebig);
+
+        this.board.leveltext.anchor = { x: 0.5, y: 0.5 };
+        this.board.scoretext.anchor = { x: 0.5, y: 0.5 };
+        this.board.chaintext.anchor = { x: 0.5, y: 0.5 };
+
+        this.board.levelval.anchor = { x: 0.5, y: 0.5 };
+        this.board.scoreval.anchor = { x: 0.5, y: 0.5 };
+        this.board.chainval.anchor = { x: 0.5, y: 0.5 };
+
         this.grid = grid;
         this.generator = generator;
+    }
+
+    /**
+     * Put new streak on board
+     */
+    Score.prototype.updateStreak = function(count) {
+        if (this.streak < count) {
+            this.streak = count;
+        }
     }
 
     /**
@@ -40,7 +89,11 @@ function(config, music, background){
         var points = Math.pow(clearCount, config.points[this.level]);
         var levelDisplay = this.level + 1;
         this.current += Math.floor(points);
-        this.board.text = "Level: " + levelDisplay + "\nScore: " + this.current;
+        this.updateStreak(clearCount);
+
+        this.board.levelval.text = levelDisplay;
+        this.board.scoreval.text = this.current;
+        this.board.chainval.text = this.streak;
 
         var newLevel = this.calcLevel();
         if (this.level < newLevel) {
@@ -54,7 +107,7 @@ function(config, music, background){
     Score.prototype.showLevel = function() {
         var text = (this.level+1).toString();
         var style = {
-            font: "200px Arial",
+            font: "200px arial",
             fill: "#fff",
             shadowColor: "#000000",
             shadowOffsetX: 1,

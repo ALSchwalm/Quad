@@ -31,6 +31,7 @@ function(config, music, background){
         this.board = game.add.text(game.world.centerX + 150, 27, text, style);
         this.grid = grid;
         this.generator = generator;
+        this.setLevel(0);
     }
 
     /**

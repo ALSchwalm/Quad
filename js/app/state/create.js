@@ -14,7 +14,7 @@ function(grid, generator, background, music, score){
      * @param {Phaser.Game} game - The current game object
      */
     var create = function(game){
-        music.start(game, 'background1');
+        music.start(game);
         background.start(game);
         grid.display(game);
         generator.start(game);

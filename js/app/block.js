@@ -254,7 +254,7 @@ function(config, Phaser, grid, score){
 
         if (doClear) {
             var totalCleared = eraseBlocks(this) + grid.cleanup();
-            this.displayClearedCount(totalCleared);
+            this.displayClearedCount(score.getPoints(totalCleared));
             score.update(totalCleared);
             this.clearedBlocks = true;
         }
@@ -266,10 +266,10 @@ function(config, Phaser, grid, score){
      * Display how many blocks are cleared.
      */
     Block.prototype.displayClearedCount = function(count) {
-        if (count <= 6) return this;
+        if (count <= 20) return this;
         var fontSize = function(count) {
-            if (count > 15) return "45px Arial";
-            else return (2*count+15).toString() + "px Arial";
+            if (count > 45) return "45px Arial";
+            else return (count).toString() + "px Arial";
         };
         var text = count.toString();
         var style = {

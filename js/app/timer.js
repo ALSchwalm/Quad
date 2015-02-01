@@ -46,7 +46,7 @@ function(config){
 
         Timer.startTime = (new Date()).getTime();
         this.game = game;
-        this.time = this.game.add.text(offsets.x + 233, offsets.y + 32, "00:00:00", timestyle);
+        this.time = this.game.add.text(offsets.x + 233, offsets.y + 40, "00:00:00", timestyle);
         this.time.anchor = { x: 0.5, y: 0.5 };
     }
 
@@ -64,8 +64,8 @@ function(config){
         var secs = Math.floor((elapsed / 1000) % 60);
         var ms = Math.floor((elapsed) % 60);
 
-        return prependZero(hours) + ":" 
-               + prependZero(mins) + ":" 
+        return prependZero(hours) + ":"
+               + prependZero(mins) + ":"
                + prependZero(secs);
     }
 

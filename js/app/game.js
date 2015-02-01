@@ -8,7 +8,7 @@ define(['app/config',
         'Phaser',
         'app/state/preload',
         'app/state/update',
-        'app/state/create'],
+        'app/state/create', 'jquery'],
 function(config, Phaser, preload, update, create){
     "use strict"
 

@@ -15,9 +15,6 @@ function(grid, generator, background){
      */
     var create = function(game){
         background.start(game);
-        grid.display(game);
-        generator.start(game);
-
     };
     return create;
 });

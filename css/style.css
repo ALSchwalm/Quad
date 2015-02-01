@@ -6,3 +6,25 @@ body {
     margin: 0px;
     padding: 0px;
 }
+button{
+    font-family:Arial;
+    color:#2a2a83;
+    cursor:pointer;
+    padding-left:1%;
+    padding-right:1%;
+    border: 2px ridge blue;
+    border-radius: 25px;
+    background-color: rgba(17, 93, 119, 0.35);
+    transition-property:background;
+    font-size:75px;
+}
+button:hover{
+    background:#66D4E5;
+}
+#start-menu{
+    position:absolute;
+    z-index:100;
+    text-align:center;
+    margin:0 auto;
+    width:100%;
+}

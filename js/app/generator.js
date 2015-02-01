@@ -2,8 +2,8 @@
  * A singleton which spawns quads at random times and locations
  * @module app/generator
  */
-define(["app/config", "Phaser", "app/quad", "app/grid"],
-function(config, Phaser, Quad, grid){
+define(["app/config", "Phaser", "app/quad", "app/grid", "app/timer"],
+function(config, Phaser, Quad, grid, timer){
     "use strict"
 
     /**
@@ -115,6 +115,7 @@ function(config, Phaser, Quad, grid){
         this.futureQuads.unshift(newQuad);
         this.showFutureQuads();
 
+        timer.dropTimerStart();
         this.dropTimer.start();
         generator.showLimits();
         return this;
@@ -160,6 +161,7 @@ function(config, Phaser, Quad, grid){
             }
         }
 
+        timer.dropTimerStop();
         this.dropTimer.stop(false);
         this.waitingQuads.map(function(quad){
             this.fallingQuads.push(quad);
@@ -267,6 +269,7 @@ function(config, Phaser, Quad, grid){
         this.dropTimer.stop(false);
 
         // Pause for the level transition effects
+        timer.droptimer = -3000;
         this.dropTimer.start(3000);
     }
 
@@ -277,7 +280,7 @@ function(config, Phaser, Quad, grid){
         var speed = config.generator.speeds[this.level];
 
         this.timerGraphic.clear();
-        var percentElapsed = this.dropTimer.ms/(speed * Phaser.Timer.SECOND)
+        var percentElapsed = (timer.droptimer)/(speed * Phaser.Timer.SECOND);
         if (percentElapsed > 1)
             percentElapsed = 1;
         else if (percentElapsed < 0)
@@ -304,6 +307,7 @@ function(config, Phaser, Quad, grid){
      * Stop 'dropping' quads
      */
     Generator.prototype.stop = function() {
+        timer.dropTimerStop();
         this.dropTimer.stop(false);
         return this;
     }

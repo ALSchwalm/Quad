@@ -11,7 +11,7 @@ TODO
 - [x] allow clearing of blocks
 - [x] allow shifting of blocks
 - [x] sounds
-- [ ] score/level system
+- [x] score/level system
 - [ ] graphics (possibly sprites for blocks)
 - [ ] rest of page HTML
 

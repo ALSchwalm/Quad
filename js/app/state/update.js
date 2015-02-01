@@ -15,9 +15,9 @@ function(controls, generator, background, music, timer){
     var update = function(game) {
         music.update();
         controls.update(game);
-        generator.update();
         background.update();
         timer.update();
+        generator.update();
     }
 
     return update;

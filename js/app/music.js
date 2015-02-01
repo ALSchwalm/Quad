@@ -29,6 +29,7 @@ define(["app/config"], function(config){
          * WebAudio node which is used to crossfade
          */
         this.gain = this.game.sound.context.createGain();
+        this.gain.gain.value = 0;
 
         this.analyser.minDecibels = -140;
         this.analyser.maxDecibels = 0;
@@ -69,7 +70,6 @@ define(["app/config"], function(config){
      */
     MusicManager.prototype.play = function(music) {
         var oldMusic = this.music;
-        this.fade("out", this.crossfadeDuration/2);
 
         var playNew = function(){
             if (oldMusic) {
@@ -83,11 +83,15 @@ define(["app/config"], function(config){
             this.analyser.connect(this.music.masterGainNode);
             this.music.play();
 
-            this.fade("in", this.crossfadeDuration/2);
+            if (oldMusic)
+                this.fade("in", this.crossfadeDuration/2);
+            else
+                this.fade("in", this.crossfadeDuration*5);
         }.bind(this);
 
         // Only crossfade if there is an already playing song
         if (this.music){
+            this.fade("out", this.crossfadeDuration/2);
             setTimeout(playNew, this.crossfadeDuration);
         } else {
             playNew();

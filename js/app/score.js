@@ -12,7 +12,22 @@ function(config, music, background){
         this.board = 0;
         this.current = 0;
         this.level = 0;
-        this.streak = 0;
+        this.best = 0;
+
+        var combo = 0;
+        Object.defineProperty(this, 'combo', {
+            get: function() {
+                return combo;
+            },
+            set: function(value) {
+                combo = value;
+                if (combo == 0 || combo == 1) {
+                    this.board.comboval.text = "None"
+                } else {
+                    this.board.comboval.text = combo.toString() + "x";
+                }
+            }
+        });
     }
 
     /**
@@ -28,7 +43,7 @@ function(config, music, background){
         };
 
         var stylesmall = {
-            font: "25px arial",
+            font: "35px arial",
             fill: "#fff",
         };
 
@@ -39,7 +54,9 @@ function(config, music, background){
 
         this.board = game.add.graphics(0, 0);
         this.board.beginFill(0x333333, .5);
-        this.board.drawRoundedRect(offsets.x + 135, offsets.y, 200, 482, 10);
+        this.board.lineStyle(1, 0xFFFFFF, 0.6);
+        this.board.drawRoundedRect(offsets.x + 134, offsets.y+14, 202, 445, 10);
+        this.board.lineStyle(0);
 
         this.board.levelbackdrop = game.add.graphics(0, 0);
         this.board.levelbackdrop.beginFill(0x000000, .5);
@@ -53,21 +70,29 @@ function(config, music, background){
         this.board.chainbackdrop.beginFill(0x000000, .5);
         this.board.chainbackdrop.drawRect(offsets.x + 135, offsets.y + 247, 200, 50, 10);
 
+        this.board.combobackdrop = game.add.graphics(0, 0);
+        this.board.combobackdrop.beginFill(0x000000, .5);
+        this.board.combobackdrop.drawRect(offsets.x + 135, offsets.y + 340, 200, 50, 10);
+
         this.board.leveltext = game.add.text(offsets.x + 233, offsets.y + 88, "Level", stylebig);
         this.board.scoretext = game.add.text(offsets.x + 233, offsets.y + 181, "Score", stylebig);
-        this.board.chaintext = game.add.text(offsets.x + 233, offsets.y + 273, "Longest Chain", stylesmall);
+        this.board.chaintext = game.add.text(offsets.x + 233, offsets.y + 273, "Best Drop", stylesmall);
+        this.board.combotext = game.add.text(offsets.x + 233, offsets.y + 365, "Combo", stylebig);
 
         this.board.levelval = game.add.text(offsets.x + 233, offsets.y + 134, "1", stylebig);
         this.board.scoreval = game.add.text(offsets.x + 233, offsets.y + 226, "0", stylebig);
         this.board.chainval = game.add.text(offsets.x + 233, offsets.y + 318, "0", stylebig);
+        this.board.comboval = game.add.text(offsets.x + 233, offsets.y + 415, "None", stylebig);
 
         this.board.leveltext.anchor = { x: 0.5, y: 0.5 };
         this.board.scoretext.anchor = { x: 0.5, y: 0.5 };
         this.board.chaintext.anchor = { x: 0.5, y: 0.5 };
+        this.board.combotext.anchor = { x: 0.5, y: 0.5 };
 
         this.board.levelval.anchor = { x: 0.5, y: 0.5 };
         this.board.scoreval.anchor = { x: 0.5, y: 0.5 };
         this.board.chainval.anchor = { x: 0.5, y: 0.5 };
+        this.board.comboval.anchor = { x: 0.5, y: 0.5 };
 
         this.grid = grid;
         this.generator = generator;
@@ -75,26 +100,34 @@ function(config, music, background){
     }
 
     /**
-     * Put new streak on board
+     * Put new best on board
      */
-    Score.prototype.updateStreak = function(count) {
-        if (this.streak < count) {
-            this.streak = count;
+    Score.prototype.updateBest = function(count) {
+        if (this.best < count) {
+            this.best = count;
         }
+    }
+
+    /**
+     * Calculate the number of points for a given clear
+     */
+    Score.prototype.getPoints = function(count) {
+        var points = Math.pow(count, config.points[this.level]);
+        return Math.floor(points * (this.combo || 1));
     }
 
     /**
      * Update the scoreboard and level.
      */
     Score.prototype.update = function(clearCount) {
-        var points = Math.pow(clearCount, config.points[this.level]);
-        var levelDisplay = this.level + 1;
-        this.current += Math.floor(points);
-        this.updateStreak(clearCount);
+        var points = this.getPoints(clearCount);
+        this.updateBest(points);
+        this.current += points
 
+        var levelDisplay = this.level + 1;
         this.board.levelval.text = levelDisplay;
         this.board.scoreval.text = this.current;
-        this.board.chainval.text = this.streak;
+        this.board.chainval.text = this.best;
 
         var newLevel = this.calcLevel();
         if (this.level < newLevel) {

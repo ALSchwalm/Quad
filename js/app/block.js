@@ -254,8 +254,9 @@ function(config, Phaser, grid, score){
 
         if (doClear) {
             var totalCleared = eraseBlocks(this) + grid.cleanup();
-            this.displayClearedCount(totalCleared);
+            this.displayClearedCount(score.getPoints(totalCleared));
             score.update(totalCleared);
+            this.clearedBlocks = true;
         }
 
         return this;
@@ -265,10 +266,10 @@ function(config, Phaser, grid, score){
      * Display how many blocks are cleared.
      */
     Block.prototype.displayClearedCount = function(count) {
-        if (count <= 6) return this;
+        if (count <= 20) return this;
         var fontSize = function(count) {
-            if (count > 15) return "45px Arial";
-            else return (2*count+15).toString() + "px Arial";
+            if (count > 45) return "45px Arial";
+            else return (count).toString() + "px Arial";
         };
         var text = count.toString();
         var style = {
@@ -281,11 +282,11 @@ function(config, Phaser, grid, score){
         };
         var point = grid.coordToPoint(this.coord);
         var graphic = this.game.add.text(point.x, point.y, text, style);
-        graphic.scale = {x: 0, y:0};
+        graphic.alpha = 0;
 
-        var scaleTween = this.game.add.tween(graphic.scale);
-        scaleTween.to({ x: 1, y: 1}, 300, Phaser.Easing.Quadratic.InOut, true);
-        scaleTween.onComplete.add(function(){
+        var tween = this.game.add.tween(graphic);
+        tween.to({alpha : 0.7, y : "-20"}, 500).start();
+        tween.onComplete.add(function(){
             graphic.destroy();
         });
         return this;

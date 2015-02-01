@@ -80,6 +80,11 @@ function(config, Phaser, music){
             }
         }
         this.graphics.endFill();
+
+        this.graphics.beginFill(0x111111, 0.5);
+        this.graphics.drawRect(0, config.grid.size/2-1, config.grid.size, 2);
+        this.graphics.drawRect(config.grid.size/2-1, 0, 2, config.grid.size);
+        this.graphics.endFill();
         return this;
     }
 

@@ -193,7 +193,7 @@ function(config, Phaser, Quad, grid){
 
         var direction = this.waitingQuads[0].direction;
         this.limitGraphic.clear();
-        this.limitGraphic.beginFill(0x222222, 0.2);
+        this.limitGraphic.beginFill(0x111111, 0.1);
         switch(direction.toLowerCase()) {
         case "top":
         case "bottom":
@@ -204,14 +204,16 @@ function(config, Phaser, Quad, grid){
             if (leftLimit > grid.getLimit("left")) {
                 var top = grid.coordToPoint({x: leftLimit, y: 0});
                 this.limitGraphic.drawRect(top.x, top.y,
-                                           2, config.grid.size);
+                                           -(top.x - grid.offsets.x),
+                                           config.grid.size);
             }
 
             // draw right limit
             if (rightLimit < config.grid.numCells - grid.getLimit("right")) {
                 top = grid.coordToPoint({x: rightLimit, y: 0});
                 this.limitGraphic.drawRect(top.x, top.y,
-                                           2, config.grid.size);
+                                           config.grid.size-(top.x-grid.offsets.x),
+                                           config.grid.size);
             }
             break;
         case "left":
@@ -223,14 +225,16 @@ function(config, Phaser, Quad, grid){
             if (topLimit > grid.getLimit("top")) {
                 var top = grid.coordToPoint({x: 0, y: topLimit});
                 this.limitGraphic.drawRect(top.x, top.y,
-                                           config.grid.size, 2);
+                                           config.grid.size,
+                                           -(top.y - grid.offsets.y));
             }
 
             // draw bottom limit
             if (bottomLimit < config.grid.numCells - grid.getLimit("bottom")) {
                 top = grid.coordToPoint({x: 0, y: bottomLimit});
                 this.limitGraphic.drawRect(top.x, top.y,
-                                           config.grid.size, 2);
+                                           config.grid.size,
+                                           config.grid.size-(top.y-grid.offsets.y));
             }
             break;
         default:

@@ -71,6 +71,7 @@ function(config, music, background){
 
         this.grid = grid;
         this.generator = generator;
+        this.setLevel(0);
     }
 
     /**

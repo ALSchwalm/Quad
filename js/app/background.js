@@ -12,7 +12,7 @@ function(config, Phaser, Visualizer, music){
         var y = (Math.random() * config.game.height);// - config.game.height/2;
         this.graphics = this.game.add.graphics(x, y);
         this.game.world.sendToBack(this.graphics);
-        this.graphics.alpha = 0.5;
+        this.graphics.alpha = 0;
         this.graphics.scale = {x: 0.5, y: 0.5};
 
         this.graphics.lineStyle(2, 0x222222, 0.4);
@@ -21,6 +21,9 @@ function(config, Phaser, Visualizer, music){
                                config.game.width,
                                config.game.height);
         this.graphics.endFill();
+
+        // Fade in the blocks
+        this.game.add.tween(this.graphics).to({alpha : 0.5}, 2000).start();
 
         music.onBeat.push(function(){
             this.pulse();

@@ -253,10 +253,16 @@ function(config, Phaser, Quad, grid){
      * Set the current level.
      */
     Generator.prototype.setLevel = function(level) {
-        this.level = level;
-        this.updateCurrentQuadLevel(this.level);
-        var speed = config.generator.speeds[this.level];
-        this.dropTimer.loop(speed * Phaser.Timer.SECOND, this.drop.bind(this));
+        if (this.level != level) {
+            this.level = level;
+            this.updateCurrentQuadLevel(this.level);
+            var speed = config.generator.speeds[this.level];
+            this.dropTimer.loop(speed * Phaser.Timer.SECOND, this.drop.bind(this));
+        }
+        this.dropTimer.stop(false);
+
+        // Pause for the level transition effects
+        this.dropTimer.start(3000);
     }
 
     /**

@@ -139,9 +139,10 @@ function(config, Phaser, grid, score){
             coord.y > config.grid.numCells-1 ||
             !grid.contents[coord.y]) {
             this.game.paused=true;
-            var text = "Game Over";
-            var style = { font: "65px Arial", fill: "#ff0044", align: "center" };
-            var t = this.game.add.text(this.game.world.centerX-300, 0, text, style);
+            $('#menu-cover').fadeIn(500, function() {
+                $('#gameover-menu').fadeIn(500);
+            });
+
             return this;
         }
 

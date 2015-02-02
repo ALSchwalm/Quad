@@ -7,19 +7,37 @@
     <script data-main="app" src="js/lib/require.js"></script>
   </head>
   <body>
-  <div id="start-menu">
-    <div>
+    <div id="menu-cover" style="display:none;"></div>
+
+    <div id="pause-menu" class="menu" style="position: absolute; width: 100%; height: 100%; overflow: hidden; display:none;" >
+      <div style="max-width: 1200px;">
+        <img src="assets\images\pause.png" alt=""><br>
+        <img class="filler_pic" src="assets\images\seperator.png" alt=""><br>
+        <img class="two_line_pic" src="assets\images\restart.png" alt=""><br>
+        <img class="one_line_pic" src="assets\images\quit.png" alt=""><br>
+      </div>
+    </div>
+
+    <div id="gameover-menu" class="menu" style="position: absolute; width: 100%; height: 100%; overflow: hidden; display:none;" >
+      <div style="max-width: 1200px;">
+        <img src="assets\images\gameover.png" alt=""><br>
+      </div>
+    </div>
+
+    <div id="start-menu">
+      <div>
         <img src="assets/images/newquadlogo.png" width="800" height="300" />
-    </div>
+      </div>
 
-    <div style="margin-top:6em; margin-bottom:3em;">
+      <div style="margin-top:6em; margin-bottom:3em;">
         <button id="start-button">Start</button>
+      </div>
+
+      <div style="margin-top:7em; margin-bottom:1em; ">
+        <button id="how-button">How To Play</button>
+      </div>
     </div>
 
-    <div style="margin-top:7em; margin-bottom:1em; ">
-        <button id="how-button">How To Play</button>
-    </div>
-</div>
     <div id="phaser-container">
       <div id="phaser-body"></div>
     </div>

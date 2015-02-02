@@ -1,11 +1,31 @@
-
 body {
-    background: -webkit-linear-gradient(left, #0193CD 30%, #66D4E5 80%, #0193CD 100%) repeat;
-    background: -moz-linear-gradient(left, #0193CD 30%, #66D4E5 80%, #0193CD 100%) repeat;
-    background-size: 50% 100%;
+    background: -webkit-radial-gradient(white, #0193CD, #0193CD);
+    background: -radial-gradient(white, #0193CD, #0193CD);
+    background-color: #0193CD;
+    background-size: 200% 200%;
     margin: 0px;
     padding: 0px;
 }
+
+#menu-cover {
+    background: rgba(0, 0, 0, 0.84);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+
+}
+
+.menu{
+    z-index: 10;
+    position: relative;
+    text-align: center;
+    padding: 15%;
+}
+
+.menu>img {
+    width: 50%;
+}
+
 button{
     font-family:Arial;
     color:#2a2a83;
@@ -18,13 +38,30 @@ button{
     transition-property:background;
     font-size:75px;
 }
+
 button:hover{
     background:#66D4E5;
 }
+
 #start-menu{
     position:absolute;
     z-index:100;
     text-align:center;
     margin:0 auto;
     width:100%;
+}
+
+.one_line_pic{
+    width: 25% !important;
+    cursor: pointer;
+}
+
+.two_line_pic{
+    width: 35% !important;
+    cursor: pointer;
+}
+
+.filler_pic{
+    width: 53% !important;
+    margin: 2% 0;
 }

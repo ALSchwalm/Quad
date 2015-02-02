@@ -75,7 +75,7 @@ define(function(){
             }
         },
         points : [ 1.5, 2, 2.5, 3 ],
-        checkpoints : [ 1000, 5000, 10000 ],
+        checkpoints : [ 1000, 3500, 6000 ],
     };
 
     return config;

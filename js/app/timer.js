@@ -35,8 +35,10 @@ function(config){
         this.game = game;
 
         var timestyle = {
-            font: "300px arial",
+            font: "350px arial",
             fill: "#fff",
+            strokeThickness: 1,
+            stroke : "#222222"
         };
 
         var offsets = {
@@ -46,7 +48,7 @@ function(config){
 
         Timer.startTime = (new Date()).getTime();
         this.time = this.game.add.text(config.game.width,
-                                       config.game.height*0.9,
+                                       config.game.height,
                                        "00:00", timestyle);
         this.time.anchor = { x: 1, y: 1 };
         this.time.alpha = 0.2

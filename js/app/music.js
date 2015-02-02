@@ -56,7 +56,7 @@ define(["app/config"], function(config){
 
         // Load all other level sounds asynchronously, so there isn't a long
         // delay at startup
-        for (var i=1; i < config.checkpoints.length + 1; ++i) {
+        for (var i=0; i < config.checkpoints.length + 1; ++i) {
             this.game.load.audio('background' + (i+1),
                                  'assets/sounds/background' + (i+1) + '.mp3');
         }
@@ -82,6 +82,7 @@ define(["app/config"], function(config){
             this.music.externalNode = this.gain;
             this.analyser.connect(this.music.masterGainNode);
             this.music.play();
+            this.beatThreshold = 50000;
 
             if (oldMusic)
                 this.fade("in", this.crossfadeDuration/2);

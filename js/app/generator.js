@@ -250,7 +250,8 @@ function(config, Phaser, Quad, grid){
      * Phaser update callback function.
      */
     Generator.prototype.update = function() {
-        this.drawTimerGraphics();
+        if (this.game)
+            this.drawTimerGraphics();
     }
 
     /**

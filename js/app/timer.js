@@ -73,7 +73,8 @@ function(config){
      * Update the scoreboard's time.
      */
     Timer.prototype.update = function() {
-        this.time.text = this.elapsedToString();
+        if (this.time)
+            this.time.text = this.elapsedToString();
     }
 
     return new Timer();

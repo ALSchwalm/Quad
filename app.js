@@ -17,4 +17,15 @@ requirejs.config({
 
 // Load and start the game
 requirejs(['app/game'],
-function(game) {});
+function(game) {
+requirejs(['app/grid', 'app/generator', 'app/score', 'app/timer', 'jquery'],
+function(grid, generator, score, timer, $) {
+        $('#start-button').click(function(){
+            grid.display(game);
+            generator.start(game);
+            score.init(game, grid, generator);
+            timer.init(game);
+            $('#start-menu').fadeOut();
+        });
+    });
+});

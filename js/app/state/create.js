@@ -16,10 +16,6 @@ function(grid, generator, background, music, score, timer){
     var create = function(game){
         music.start(game);
         background.start(game);
-        grid.display(game);
-        generator.start(game);
-        score.init(game, grid, generator);
-        timer.init(game);
     };
     return create;
 });

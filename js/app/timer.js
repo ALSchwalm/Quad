@@ -19,8 +19,13 @@ function(config){
      * Timer constructor
      */
     var Timer = function() {
-        this.game = 0;
+        this.game = null;
         this.time = 0;
+        this.elapsedms = 0;
+        this.oldelapsed = 0;
+        this.dropstopped = true;
+        this.droptimer = -3000;
+        this.totalElapsedTime = 0;
     }
 
     /**
@@ -53,16 +58,39 @@ function(config){
         this.time.anchor = { x: 1, y: 1 };
         this.time.alpha = 0.2
         this.game.world.sendToBack(this.time);
+
+        game.onPause.add(function() {
+            this.pause();
+        }.bind(this));
+
+        game.onResume.add(function() {
+            this.resume();
+        }.bind(this));
+
+    }
+
+    Timer.prototype.calculateTimeElapsed = function() {
+        var currentTime = (new Date()).getTime();
+        var elapsed = new Date();
+        var temp = 0;
+
+        elapsed.setTime(currentTime - Timer.startTime - this.totalElapsedTime);
+
+        this.oldelapsed = this.elapsedms;
+        this.elapsedms = elapsed.getTime();
+        this.droptimer += this.elapsedms - this.oldelapsed;
+        if (this.dropstopped) {
+            this.droptimer = 0;
+        }
+
+        return elapsed;
     }
 
     /**
      * Return the time elapsed since beginning as string.
      */
     Timer.prototype.elapsedToString = function() {
-        var currentTime = (new Date()).getTime();
-        var elapsed = new Date();
-
-        elapsed.setTime(currentTime - Timer.startTime);
+        var elapsed = this.calculateTimeElapsed();
 
         var hours = Math.floor((elapsed / (1000 * 60 * 60)) % 24);
         var mins = Math.floor((elapsed / (1000 * 60)) % 60);
@@ -73,12 +101,28 @@ function(config){
                + prependZero(secs);
     }
 
+    Timer.prototype.pause = function() {
+        this.recentPauseTime = (new Date()).getTime();
+    }
+
+    Timer.prototype.resume = function() {
+        this.totalElapsedTime += new Date() - this.recentPauseTime;
+    }
+
     /**
      * Update the scoreboard's time.
      */
     Timer.prototype.update = function() {
         if (this.time)
             this.time.text = this.elapsedToString();
+    }
+
+    Timer.prototype.dropTimerStart = function() {
+        this.dropstopped = false;
+    }
+
+    Timer.prototype.dropTimerStop = function() {
+        this.dropstopped = true;
     }
 
     return new Timer();

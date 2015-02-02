@@ -19,14 +19,13 @@ function(config){
      * Timer constructor
      */
     var Timer = function() {
-        this.game = 0;
+        this.game = null;
         this.time = 0;
-        this.pauseStart = [];
-        this.pauseEnd = [];
         this.elapsedms = 0;
         this.oldelapsed = 0;
         this.dropstopped = true;
         this.droptimer = -3000;
+        this.totalElapsedTime = 0;
     }
 
     /**
@@ -57,11 +56,11 @@ function(config){
 
         game.onPause.add(function() {
             this.pause();
-        });
+        }.bind(this));
 
         game.onResume.add(function() {
             this.resume();
-        });
+        }.bind(this));
 
     }
 
@@ -70,14 +69,7 @@ function(config){
         var elapsed = new Date();
         var temp = 0;
 
-        elapsed.setTime(currentTime - Timer.startTime);
-
-        for (var i = 0; i < this.pauseStart.length; i++) {
-            temp = elapsed.getTime();
-            elapsed.setTime(temp
-                            - this.pauseEnd[i] 
-                            + this.pauseStart[i]);
-        }
+        elapsed.setTime(currentTime - Timer.startTime - this.totalElapsedTime);
 
         this.oldelapsed = this.elapsedms;
         this.elapsedms = elapsed.getTime();
@@ -106,11 +98,11 @@ function(config){
     }
 
     Timer.prototype.pause = function() {
-        this.pauseStart.push((new Date()).getTime());
+        this.recentPauseTime = (new Date()).getTime();
     }
 
     Timer.prototype.resume = function() {
-        this.pauseEnd.push((new Date()).getTime());
+        this.totalElapsedTime += new Date() - this.recentPauseTime;
     }
 
     /**

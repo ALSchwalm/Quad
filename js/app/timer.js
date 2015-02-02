@@ -37,11 +37,13 @@ function(config){
      * Init timer class
      */
     Timer.prototype.init = function(game) {
+        this.game = game;
 
         var timestyle = {
-            font: "30px arial",
+            font: "350px arial",
             fill: "#fff",
-            align: "center"
+            strokeThickness: 1,
+            stroke : "#222222"
         };
 
         var offsets = {
@@ -50,9 +52,12 @@ function(config){
         }
 
         Timer.startTime = (new Date()).getTime();
-        this.game = game;
-        this.time = this.game.add.text(offsets.x + 233, offsets.y + 40, "00:00:00", timestyle);
-        this.time.anchor = { x: 0.5, y: 0.5 };
+        this.time = this.game.add.text(config.game.width,
+                                       config.game.height,
+                                       "00:00", timestyle);
+        this.time.anchor = { x: 1, y: 1 };
+        this.time.alpha = 0.2
+        this.game.world.sendToBack(this.time);
 
         game.onPause.add(function() {
             this.pause();
@@ -92,8 +97,7 @@ function(config){
         var secs = Math.floor((elapsed / 1000) % 60);
         var ms = Math.floor((elapsed) % 60);
 
-        return prependZero(hours) + ":"
-               + prependZero(mins) + ":"
+        return prependZero(mins) + ":"
                + prependZero(secs);
     }
 

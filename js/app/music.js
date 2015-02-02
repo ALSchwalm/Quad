@@ -76,8 +76,9 @@ define(["app/config"], function(config){
      */
     MusicManager.prototype.play = function(music) {
         var oldMusic = this.music;
+        var loaded = this.game.cache.checkSoundKey(music);
 
-        var playNew = function(){
+        var playNow = function() {
             if (oldMusic) {
                 oldMusic.externalNode = null;
                 this.analyser.disconnect();
@@ -93,17 +94,30 @@ define(["app/config"], function(config){
             if (oldMusic)
                 this.fade("in", this.crossfadeDuration/2);
             else
-                this.fade("in", this.crossfadeDuration*5);
+                this.fade("in", this.crossfadeDuration*3);
         }.bind(this);
 
-        // Only crossfade if there is an already playing song
-        if (this.music){
-            this.fade("out", this.crossfadeDuration/2);
-            setTimeout(playNew, this.crossfadeDuration);
-        } else {
-            playNew();
-        }
+        var crossfade = function() {
+            // Only crossfade if there is music already playing
+            if (!this.music){
+                playNow();
+            } else {
+                this.fade("out", this.crossfadeDuration/2);
+                setTimeout(playNow, this.crossfadeDuration);
+            }
+        }.bind(this);
 
+        // If the requested music has already been loaded, crossfade
+        // to it. Otherwise, wait for it to load.
+        if (loaded) {
+            crossfade();
+        } else {
+            this.game.load.onFileComplete.add(function(p, name){
+                if (name == music) {
+                    crossfade();
+                }
+            }.bind(this));
+        }
         return this;
     }
 
@@ -115,10 +129,11 @@ define(["app/config"], function(config){
             function(){
                 ++count;
                 if (this.music) {
-                    if (direction === "out")
+                    if (direction === "out" && this.gain.gain.value - 1/100 >= 0) {
                         this.gain.gain.value -= 1/100;
-                    else
+                    } else if (this.gain.gain.value + 1/100 <= 1){
                         this.gain.gain.value += 1/100;
+                    }
                 }
                 if (count == 100) timer.stop();
             }.bind(this));

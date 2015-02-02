@@ -143,8 +143,7 @@ function(config, Phaser, Visualizer, music){
                 var color = Phaser.Color.getWebRGB(setColor);
                 //TODO make this work in non-webkit browsers
                 var newColor = "-webkit-radial-gradient(white, " + color + ", " + color + ")";
-                this.body.style["background"] = newColor;
-                this.body.style["background-size"] = "200% 200%";
+                this.body.style["background-image"] = newColor;
             }.bind(this));
         timer.start();
     }

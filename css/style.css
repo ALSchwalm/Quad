@@ -1,6 +1,6 @@
 body {
-    background: -webkit-radial-gradient(white, #0193CD, #0193CD);
-    background: -radial-gradient(white, #0193CD, #0193CD);
+    background-image: -webkit-radial-gradient(white, #0193CD, #0193CD);
+    background-image: -radial-gradient(white, #0193CD, #0193CD);
     background-color: #0193CD;
     background-size: 200% 200%;
     margin: 0px;

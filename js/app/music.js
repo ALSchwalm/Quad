@@ -53,7 +53,13 @@ define(["app/config"], function(config){
 
         if (music)
             this.play(music);
+    }
 
+    /**
+     * Begin loading background music asyncronously. This method should be called
+     * after the title music has been loaded.
+     */
+    MusicManager.prototype.loadBackgroundMusic = function() {
         // Load all other level sounds asynchronously, so there isn't a long
         // delay at startup
         for (var i=0; i < config.checkpoints.length + 1; ++i) {
@@ -123,14 +129,15 @@ define(["app/config"], function(config){
      * Update the analyzer (and do beat detection)
      */
     MusicManager.prototype.update = function() {
-        this.detectBeat();
+        if (this.music)
+            this.detectBeat();
     }
 
     MusicManager.prototype.getAverageFreq = function() {
         var avg = 0;
-	for(var i = 0; i < this.freqs.length; i++) {
-	    avg += this.freqs[i];
-	}
+        for(var i = 0; i < this.freqs.length; i++) {
+            avg += this.freqs[i];
+        }
         return avg /= this.freqs.length;
     }
 
@@ -139,22 +146,22 @@ define(["app/config"], function(config){
      */
     MusicManager.prototype.detectBeat = function(){
         var avg = this.getAverageFreq();
-	if (avg > this.beatThreshold && avg > config.sound.beat.minThreshold){
-	    this.beatThreshold = avg*1.1;
-	    this.beatCounter = 0;
+        if (avg > this.beatThreshold && avg > config.sound.beat.minThreshold){
+            this.beatThreshold = avg*1.1;
+            this.beatCounter = 0;
 
             this.onBeat.map(function(callback){
                 callback();
             });
-	} else {
-	    if (this.beatCounter <= config.sound.beat.delay){
-		this.beatCounter++;
-	    }else{
-		this.beatThreshold *= config.sound.beat.decayRate;
+        } else {
+            if (this.beatCounter <= config.sound.beat.delay){
+                this.beatCounter++;
+            }else{
+                this.beatThreshold *= config.sound.beat.decayRate;
                 this.beatThreshold = Math.max(this.beatThreshold,
                                               config.sound.beat.minThreshold);
-	    }
-	}
+            }
+        }
         return this;
     }
 

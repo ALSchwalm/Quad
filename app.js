@@ -27,6 +27,7 @@ function(game) {
             timer.init(game);
             $('#start-menu').fadeOut();
             $('#pause-menu').data("available", "true");
+            $(this).off('click');
         });
 
         var pause = function(){

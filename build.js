@@ -9,5 +9,5 @@
         app: '../app'
     },
     name : "../../app",
-    out : "js/quad.min.js"
+    out : "quad-built.js"
 })

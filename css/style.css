@@ -41,6 +41,17 @@ body {
     font-size: 5em;
 }
 
+#gameover-menu>table {
+    margin: 0 auto;
+    background-color: #222222;
+}
+
+#gameover-menu th,
+#gameover-menu td {
+    color: lightgray;
+    background-color: #222222;
+}
+
 .menu{
     z-index: 10;
     position: relative;
@@ -113,19 +124,4 @@ button:hover{
     bottom:0px;
     left:0px;
     width: 100%;
-}
-
-.one_line_pic{
-    width: 25% !important;
-    cursor: pointer;
-}
-
-.two_line_pic{
-    width: 35% !important;
-    cursor: pointer;
-}
-
-.filler_pic{
-    width: 53% !important;
-    margin: 2% 0;
 }

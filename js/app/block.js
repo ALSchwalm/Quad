@@ -139,6 +139,7 @@ function(config, Phaser, grid, score){
             coord.y > config.grid.numCells-1 ||
             !grid.contents[coord.y]) {
             this.game.paused=true;
+            score.updateGameOver();
             $('#menu-cover').fadeIn(500, function() {
                 $('#gameover-menu').fadeIn(500);
             });

@@ -25,6 +25,17 @@ function(config, music, background){
         this.grid = grid;
         this.generator = generator;
         this.setLevel(0);
+
+        var style = {
+            font: "25px arial",
+            fill: "#fff",
+        }
+
+        this.scoreGraphic = this.game.add.text(185, 445, "/", style);
+        this.scoreGraphic.anchor = {x: 0.5, y: 0.5};
+        this.scoreGraphic.alpha = 0.5
+
+        this.update(0);
     }
 
     /**
@@ -41,13 +52,15 @@ function(config, music, background){
      */
     Score.prototype.getPoints = function(count) {
         var points = Math.pow(count, config.points[this.level]);
-        return Math.floor(points * (this.combo || 1));
+        return Math.round(points * (this.combo || 1)/5)*5;
     }
 
     /**
      * Update the scoreboard and level.
      */
     Score.prototype.update = function(clearCount) {
+        if (!this.scoreGraphic) return this;
+
         var points = this.getPoints(clearCount);
         this.updateBest(points);
         this.totalScore += points;
@@ -62,11 +75,20 @@ function(config, music, background){
         $('#level-base').text(levelDisplay);
         $('#level-overlay').text(levelDisplay);
 
-        var overlayHeight = 400*this.levelTotal/config.checkpoints[this.level]
-        $('#level-wrapper').animate({
-            height : 130 + overlayHeight // 130 is the number of pixels padded
-                                         // below the level indicator
-        });
+        if (config.checkpoints[this.level]) {
+            this.scoreGraphic.text = this.levelTotal.toString() + "/" +
+                config.checkpoints[this.level];
+
+            var overlayHeight = 400*this.levelTotal/config.checkpoints[this.level]
+            $('#level-wrapper').animate({
+                height : 130 + overlayHeight // 130 is the number of pixels padded
+                                             // below the level indicator
+            });
+        } else {
+            this.scoreGraphic.text = this.levelTotal.toString()
+            $('#level-wrapper').animate({ height : "100%"});
+
+        }
     }
 
     /**

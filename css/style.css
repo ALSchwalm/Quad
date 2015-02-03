@@ -60,19 +60,32 @@ table {
 
 button{
     font-family:Arial;
-    color:#2a2a83;
+    -webkit-text-fill-color: rgba(17, 93, 119, 0.35);
+    -webkit-text-stroke-color: black;
+    -webkit-text-stroke-width: 1px;
     cursor:pointer;
     padding-left:1%;
     padding-right:1%;
-    border: 2px ridge blue;
-    border-radius: 25px;
-    background-color: rgba(17, 93, 119, 0.35);
+    border: 2px ridge black;
+    background-color: rgba(83, 181, 246, 0.66);
     transition-property:background;
-    font-size:75px;
+    font-size:65px;
 }
 
 button:hover{
-    background:#66D4E5;
+    background:rgba(17, 93, 119, 0.35);
+    font-family:Arial;
+    -webkit-text-fill-color: white;
+    -webkit-text-stroke-color: white;
+    -webkit-text-stroke-width: 2.00px;
+}
+
+#quad{
+    font-family:arial;
+    font-size:225px;
+    -webkit-text-fill-color: rgba(17, 93, 119, 0.35);
+    -webkit-text-stroke-color: black;
+    -webkit-text-stroke-width: 1px;
 }
 
 #start-menu{

@@ -18,6 +18,9 @@
           <span class="pause-title">Paused</span>
         </div>
         <div class="columns small-12">
+          <span id="pause-resume" class="pause-text">Resume</span>
+        </div>
+        <div class="columns small-12">
           <span class="pause-text" onClick="history.go(0)">Restart</span>
         </div>
       </div>
@@ -28,8 +31,40 @@
         <div class="columns small-12">
           <span class="gameover-title">Game Over</span>
         </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th width="200">Statistic</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Total Score</td>
+            <td id="total-score"></td>
+          </tr>
+          <tr>
+            <td>Total Cleared</td>
+            <td id="total-cleared"></td>
+          </tr>
+          <tr>
+            <td>Best Drop</td>
+            <td id="best-drop"></td>
+          </tr>
+          <tr>
+            <td>Largest Combo</td>
+            <td id="largest-combo"></td>
+          </tr>
+          <tr>
+            <td>Time Played</td>
+            <td id="time-played"></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="row">
         <div class="columns small-12">
-          <span class="pause-text" onClick="history.go(0)">Quit</span>
+          <span class="pause-text" onClick="history.go(0)">Restart</span>
         </div>
       </div>
     </div>

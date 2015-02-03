@@ -1,8 +1,8 @@
 /**
  * @module app/score
  */
-define(['app/config', 'app/music', 'app/background'],
-function(config, music, background){
+define(['app/config', 'app/music', 'app/background', 'app/timer'],
+function(config, music, background, timer){
     "use strict"
 
     /**
@@ -12,8 +12,10 @@ function(config, music, background){
         this.board = 0;
         this.totalScore = 0;
         this.levelTotal = 0;
+        this.totalCleared = 0;
         this.level = 0;
         this.best = 0;
+        this.largestCombo = 0;
         this.combo = 0;
     }
 
@@ -56,6 +58,17 @@ function(config, music, background){
     }
 
     /**
+     * Update the content of the Game Over screen with statistics
+     */
+    Score.prototype.updateGameOver = function(){
+        $("#total-score").text(this.totalScore);
+        $("#total-cleared").text(this.totalCleared);
+        $("#best-drop").text(this.best);
+        $("#largest-combo").text(this.largestCombo);
+        $("#time-played").text(timer.time.text);
+    }
+
+    /**
      * Update the scoreboard and level.
      */
     Score.prototype.update = function(clearCount) {
@@ -65,6 +78,10 @@ function(config, music, background){
         this.updateBest(points);
         this.totalScore += points;
         this.levelTotal += points;
+        this.totalCleared += clearCount;
+
+        if (this.combo > this.largestCombo)
+            this.largestCombo = (this.combo+1).toString() + 'x';
 
         var newLevel = this.calcLevel();
         if (this.level < newLevel) {

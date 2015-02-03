@@ -29,21 +29,32 @@ function(game) {
             $('#pause-menu').data("available", "true");
         });
 
+        var pause = function(){
+            game.paused = true;
+            $('#menu-cover').fadeIn(500, function() {
+                $('#pause-menu').fadeIn(500);
+            });
+        }
+
+        var unpause = function(){
+            game.paused = false;
+            $('#pause-menu').fadeOut(500, function() {
+                $('#menu-cover').fadeOut(500);
+            });
+        }
+
+        $('#pause-resume').click(function(){
+            unpause();
+        })
+
         window.onkeyup = function(e){
             if(String.fromCharCode(e.which) == 'P'
                 && $('#pause-menu').data("available") == "true")
             {
                 if(game.paused == false){
-                    game.paused = true;
-                    $('#menu-cover').fadeIn(500, function() {
-                        $('#pause-menu').fadeIn(500);
-                    });
-                }
-                else{
-                    game.paused = false;
-                    $('#pause-menu').fadeOut(500, function() {
-                        $('#menu-cover').fadeOut(500);
-                    });
+                    pause();
+                } else{
+                    unpause();
                 }
             };
         }

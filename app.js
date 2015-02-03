@@ -26,10 +26,13 @@ function(game) {
             score.init(game, grid, generator);
             timer.init(game);
             $('#start-menu').fadeOut();
+            $('#pause-menu').data("available", "true");
         });
 
         window.onkeyup = function(e){
-            if(String.fromCharCode(e.which) == 'P'){
+            if(String.fromCharCode(e.which) == 'P'
+                && $('#pause-menu').data("available") == "true")
+            {
                 if(game.paused == false){
                     game.paused = true;
                     $('#menu-cover').fadeIn(500, function() {
@@ -45,4 +48,5 @@ function(game) {
             };
         }
     });
+
 });

@@ -142,6 +142,7 @@ function(config, Phaser, grid, score){
             $('#menu-cover').fadeIn(500, function() {
                 $('#gameover-menu').fadeIn(500);
             });
+            $('#pause-menu').data("available", "false");
 
             return this;
         }

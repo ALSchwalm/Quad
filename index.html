@@ -4,23 +4,41 @@
     <meta charset="utf-8" />
     <title>Quad</title>
     <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/foundation.css">
+
     <script data-main="app" src="js/lib/require.js"></script>
   </head>
   <body>
     <div id="menu-cover" style="display:none;"></div>
 
+<<<<<<< HEAD
     <div data-available="false" id="pause-menu" class="menu" style="position: absolute; width: 100%; height: 100%; overflow: hidden; display:none;" >
       <div style="max-width: 1200px;">
         <img src="assets\images\pause.png" alt=""><br>
         <img class="filler_pic" src="assets\images\seperator.png" alt=""><br>
         <img class="two_line_pic" src="assets\images\restart.png" alt=""><br>
         <img class="one_line_pic" src="assets\images\quit.png" alt=""><br>
+=======
+    <div id="pause-menu" class="menu" style="position: absolute; width: 100%; height: 100%; overflow: hidden; display:none;" >
+      <div class="row">
+        <div class="columns small-12">
+          <span class="pause-title">Paused</span>
+        </div>
+        <div class="columns small-12">
+          <span class="pause-text" onClick="history.go(0)">Restart</span>
+        </div>
+>>>>>>> restart material
       </div>
     </div>
 
     <div id="gameover-menu" class="menu" style="position: absolute; width: 100%; height: 100%; overflow: hidden; display:none;" >
-      <div style="max-width: 1200px;">
-        <img src="assets\images\gameover.png" alt=""><br>
+      <div class="row">
+        <div class="columns small-12">
+          <span class="gameover-title">Gameover</span>
+        </div>
+        <div class="columns small-12">
+          <span class="pause-text" onClick="history.go(0)">Quit</span>
+        </div>
       </div>
     </div>
 

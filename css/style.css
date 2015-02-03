@@ -8,12 +8,41 @@ body {
 }
 
 #menu-cover {
-    background: rgba(0, 0, 0, 0.84);
+    background: rgba(0, 0, 0, 0.90);
     width: 100%;
     height: 100%;
     position: absolute;
+    overflow: hidden;
 
 }
+
+.pause-text{
+    font-size: 0.4em;
+    cursor: pointer;
+}
+
+#pause-menu {
+    position: absolute;
+width: 100%;
+height: 100%;
+overflow: hidden;
+color: rgba(255, 255, 255, 0.55);
+font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+font-size: 5em;
+}
+
+#gameover-menu {
+    position: absolute;
+width: 100%;
+height: 100%;
+overflow: hidden;
+color: rgba(255, 255, 255, 0.55);
+font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+font-size: 5em;
+}
+
+
+
 
 .menu{
     z-index: 10;

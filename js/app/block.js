@@ -139,9 +139,11 @@ function(config, Phaser, grid, score){
             coord.y > config.grid.numCells-1 ||
             !grid.contents[coord.y]) {
             this.game.paused=true;
-            var text = "Game Over";
-            var style = { font: "65px Arial", fill: "#ff0044", align: "center" };
-            var t = this.game.add.text(this.game.world.centerX-300, 0, text, style);
+            $('#menu-cover').fadeIn(500, function() {
+                $('#gameover-menu').fadeIn(500);
+            });
+            $('#pause-menu').data("available", "false");
+
             return this;
         }
 
@@ -254,8 +256,9 @@ function(config, Phaser, grid, score){
 
         if (doClear) {
             var totalCleared = eraseBlocks(this) + grid.cleanup();
-            this.displayClearedCount(totalCleared);
             score.update(totalCleared);
+            this.displayClearedCount(score.getPoints(totalCleared));
+            this.clearedBlocks = true;
         }
 
         return this;
@@ -264,28 +267,31 @@ function(config, Phaser, grid, score){
     /**
      * Display how many blocks are cleared.
      */
-    Block.prototype.displayClearedCount = function(count) {
-        if (count <= 6) return this;
-        var fontSize = function(count) {
-            if (count > 15) return "45px Arial";
-            else return (2*count+15).toString() + "px Arial";
-        };
-        var text = count.toString();
+    Block.prototype.displayClearedCount = function(points) {
+        var fontSize;
+        if (points > 45) fontSize = "45px Arial";
+        else if (points < 20) fontSize = "20px Arial";
+        else fontSize = points.toString() + "px Arial";
+
+        var text = points.toString();
+        if (score.combo > 0)
+            text += " (" + (score.combo+1) + "x)";
+
         var style = {
-            font: fontSize(count),
+            font: fontSize,
             fill: "#FFFFFF",
-            align: "center",
             shadowColor: "#000000",
-            shadowOffsetX: 3,
-            shadowOffsetY: 3,
+            shadowOffsetX: 2,
+            shadowOffsetY: 2,
         };
+
         var point = grid.coordToPoint(this.coord);
         var graphic = this.game.add.text(point.x, point.y, text, style);
-        graphic.scale = {x: 0, y:0};
+        graphic.alpha = 0;
 
-        var scaleTween = this.game.add.tween(graphic.scale);
-        scaleTween.to({ x: 1, y: 1}, 300, Phaser.Easing.Quadratic.InOut, true);
-        scaleTween.onComplete.add(function(){
+        var tween = this.game.add.tween(graphic);
+        tween.to({alpha : 0.7, y : "-20"}, 500).start();
+        tween.onComplete.add(function(){
             graphic.destroy();
         });
         return this;

@@ -1,9 +1,132 @@
-
 body {
-    background: -webkit-radial-gradient(white, #0193CD, #0193CD);
-    background: -radial-gradient(white, #0193CD, #0193CD);
+    background-image: -webkit-radial-gradient(white, #0193CD, #0193CD);
+    background-image: -radial-gradient(white, #0193CD, #0193CD);
     background-color: #0193CD;
     background-size: 200% 200%;
     margin: 0px;
     padding: 0px;
+}
+
+#menu-cover {
+    background: rgba(0, 0, 0, 0.90);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    overflow: hidden;
+
+}
+
+.pause-text{
+    font-size: 0.4em;
+    cursor: pointer;
+}
+
+#pause-menu {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    color: rgba(255, 255, 255, 0.55);
+    font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+    font-size: 5em;
+}
+
+#gameover-menu {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    color: rgba(255, 255, 255, 0.55);
+    font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+    font-size: 5em;
+}
+
+.menu{
+    z-index: 10;
+    position: relative;
+    text-align: center;
+    padding: 15%;
+}
+
+.menu>img {
+    width: 50%;
+}
+
+button{
+    font-family:Arial;
+    color:#2a2a83;
+    cursor:pointer;
+    padding-left:1%;
+    padding-right:1%;
+    border: 2px ridge blue;
+    border-radius: 25px;
+    background-color: rgba(17, 93, 119, 0.35);
+    transition-property:background;
+    font-size:75px;
+}
+
+button:hover{
+    background:#66D4E5;
+}
+
+#start-menu{
+    position:absolute;
+    z-index:100;
+    text-align:center;
+    margin:0 auto;
+    width:100%;
+}
+
+#level {
+    line-height: initial;
+    position:absolute;
+    top: 0px;
+    left: 0px;
+    width: 350px;
+    height: 550px;
+    font-size: 550px;
+    color: white;
+}
+
+#level-base {
+    position:absolute;
+    bottom:0px;
+    left: 0px;
+    width: 100%;
+    opacity: 0.3;
+}
+
+#level-wrapper {
+    position:absolute;
+    bottom:0px;
+    left: 0px;
+
+    /* We make the initial width 0px and hide the overflow. */
+    width: 100%;
+    height: 130px;
+    overflow:hidden;
+}
+
+#level-overlay {
+    opacity: 0.7;
+    position:absolute;
+    z-index:10;
+    bottom:0px;
+    left:0px;
+    width: 100%;
+}
+
+.one_line_pic{
+    width: 25% !important;
+    cursor: pointer;
+}
+
+.two_line_pic{
+    width: 35% !important;
+    cursor: pointer;
+}
+
+.filler_pic{
+    width: 53% !important;
+    margin: 2% 0;
 }

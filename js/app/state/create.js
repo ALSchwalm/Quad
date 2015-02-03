@@ -3,8 +3,8 @@
  * phase of Phaser js startup
  * @module app/state/create
  */
-define(["app/grid", "app/generator", "app/background", "app/music", "app/score"],
-function(grid, generator, background, music, score){
+define(["app/background", "app/music"],
+function(background, music){
     "use strict"
 
     /**
@@ -14,11 +14,22 @@ function(grid, generator, background, music, score){
      * @param {Phaser.Game} game - The current game object
      */
     var create = function(game){
-        music.start(game, 'background1');
+        music.start(game);
         background.start(game);
-        grid.display(game);
-        generator.start(game);
-        score.init(game, grid, generator);
+
+        game.load.audio('title', 'assets/sounds/title.mp3').onFileComplete.add(
+            function(percent, name) {
+                if (name == 'title') {
+                    music.play('title');
+                    music.loadBackgroundMusic();
+                }
+        });
+
+        game.load.audio('attach', 'assets/sounds/attach.wav');
+        game.load.audio('destroy', 'assets/sounds/destroy.wav');
+        game.load.audio('move', 'assets/sounds/move.wav');
+        game.load.audio('rotate', 'assets/sounds/rotate.wav');
+        game.load.start();
     };
     return create;
 });

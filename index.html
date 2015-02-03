@@ -1,10 +1,59 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8" />
+    <title>Quad</title>
+
+    <link rel="stylesheet" type="text/css" href="css/foundation.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
+
     <script data-main="app" src="js/lib/require.js"></script>
   </head>
   <body>
+    <div id="menu-cover" style="display:none;"></div>
+
+    <div data-available="false" id="pause-menu" class="menu" style="position: absolute; width: 100%; height: 100%; overflow: hidden; display:none;" >
+      <div class="row">
+        <div class="columns small-12">
+          <span class="pause-title">Paused</span>
+        </div>
+        <div class="columns small-12">
+          <span class="pause-text" onClick="history.go(0)">Restart</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="gameover-menu" class="menu" style="position: absolute; width: 100%; height: 100%; overflow: hidden; display:none;" >
+      <div class="row">
+        <div class="columns small-12">
+          <span class="gameover-title">Game Over</span>
+        </div>
+        <div class="columns small-12">
+          <span class="pause-text" onClick="history.go(0)">Quit</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="start-menu">
+      <div>
+        <img src="assets/images/newquadlogo.png" width="800" height="300" />
+      </div>
+
+      <div style="margin-top:6em; margin-bottom:3em;">
+        <button id="start-button">Start</button>
+      </div>
+
+      <div style="margin-top:7em;">
+        <button id="how-button">How To Play</button>
+      </div>
+    </div>
+
+    <div id="level">
+      <span id="level-base"></span>
+      <div id="level-wrapper">
+        <span id="level-overlay"></span>
+      </div>
+    </div>
     <div id="phaser-container">
       <div id="phaser-body"></div>
     </div>

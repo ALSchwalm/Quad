@@ -29,6 +29,7 @@ define(["app/config"], function(config){
          * WebAudio node which is used to crossfade
          */
         this.gain = this.game.sound.context.createGain();
+        this.gain.gain.value = 0;
 
         this.analyser.minDecibels = -140;
         this.analyser.maxDecibels = 0;
@@ -52,10 +53,16 @@ define(["app/config"], function(config){
 
         if (music)
             this.play(music);
+    }
 
+    /**
+     * Begin loading background music asyncronously. This method should be called
+     * after the title music has been loaded.
+     */
+    MusicManager.prototype.loadBackgroundMusic = function() {
         // Load all other level sounds asynchronously, so there isn't a long
         // delay at startup
-        for (var i=1; i < config.checkpoints.length + 1; ++i) {
+        for (var i=0; i < config.checkpoints.length + 1; ++i) {
             this.game.load.audio('background' + (i+1),
                                  'assets/sounds/background' + (i+1) + '.mp3');
         }
@@ -69,9 +76,9 @@ define(["app/config"], function(config){
      */
     MusicManager.prototype.play = function(music) {
         var oldMusic = this.music;
-        this.fade("out", this.crossfadeDuration/2);
+        var loaded = this.game.cache.checkSoundKey(music);
 
-        var playNew = function(){
+        var playNow = function() {
             if (oldMusic) {
                 oldMusic.externalNode = null;
                 this.analyser.disconnect();
@@ -82,17 +89,35 @@ define(["app/config"], function(config){
             this.music.externalNode = this.gain;
             this.analyser.connect(this.music.masterGainNode);
             this.music.play();
+            this.beatThreshold = 50000;
 
-            this.fade("in", this.crossfadeDuration/2);
+            if (oldMusic)
+                this.fade("in", this.crossfadeDuration/2);
+            else
+                this.fade("in", this.crossfadeDuration*3);
         }.bind(this);
 
-        // Only crossfade if there is an already playing song
-        if (this.music){
-            setTimeout(playNew, this.crossfadeDuration);
-        } else {
-            playNew();
-        }
+        var crossfade = function() {
+            // Only crossfade if there is music already playing
+            if (!this.music){
+                playNow();
+            } else {
+                this.fade("out", this.crossfadeDuration/2);
+                setTimeout(playNow, this.crossfadeDuration);
+            }
+        }.bind(this);
 
+        // If the requested music has already been loaded, crossfade
+        // to it. Otherwise, wait for it to load.
+        if (loaded) {
+            crossfade();
+        } else {
+            this.game.load.onFileComplete.add(function(p, name){
+                if (name == music) {
+                    crossfade();
+                }
+            }.bind(this));
+        }
         return this;
     }
 
@@ -104,10 +129,11 @@ define(["app/config"], function(config){
             function(){
                 ++count;
                 if (this.music) {
-                    if (direction === "out")
+                    if (direction === "out" && this.gain.gain.value - 1/100 >= 0) {
                         this.gain.gain.value -= 1/100;
-                    else
+                    } else if (this.gain.gain.value + 1/100 <= 1){
                         this.gain.gain.value += 1/100;
+                    }
                 }
                 if (count == 100) timer.stop();
             }.bind(this));
@@ -118,14 +144,15 @@ define(["app/config"], function(config){
      * Update the analyzer (and do beat detection)
      */
     MusicManager.prototype.update = function() {
-        this.detectBeat();
+        if (this.music)
+            this.detectBeat();
     }
 
     MusicManager.prototype.getAverageFreq = function() {
         var avg = 0;
-	for(var i = 0; i < this.freqs.length; i++) {
-	    avg += this.freqs[i];
-	}
+        for(var i = 0; i < this.freqs.length; i++) {
+            avg += this.freqs[i];
+        }
         return avg /= this.freqs.length;
     }
 
@@ -134,22 +161,22 @@ define(["app/config"], function(config){
      */
     MusicManager.prototype.detectBeat = function(){
         var avg = this.getAverageFreq();
-	if (avg > this.beatThreshold && avg > config.sound.beat.minThreshold){
-	    this.beatThreshold = avg*1.1;
-	    this.beatCounter = 0;
+        if (avg > this.beatThreshold && avg > config.sound.beat.minThreshold){
+            this.beatThreshold = avg*1.1;
+            this.beatCounter = 0;
 
             this.onBeat.map(function(callback){
                 callback();
             });
-	} else {
-	    if (this.beatCounter <= config.sound.beat.delay){
-		this.beatCounter++;
-	    }else{
-		this.beatThreshold *= config.sound.beat.decayRate;
+        } else {
+            if (this.beatCounter <= config.sound.beat.delay){
+                this.beatCounter++;
+            }else{
+                this.beatThreshold *= config.sound.beat.decayRate;
                 this.beatThreshold = Math.max(this.beatThreshold,
                                               config.sound.beat.minThreshold);
-	    }
-	}
+            }
+        }
         return this;
     }
 

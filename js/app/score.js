@@ -10,8 +10,11 @@ function(config, music, background){
      */
     var Score = function() {
         this.board = 0;
-        this.current = 0;
+        this.totalScore = 0;
+        this.levelTotal = 0;
         this.level = 0;
+        this.best = 0;
+        this.combo = 0;
     }
 
     /**
@@ -19,42 +22,59 @@ function(config, music, background){
      */
     Score.prototype.init = function(game, grid, generator) {
         this.game = game;
-        var text = "Level: 1\nScore: 0";
-        var style = {
-            font: "20px Arial",
-            fill: "#fff",
-            align: "left",
-            shadowColor: "#000000",
-            shadowOffsetX: 1,
-            shadowOffsetY: 1
-        };
-        this.board = game.add.text(game.world.centerX + 150, 27, text, style);
         this.grid = grid;
         this.generator = generator;
+        this.setLevel(0);
+    }
+
+    /**
+     * Put new best on board
+     */
+    Score.prototype.updateBest = function(count) {
+        if (this.best < count) {
+            this.best = count;
+        }
+    }
+
+    /**
+     * Calculate the number of points for a given clear
+     */
+    Score.prototype.getPoints = function(count) {
+        var points = Math.pow(count, config.points[this.level]);
+        return Math.floor(points * (this.combo || 1));
     }
 
     /**
      * Update the scoreboard and level.
      */
     Score.prototype.update = function(clearCount) {
-        var points = Math.pow(clearCount, config.points[this.level]);
-        var levelDisplay = this.level + 1;
-        this.current += Math.floor(points);
-        this.board.text = "Level: " + levelDisplay + "\nScore: " + this.current;
+        var points = this.getPoints(clearCount);
+        this.updateBest(points);
+        this.totalScore += points;
+        this.levelTotal += points;
 
         var newLevel = this.calcLevel();
         if (this.level < newLevel) {
             this.setLevel(newLevel);
         }
+
+        var levelDisplay = this.level + 1;
+        $('#level-base').text(levelDisplay);
+        $('#level-overlay').text(levelDisplay);
+
+        var overlayHeight = 400*this.levelTotal/config.checkpoints[this.level]
+        $('#level-wrapper').animate({
+            height : 130 + overlayHeight // 130 is the number of pixels padded
+                                         // below the level indicator
+        });
     }
 
     /**
-     * Show a transition indicating the current level
+     * Show a transition prompt
      */
-    Score.prototype.showLevel = function() {
-        var text = (this.level+1).toString();
+    Score.prototype.showReady = function() {
         var style = {
-            font: "200px Arial",
+            font: "100px arial",
             fill: "#fff",
             shadowColor: "#000000",
             shadowOffsetX: 1,
@@ -62,7 +82,7 @@ function(config, music, background){
         }
         var graphics = this.game.add.text(config.game.width/2,
                                           config.game.height/2,
-                                          text, style);
+                                          "ready", style);
         graphics.anchor = {x:0.5, y:0.5};
         graphics.scale = {x: 0, y: 0};
         graphics.alpha = 0;
@@ -81,9 +101,13 @@ function(config, music, background){
     Score.prototype.setLevel = function(level){
         this.level = level;
         this.generator.setLevel(this.level);
+
+        if (this.level > 0)
+            this.levelTotal = this.levelTotal - config.checkpoints[this.level-1];
+
         music.play("background" + (this.level+1));
         background.newColor(config.color.background[this.level]);
-        this.showLevel();
+        this.showReady();
         this.update(0); // display the new level
 
         this.generator.centerQuad.breakable();
@@ -97,7 +121,7 @@ function(config, music, background){
      */
     Score.prototype.calcLevel = function() {
         for (var i = config.checkpoints.length - 1; i >= 0; i--) {
-            if (this.current >= config.checkpoints[i]) {
+            if (this.levelTotal >= config.checkpoints[i]) {
                 return i+1;
             }
         }

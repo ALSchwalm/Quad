@@ -2,8 +2,8 @@
  * A singleton which spawns quads at random times and locations
  * @module app/generator
  */
-define(["app/config", "Phaser", "app/quad", "app/grid"],
-function(config, Phaser, Quad, grid){
+define(["app/config", "Phaser", "app/quad", "app/grid", "app/timer"],
+function(config, Phaser, Quad, grid, timer){
     "use strict"
 
     /**
@@ -115,6 +115,7 @@ function(config, Phaser, Quad, grid){
         this.futureQuads.unshift(newQuad);
         this.showFutureQuads();
 
+        timer.dropTimerStart();
         this.dropTimer.start();
         generator.showLimits();
         return this;
@@ -160,6 +161,7 @@ function(config, Phaser, Quad, grid){
             }
         }
 
+        timer.dropTimerStop();
         this.dropTimer.stop(false);
         this.waitingQuads.map(function(quad){
             this.fallingQuads.push(quad);
@@ -193,7 +195,7 @@ function(config, Phaser, Quad, grid){
 
         var direction = this.waitingQuads[0].direction;
         this.limitGraphic.clear();
-        this.limitGraphic.beginFill(0x222222, 0.2);
+        this.limitGraphic.beginFill(0x111111, 0.1);
         switch(direction.toLowerCase()) {
         case "top":
         case "bottom":
@@ -204,14 +206,16 @@ function(config, Phaser, Quad, grid){
             if (leftLimit > grid.getLimit("left")) {
                 var top = grid.coordToPoint({x: leftLimit, y: 0});
                 this.limitGraphic.drawRect(top.x, top.y,
-                                           2, config.grid.size);
+                                           -(top.x - grid.offsets.x),
+                                           config.grid.size);
             }
 
             // draw right limit
             if (rightLimit < config.grid.numCells - grid.getLimit("right")) {
                 top = grid.coordToPoint({x: rightLimit, y: 0});
                 this.limitGraphic.drawRect(top.x, top.y,
-                                           2, config.grid.size);
+                                           config.grid.size-(top.x-grid.offsets.x),
+                                           config.grid.size);
             }
             break;
         case "left":
@@ -223,14 +227,16 @@ function(config, Phaser, Quad, grid){
             if (topLimit > grid.getLimit("top")) {
                 var top = grid.coordToPoint({x: 0, y: topLimit});
                 this.limitGraphic.drawRect(top.x, top.y,
-                                           config.grid.size, 2);
+                                           config.grid.size,
+                                           -(top.y - grid.offsets.y));
             }
 
             // draw bottom limit
             if (bottomLimit < config.grid.numCells - grid.getLimit("bottom")) {
                 top = grid.coordToPoint({x: 0, y: bottomLimit});
                 this.limitGraphic.drawRect(top.x, top.y,
-                                           config.grid.size, 2);
+                                           config.grid.size,
+                                           config.grid.size-(top.y-grid.offsets.y));
             }
             break;
         default:
@@ -246,17 +252,25 @@ function(config, Phaser, Quad, grid){
      * Phaser update callback function.
      */
     Generator.prototype.update = function() {
-        this.drawTimerGraphics();
+        if (this.game)
+            this.drawTimerGraphics();
     }
 
     /**
      * Set the current level.
      */
     Generator.prototype.setLevel = function(level) {
-        this.level = level;
-        this.updateCurrentQuadLevel(this.level);
-        var speed = config.generator.speeds[this.level];
-        this.dropTimer.loop(speed * Phaser.Timer.SECOND, this.drop.bind(this));
+        if (this.level != level) {
+            this.level = level;
+            this.updateCurrentQuadLevel(this.level);
+            var speed = config.generator.speeds[this.level];
+            this.dropTimer.loop(speed * Phaser.Timer.SECOND, this.drop.bind(this));
+        }
+        this.dropTimer.stop(false);
+
+        // Pause for the level transition effects
+        timer.droptimer = -3000;
+        this.dropTimer.start(3000);
     }
 
     /**
@@ -266,7 +280,7 @@ function(config, Phaser, Quad, grid){
         var speed = config.generator.speeds[this.level];
 
         this.timerGraphic.clear();
-        var percentElapsed = this.dropTimer.ms/(speed * Phaser.Timer.SECOND)
+        var percentElapsed = (timer.droptimer)/(speed * Phaser.Timer.SECOND);
         if (percentElapsed > 1)
             percentElapsed = 1;
         else if (percentElapsed < 0)
@@ -293,6 +307,7 @@ function(config, Phaser, Quad, grid){
      * Stop 'dropping' quads
      */
     Generator.prototype.stop = function() {
+        timer.dropTimerStop();
         this.dropTimer.stop(false);
         return this;
     }

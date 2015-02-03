@@ -48,6 +48,18 @@ function(game) {
             unpause();
         })
 
+        $('#how-button').click(function(){
+            $('#menu-cover').fadeIn(500, function(){
+                $('#how-to-play-menu').fadeIn(200);
+            });
+        });
+
+        $('#how-to-close').click(function(){
+            $('#how-to-play-menu').fadeOut(500, function(){
+                $('#menu-cover').fadeOut(200);
+            });
+        });
+
         window.onkeyup = function(e){
             if(String.fromCharCode(e.which) == 'P'
                 && $('#pause-menu').data("available") == "true")

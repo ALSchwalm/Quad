@@ -13,7 +13,7 @@ body {
     height: 100%;
     position: absolute;
     overflow: hidden;
-
+    z-index: 150;
 }
 
 .pause-text{
@@ -21,7 +21,9 @@ body {
     cursor: pointer;
 }
 
-#pause-menu {
+#pause-menu,
+#gameover-menu,
+#how-to-play-menu {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -29,25 +31,18 @@ body {
     color: rgba(255, 255, 255, 0.55);
     font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
     font-size: 5em;
+    z-index: 200;
 }
 
-#gameover-menu {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    color: rgba(255, 255, 255, 0.55);
-    font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
-    font-size: 5em;
-}
-
-#gameover-menu>table {
+table {
     margin: 0 auto;
     background-color: #222222;
 }
 
 #gameover-menu th,
-#gameover-menu td {
+#gameover-menu td,
+#how-to-play-menu th,
+#how-to-play-menu td {
     color: lightgray;
     background-color: #222222;
 }
@@ -124,4 +119,9 @@ button:hover{
     bottom:0px;
     left:0px;
     width: 100%;
+}
+
+#how-to-description {
+    font-size: 25px;
+    text-align: left;
 }

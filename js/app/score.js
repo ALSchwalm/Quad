@@ -74,25 +74,27 @@ function(config, music, background){
      */
     Score.prototype.showReady = function() {
         var style = {
-            font: "100px arial",
+            font: "90px arial",
             fill: "#fff",
             shadowColor: "#000000",
             shadowOffsetX: 1,
             shadowOffsetY: 1,
         }
-        var graphics = this.game.add.text(config.game.width/2,
+        var graphics = this.game.add.text(config.game.width/2-100,
                                           config.game.height/2,
                                           "ready", style);
         graphics.anchor = {x:0.5, y:0.5};
-        graphics.scale = {x: 0, y: 0};
         graphics.alpha = 0;
         this.game.world.bringToTop(graphics);
 
-        var tween = this.game.add.tween(graphics.scale);
-        tween.to({x: 1, y:1}, 1500).to({x:0, y:0}, 2000).start();
-
-        var alphaTween = this.game.add.tween(graphics);
-        alphaTween.to({alpha:1}, 1500).to({alpha:0}, 2000).start();
+        var tweenIn = this.game.add.tween(graphics);
+        tweenIn.to({alpha:1, x: config.game.width/2}, 1000,
+                   Phaser.Easing.Cubic.Out, true)
+            .onComplete.add(function(){
+                var tween = this.game.add.tween(graphics);
+                tween.to({alpha:0, x: config.game.width/2+100}, 1000,
+                         Phaser.Easing.Cubic.Out, true, 1000);
+            }.bind(this));
     }
 
     /**

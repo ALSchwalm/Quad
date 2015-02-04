@@ -67,7 +67,7 @@ button{
     padding-left:1%;
     padding-right:1%;
     border: 2px ridge black;
-    background-color: rgba(83, 181, 246, 0.66);
+    background-color: rgba(70, 176, 219, 0.46);
     transition-property:background;
     font-size:65px;
 }

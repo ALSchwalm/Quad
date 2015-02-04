@@ -60,19 +60,30 @@ table {
 
 button{
     font-family:Arial;
-    color:#2a2a83;
+    color:rgba(255, 255, 255, 0.75);
     cursor:pointer;
     padding-left:1%;
     padding-right:1%;
-    border: 2px ridge blue;
-    border-radius: 25px;
-    background-color: rgba(17, 93, 119, 0.35);
+    border: 1px ridge rgba(17, 93, 119, 0.55);
+    background-color: rgba(70, 175, 218, 0.61);
     transition-property:background;
-    font-size:75px;
+    font-size:55px;
 }
 
 button:hover{
-    background:#66D4E5;
+    background:rgba(17, 93, 119, 0.35);
+    font-family:Arial;
+    color:white;
+}
+
+#quad{
+    font-family:arial;
+    font-size:360px;
+    color:rgba(255, 255, 255, 0.65);
+    position:fixed;
+    text-align:center;
+    margin:0 auto;
+    width:100%;
 }
 
 #start-menu{

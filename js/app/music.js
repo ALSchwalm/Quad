@@ -114,7 +114,7 @@ define(["app/config"], function(config){
         } else {
             this.game.load.onFileComplete.add(function(p, name){
                 if (name == music) {
-                    crossfade();
+                    this.play(music);
                 }
             }.bind(this));
         }

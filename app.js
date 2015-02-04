@@ -49,14 +49,17 @@ function(game) {
         })
 
         $('#how-button').click(function(){
-            $('#menu-cover').fadeIn(500, function(){
+            $('#menu-cover').css("background", "rgba(0, 0, 0, 0.9)")
+                .fadeIn(500, function(){
                 $('#how-to-play-menu').fadeIn(200);
             });
         });
 
         $('#how-to-close').click(function(){
             $('#how-to-play-menu').fadeOut(500, function(){
-                $('#menu-cover').fadeOut(200);
+                $('#menu-cover').fadeOut(200, function(){
+                    $('#menu-cover').css("background", "rgba(0, 0, 0, 0.70)");
+                })
             });
         });
 

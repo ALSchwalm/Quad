@@ -5,6 +5,29 @@ body {
     background-size: 200% 200%;
     margin: 0px;
     padding: 0px;
+    max-width: 100%;
+    max-height: 100%;
+    overflow: hidden;
+}
+
+#title-wrapper {
+    position: relative;
+    top: 4em;
+    border:1px rgba(20, 20, 20, 0.4) solid;
+    background-color: rgba(220, 220, 220, 0.1);
+    display:inline-block;
+    margin-bottom: 10em;
+    cursor: default;
+}
+
+#title {
+    position: relative;
+    top:-0.5vw;
+    display:inline-block;
+    font-size: 20vw;
+    line-height: 1em;
+    color: rgba(240, 240, 240, 0.8);
+    -webkit-font-smoothing: antialiased;
 }
 
 #menu-cover {
@@ -58,34 +81,23 @@ table {
     width: 50%;
 }
 
-button{
+#how-button {
+    margin-top: 40px;
+}
+
+button {
     font-family:Arial;
-    -webkit-text-fill-color: rgba(17, 93, 119, 0.35);
-    -webkit-text-stroke-color: black;
-    -webkit-text-stroke-width: 1px;
+    color: rgba(230, 230, 230, 0.8);
     cursor:pointer;
     padding-left:1%;
     padding-right:1%;
-    border: 2px ridge black;
-    background-color: rgba(70, 176, 219, 0.46);
-    transition-property:background;
-    font-size:65px;
+    background-color: rgba(50, 50, 50, 0.35);
+    border:1px rgba(20, 20, 20, 0.4) solid;
+    font-size:45px;
 }
 
 button:hover{
-    background:rgba(17, 93, 119, 0.35);
-    font-family:Arial;
-    -webkit-text-fill-color: white;
-    -webkit-text-stroke-color: white;
-    -webkit-text-stroke-width: 2.00px;
-}
-
-#quad{
-    font-family:arial;
-    font-size:225px;
-    -webkit-text-fill-color: rgba(17, 93, 119, 0.35);
-    -webkit-text-stroke-color: black;
-    -webkit-text-stroke-width: 1px;
+    background-color: rgba(50, 50, 50, 0.50);
 }
 
 #start-menu{

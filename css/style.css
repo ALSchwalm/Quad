@@ -60,6 +60,7 @@ table {
 
 button{
     font-family:Arial;
+<<<<<<< HEAD
     color:rgba(255, 255, 255, 0.75);
     cursor:pointer;
     padding-left:1%;
@@ -68,22 +69,47 @@ button{
     background-color: rgba(70, 175, 218, 0.61);
     transition-property:background;
     font-size:55px;
+=======
+    -webkit-text-fill-color: rgba(17, 93, 119, 0.35);
+    -webkit-text-stroke-color: black;
+    -webkit-text-stroke-width: 1px;
+    cursor:pointer;
+    padding-left:1%;
+    padding-right:1%;
+    border: 2px ridge black;
+    background-color: rgba(70, 176, 219, 0.46);
+    transition-property:background;
+    font-size:65px;
+>>>>>>> upstream/master
 }
 
 button:hover{
     background:rgba(17, 93, 119, 0.35);
     font-family:Arial;
+<<<<<<< HEAD
     color:white;
+=======
+    -webkit-text-fill-color: white;
+    -webkit-text-stroke-color: white;
+    -webkit-text-stroke-width: 2.00px;
+>>>>>>> upstream/master
 }
 
 #quad{
     font-family:arial;
+<<<<<<< HEAD
     font-size:360px;
     color:rgba(255, 255, 255, 0.65);
     position:fixed;
     text-align:center;
     margin:0 auto;
     width:100%;
+=======
+    font-size:225px;
+    -webkit-text-fill-color: rgba(17, 93, 119, 0.35);
+    -webkit-text-stroke-color: black;
+    -webkit-text-stroke-width: 1px;
+>>>>>>> upstream/master
 }
 
 #start-menu{

@@ -31,7 +31,7 @@ function(config, generator, Phaser, grid){
                 delay: delayBetween,
                 active: false,
                 press : function() {
-                    if (!keyObj.active) {
+                    if (!keyObj.active && $('#pause-menu').data("available")) {
                         keyObj.callback();
                         keyObj.active = true;
                         setTimeout(function(){

@@ -58,7 +58,6 @@ table {
 }
 
 button{
-    font-family:Arial;
     color:rgba(255, 255, 255, 0.75);
     cursor:pointer;
     padding-left:1%;
@@ -71,12 +70,10 @@ button{
 
 button:hover{
     background:rgba(17, 93, 119, 0.35);
-    font-family:Arial;
     color:white;
 }
 
 #quad{
-    font-family:arial;
     font-size:360px;
     color:rgba(255, 255, 255, 0.65);
     position:fixed;

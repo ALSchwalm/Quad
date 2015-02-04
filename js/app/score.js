@@ -64,7 +64,7 @@ function(config, music, background, timer){
         $("#total-score").text(this.totalScore);
         $("#total-cleared").text(this.totalCleared);
         $("#best-drop").text(this.best);
-        $("#largest-combo").text(this.largestCombo);
+        $("#largest-combo").text((this.largestCombo+1).toString() + 'x');
         $("#time-played").text(timer.time.text);
     }
 
@@ -81,7 +81,7 @@ function(config, music, background, timer){
         this.totalCleared += clearCount;
 
         if (this.combo > this.largestCombo)
-            this.largestCombo = (this.combo+1).toString() + 'x';
+            this.largestCombo = this.combo;
 
         var newLevel = this.calcLevel();
         if (this.level < newLevel) {

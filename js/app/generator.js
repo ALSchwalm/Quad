@@ -142,6 +142,15 @@ function(config, Phaser, Quad, grid, timer){
         return this;
     }
 
+    Generator.prototype.resize = function() {
+        var resizeQuad = function(quad) { quad.resize(); }
+        this.waitingQuads.map(resizeQuad)
+        this.futureQuads.map(resizeQuad)
+        this.fallingQuads.map(resizeQuad)
+        this.showFutureQuads();
+        this.game.world.bringToTop(this.timerGraphic);
+    }
+
     /**
      * Drop all waiting quads onto the game grid
      *

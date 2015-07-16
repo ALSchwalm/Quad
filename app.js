@@ -18,8 +18,8 @@ requirejs.config({
 // Load and start the game
 requirejs(['app/game'],
 function(game) {
-    requirejs(['app/grid', 'app/generator', 'app/score', 'app/timer', 'jquery'],
-    function(grid, generator, score, timer, $) {
+    requirejs(['app/config', 'app/grid', 'app/generator', 'app/score', 'app/timer', 'jquery'],
+    function(config, grid, generator, score, timer, $) {
         $('#start-button').click(function(){
             grid.display(game);
             generator.start(game);
@@ -28,6 +28,25 @@ function(game) {
             $('#start-menu').fadeOut();
             $('#pause-menu').data("available", "true");
             $(this).off('click');
+        });
+
+        $(window).resize(function(){
+            var height = $(window).height();
+            var width = $(window).width();
+
+            game.width = width;
+            game.height = height;
+            config.game.width = game.width;
+            config.game.height = game.height;
+
+            if (game.renderType === Phaser.WEBGL) {
+                game.renderer.autoResize = false;
+	        game.renderer.resize(width, height);
+            }
+
+            grid.resize(game);
+            timer.resize();
+            generator.resize();
         });
 
         var pause = function(){

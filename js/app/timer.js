@@ -46,11 +46,6 @@ function(config){
             stroke : "#222222"
         };
 
-        var offsets = {
-            x : config.game.width/2 + config.grid.size/2,
-            y : config.game.height/2 - config.grid.size/2
-        }
-
         Timer.startTime = (new Date()).getTime();
         this.time = this.game.add.text(config.game.width,
                                        config.game.height,
@@ -66,7 +61,11 @@ function(config){
         game.onResume.add(function() {
             this.resume();
         }.bind(this));
+    }
 
+    Timer.prototype.resize = function() {
+        this.time.x = config.game.width;
+        this.time.y = config.game.height;
     }
 
     Timer.prototype.calculateTimeElapsed = function() {

@@ -93,6 +93,12 @@ function(config, Phaser, Block, color, score){
         return this;
     }
 
+    Quad.prototype.resize = function() {
+        this.blocks.map(function(block){
+            block.resize();
+        });
+    }
+
     /**
      * 'drop' the quad onto the grid.
      */

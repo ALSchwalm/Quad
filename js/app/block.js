@@ -64,6 +64,18 @@ function(config, Phaser, grid, score){
         this.graphics.endFill();
     }
 
+    Block.prototype.resize = function() {
+        var point;
+        if (this.coord) {
+            point = grid.coordToPoint(this.coord);
+        } else {
+            point = grid.directionToPoint(this.direction, this.position, this.offset);
+        }
+        this.graphics.x = point.x;
+        this.graphics.y = point.y;
+        this.game.world.bringToTop(this.graphics);
+    }
+
     /**
      * Show the block outside the grid.
      *

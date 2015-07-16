@@ -44,6 +44,29 @@ function(config, Phaser, music){
                        y: this.initCoord};
     }
 
+    Grid.prototype.resize = function(game) {
+        this.offsets = {
+            x : config.game.width/2 - config.grid.size/2,
+            y : config.game.height/2 - config.grid.size/2
+        }
+
+        if (this.outerGraphic && this.graphics) {
+            this.outerGraphic.x = this.offsets.x;
+            this.outerGraphic.y = this.offsets.y;
+            this.graphics.x = this.offsets.x;
+            this.graphics.y = this.offsets.y;
+        }
+
+        for (var i=0; i < config.grid.numCells; ++i) {
+            for (var j=0; j < config.grid.numCells; ++j) {
+                var block = this.at(i, j);
+                if (block) {
+                    block.resize();
+                }
+            }
+        }
+    }
+
     /**
      * Show the grid of 'cells' that the blocks can be moved around on
      */

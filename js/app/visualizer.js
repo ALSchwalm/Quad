@@ -35,9 +35,15 @@ define(["app/config", "app/music"], function(config, music){
         this.drawContext = this.game.context;
 
         this.visualFrequencyBinCount =
-            music.analyser.frequencyBinCount * config.sound.visualizer.frequencyBound;
+            music.analyser.frequencyBinCount * config.sound.visualizer.frequencyBound /
+            config.sound.visualizer.frequencySpacing;
 
         this.graphics = game.add.graphics(0, 0);
+        this.barWidth = Math.round(this.canvas.width/this.visualFrequencyBinCount);
+        if (this.barWidth < 2) this.barWidth = 2;
+    }
+
+    Visualizer.prototype.resize = function() {
         this.barWidth = Math.round(this.canvas.width/this.visualFrequencyBinCount);
         if (this.barWidth < 2) this.barWidth = 2;
     }
@@ -54,9 +60,9 @@ define(["app/config", "app/music"], function(config, music){
 
         //Draw the frequency domain chart. Ignore the upper frequencies when drawing
         for (var i = 0; i < this.visualFrequencyBinCount; ++i) {
-            var value = music.freqs[i];
+            var value = music.freqs[i * config.sound.visualizer.frequencySpacing];
             var percent = value / 256;
-            var height = this.canvas.height/2 * percent;
+            var height = config.sound.visualizer.maxBarHeight * percent;
 
             this.graphics.beginFill(0x777777, percent);
             this.graphics.drawRect(i*this.barWidth, this.canvas.height,

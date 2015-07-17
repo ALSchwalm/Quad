@@ -118,6 +118,12 @@ function(config, Phaser, Visualizer, music){
         })
     }
 
+    Background.prototype.resize = function() {
+        if (this.visualizer) {
+            this.visualizer.resize();
+        }
+    }
+
     /**
      * Switch to using 'color' as a basis for a new background
      *

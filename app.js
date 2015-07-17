@@ -18,8 +18,9 @@ requirejs.config({
 // Load and start the game
 requirejs(['app/game'],
 function(game) {
-    requirejs(['app/config', 'app/grid', 'app/generator', 'app/score', 'app/timer', 'jquery'],
-    function(config, grid, generator, score, timer, $) {
+    requirejs(['app/config', 'app/grid', 'app/generator', 'app/score',
+               'app/timer', 'app/background', 'jquery'],
+        function(config, grid, generator, score, timer, background, $) {
         $('#start-button').click(function(){
             grid.display(game);
             generator.start(game);
@@ -47,6 +48,7 @@ function(game) {
             grid.resize(game);
             timer.resize();
             generator.resize();
+            background.resize();
         });
 
         var pause = function(){

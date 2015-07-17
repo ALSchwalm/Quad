@@ -71,7 +71,9 @@ define(function(){
                 minThreshold : 60
             },
             visualizer : {
-                frequencyBound : 0.8
+                frequencyBound : 0.8,
+                frequencySpacing : 1,
+                maxBarHeight : window.innerHeight/2
             }
         },
         points : [ 1.5, 2, 2.5, 3 ],

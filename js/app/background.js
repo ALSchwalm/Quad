@@ -2,8 +2,8 @@
  * A module which displays a background for the game
  * @module app/background
  */
-define(["app/config", "Phaser", "app/visualizer", "app/music"],
-function(config, Phaser, Visualizer, music){
+define(["app/config", "Phaser", "app/music"],
+function(config, Phaser, music){
 
     var BackgroundBlock = function(game) {
         this.game = game;
@@ -93,9 +93,6 @@ function(config, Phaser, Visualizer, music){
      */
     Background.prototype.start = function(game) {
         this.game = game;
-        if (this.game.sound.usingWebAudio) {
-            this.visualizer = new Visualizer(game);
-        }
 
         this.blocks = [];
 
@@ -103,15 +100,36 @@ function(config, Phaser, Visualizer, music){
             var block = new BackgroundBlock(this.game);
             this.blocks.push(block);
         }
+
+        this.frequencySprite = this.game.add.sprite(0, 0);
+        this.frequencySprite.width = config.game.width;
+        this.frequencySprite.height = config.game.height;
+
+        this.timeSprite = this.game.add.sprite(0, 0);
+        this.timeSprite.width = config.game.width;
+        this.timeSprite.height = config.game.height;
+
+        this.frequencyFilter = this.game.add.filter("Frequency", config.game.width,
+                                                    config.game.height);
+        this.timeFilter = this.game.add.filter("Time", config.game.width,
+                                               config.game.height);
+
+        this.frequencySprite.filters = [this.frequencyFilter];
+        this.game.world.sendToBack(this.frequencySprite);
+
+        this.timeSprite.filters = [this.timeFilter];
+        this.game.world.sendToBack(this.timeSprite);
     }
 
     /**
      * Update the background
      */
     Background.prototype.update = function(){
-        if (this.visualizer) {
-            this.visualizer.draw();
-        }
+        this.frequencyFilter.setFrequencyData(music.freqs);
+        this.frequencyFilter.update();
+
+        this.timeFilter.setTimeDomainData(music.times);
+        this.timeFilter.update();
 
         this.blocks.map(function(block){
             block.update();
@@ -119,9 +137,10 @@ function(config, Phaser, Visualizer, music){
     }
 
     Background.prototype.resize = function() {
-        if (this.visualizer) {
-            this.visualizer.resize();
-        }
+        this.timeFilter.setResolution(config.game.width,
+                                      config.game.height);
+        this.frequencyFilter.setResolution(config.game.width,
+                                           config.game.height);
     }
 
     /**

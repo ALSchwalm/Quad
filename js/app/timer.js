@@ -64,8 +64,10 @@ function(config){
     }
 
     Timer.prototype.resize = function() {
-        this.time.x = config.game.width;
-        this.time.y = config.game.height;
+        if (this.time) {
+            this.time.x = config.game.width;
+            this.time.y = config.game.height;
+        }
     }
 
     Timer.prototype.calculateTimeElapsed = function() {

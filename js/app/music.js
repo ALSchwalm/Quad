@@ -146,6 +146,10 @@ define(["app/config"], function(config){
     MusicManager.prototype.update = function() {
         if (this.music)
             this.detectBeat();
+
+        // Get the frequency/time data from the currently playing music
+        this.analyser.getByteFrequencyData(this.freqs);
+        this.analyser.getByteTimeDomainData(this.times);
     }
 
     MusicManager.prototype.getAverageFreq = function() {

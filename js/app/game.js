@@ -10,7 +10,7 @@ define(['app/config',
         'app/state/update',
         'app/state/create', 'jquery'],
 function(config, Phaser, preload, update, create){
-    "use strict"
+    "use strict";
 
     /**
      * The game singleton
@@ -20,7 +20,7 @@ function(config, Phaser, preload, update, create){
                                Phaser.AUTO, 'phaser-body', {
         preload : preload,
         update  : update,
-        create  : create,
+        create  : create
     }, true);
 
     return game;

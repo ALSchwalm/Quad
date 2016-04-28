@@ -12,15 +12,15 @@ requirejs.config({
 
         // All application files can be required with 'app/<name>'
         app: '../app'
-    },
+    }
 });
 
 // Load and start the game
 requirejs(['app/game'],
 function(game) {
     requirejs(['app/config', 'app/grid', 'app/generator', 'app/score',
-               'app/timer', 'app/background', 'jquery'],
-        function(config, grid, generator, score, timer, background, $) {
+               'app/timer', 'app/background', 'jquery', 'fancybox'],
+    function(config, grid, generator, score, timer, background, $, fancybox) {
         $('#start-button').click(function(){
             grid.display(game);
             generator.start(game);
@@ -42,7 +42,7 @@ function(game) {
 
             if (game.renderType === Phaser.WEBGL) {
                 game.renderer.autoResize = false;
-	        game.renderer.resize(width, height);
+                game.renderer.resize(width, height);
             }
 
             grid.resize(game);
@@ -56,31 +56,43 @@ function(game) {
             $('#menu-cover').fadeIn(500, function() {
                 $('#pause-menu').fadeIn(500);
             });
-        }
+        };
 
         var unpause = function(){
             game.paused = false;
             $('#pause-menu').fadeOut(500, function() {
                 $('#menu-cover').fadeOut(500);
             });
-        }
+        };
 
         $('#pause-resume').click(function(){
             unpause();
-        })
-
-        $('#how-button').click(function(){
-            $('#menu-cover').css("background", "rgba(0, 0, 0, 0.9)")
-                .fadeIn(500, function(){
-                $('#how-to-play-menu').fadeIn(200);
-            });
         });
 
-        $('#how-to-close').click(function(){
-            $('#how-to-play-menu').fadeOut(500, function(){
-                $('#menu-cover').fadeOut(200, function(){
-                    $('#menu-cover').css("background", "rgba(0, 0, 0, 0.70)");
-                })
+        // Preload the first tutorial, but after the page is done
+        $("#tutorial>video")[0].load();
+        $("#how-button").click(function(){
+            var vids = $("#tutorial>.tutorial-item");
+
+            // User will probably continue through the tutorial, so
+            // preload the rest of them.
+            vids.map(function(_, elem){
+                if (elem.load !== undefined)
+                    elem.load();
+            });
+            $.fancybox(vids, {
+                beforeShow : function() {
+                    var e = this.element[0];
+                    if (e.play !== undefined)
+                        e.play();
+                },
+                loop: false,
+
+                helpers : {
+                    title : {
+                        type : 'inside'
+                    }
+                }
             });
         });
 
@@ -94,7 +106,7 @@ function(game) {
                     unpause();
                 }
             };
-        }
+        };
     });
 
 });

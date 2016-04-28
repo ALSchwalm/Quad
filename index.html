@@ -5,6 +5,7 @@
     <title>QuaD</title>
 
     <link rel="stylesheet" type="text/css" href="css/foundation.css">
+    <link rel="stylesheet" type="text/css" href="css/fancybox.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
 
     <script data-main="app" src="js/lib/require.js"></script>
@@ -81,45 +82,71 @@
         <button id="how-button">How To Play</button>
       </div>
     </div>
-    <div id="how-to-play-menu" class="menu" style="display:none;">
-      <div class="row">
-        <div class="columns small-12">
-          <span class="gameover-title">How To Play</span>
+    <div id="tutorial" style="display:none">
+      <video class="tutorial-item"
+             loop
+             preload="none"
+             title="Groups of blocks (called quads) spawn at the top of the screen
+                    and 'drop' when the timer in the central block runs out. Notice
+                    that blocks cannot pass through each other.">
+        <source src="/assets/videos/part1.mp4" type="video/mp4">
+      </video>
+      <video class="tutorial-item"
+             loop
+             preload="none"
+             title="The direction the waiting quad will fall from can be changed
+                    with the left and right arrows.">
+        <source src="/assets/videos/part2.mp4" type="video/mp4">
+      </video>
+      <video class="tutorial-item"
+             loop
+             preload="none"
+             title="The blocks on the grid can be shifted up, left, down, and right
+                    with the 'w', 'a', 's', and 'd' keys respectively.">
+        <source src="/assets/videos/part3.mp4" type="video/mp4">
+      </video>
+      <video class="tutorial-item"
+             loop
+             preload="none"
+             title="Create quads of the same color to score points! When you form
+                    a quad of one color, it and all adjacent blocks of the same
+                    color will be removed from the field. Additionally, any
+                    single block with no neighbors is removed.">
+        <source src="/assets/videos/part4.mp4" type="video/mp4">
+      </video>
+      <div class="tutorial-item">
+        <div class="row">
+          <div class="columns small-12" >
+            <h2> That's it! </h2>
+            <p>
+              Here are the controls we talked about, plus a few others that
+              are pretty self-explanatory
+            </p>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="columns small-12" >
-          <p id="how-to-description">
-            The objective of Quad is to place 'Quads' on a game grid. Each quad is composed
-            of 4 colored blocks. Create groups of blocks of the same color to clear blocks
-            and earn points!
-          </p>
-        </div>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th width="200">Key</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Left/Right</td>
-            <td>Rotate the waiting quad clockwise/counter-clockwise</td>
-          </tr>
-          <tr>
-            <td>WASD</td><td>Shift the contents of the grid</td>
-          </tr>
-          <tr>
-            <td>Space</td><td>Drop the waiting quad</td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="row">
-        <div class="columns small-12">
-          <span id="how-to-close" class="pause-text">Close</span>
-        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Right/Left</td>
+              <td>Rotate the waiting quad clockwise/counter-clockwise</td>
+            </tr>
+            <tr>
+              <td>WASD</td><td>Shift the contents of the grid</td>
+            </tr>
+            <tr>
+              <td>Space</td><td>Drop the waiting quad immediately</td>
+            </tr>
+            <tr>
+              <td>P</td><td>Pause or resume the game</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 

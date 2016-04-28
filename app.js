@@ -16,11 +16,11 @@ requirejs.config({
 });
 
 // Load and start the game
-requirejs(['app/game'],
-function(game) {
+requirejs(['app/game', 'fancybox'],
+function(game, fancybox) {
     requirejs(['app/config', 'app/grid', 'app/generator', 'app/score',
-               'app/timer', 'app/background', 'jquery', 'fancybox'],
-    function(config, grid, generator, score, timer, background, $, fancybox) {
+               'app/timer', 'app/background', 'jquery'],
+    function(config, grid, generator, score, timer, background, $) {
         $('#start-button').click(function(){
             grid.display(game);
             generator.start(game);

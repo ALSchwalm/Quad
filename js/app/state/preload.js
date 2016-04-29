@@ -11,10 +11,7 @@ define(function(){
      *
      * @param {Phaser.Game} game - The current game object
      */
-    var preload = function(game){
-        game.load.script('Frequency', 'js/app/shaders/Frequency.js');
-        game.load.script('Time', 'js/app/shaders/Time.js');
-    };
+    var preload = function(game){};
 
     return preload;
 });

@@ -2,7 +2,8 @@
  * A module which displays a background for the game
  * @module app/background
  */
-define(["app/config", "Phaser", "app/music"],
+define(["app/config", "Phaser", "app/music",
+        "app/shaders/Frequency", "app/shaders/Time"],
 function(config, Phaser, music){
 
     var BackgroundBlock = function(game) {

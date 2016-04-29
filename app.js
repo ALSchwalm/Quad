@@ -12,15 +12,19 @@ requirejs.config({
 
         // All application files can be required with 'app/<name>'
         app: '../app'
+    },
+
+    shim: {
+        'fancybox': ['jquery']
     }
 });
 
 // Load and start the game
-requirejs(['app/game', 'fancybox'],
-function(game, fancybox) {
+requirejs(['app/game', 'jquery', 'fancybox'],
+function(game, $, fancybox) {
     requirejs(['app/config', 'app/grid', 'app/generator', 'app/score',
-               'app/timer', 'app/background', 'jquery'],
-    function(config, grid, generator, score, timer, background, $) {
+               'app/timer', 'app/background'],
+    function(config, grid, generator, score, timer, background) {
         $('#start-button').click(function(){
             grid.display(game);
             generator.start(game);
@@ -77,7 +81,7 @@ function(game, fancybox) {
             // User will probably continue through the tutorial, so
             // preload the rest of them.
             vids.map(function(_, elem){
-                if (elem.load !== undefined)
+                if (elem.load !== undefined && elem.readyState !== 4)
                     elem.load();
             });
             $.fancybox(vids, {

@@ -15,7 +15,9 @@ requirejs.config({
     },
 
     shim: {
-        'fancybox': ['jquery']
+        'fancybox': ['jquery'],
+        'app/shaders/Time': ['Phaser'],
+        'app/shaders/Frequency': ['Phaser'],
     }
 });
 

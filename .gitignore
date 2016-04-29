@@ -1,3 +1,4 @@
 # Documentation will be periodically generated and placed in the gh-pages branch
 docs/html
 .DS_Store
+bower_components/

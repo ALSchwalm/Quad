@@ -51,12 +51,12 @@ define(function(){
             available : [
                 [0xFF8C00, 0x00008B],
                 [0x24ed00, 0xed009a],
-                [0x666666, 0xbc0f0f],
+                [0x666666, 0xd41111],
                 [0x111111, 0xEEEEEE],
             ],
             background : [
                 0x0193CD,
-                0xB2248F,
+                0x6a1555,
                 0x590000,
                 0xCCCCCC
             ]

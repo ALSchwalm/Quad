@@ -8,7 +8,15 @@
     <link rel="stylesheet" type="text/css" href="css/fancybox.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
 
-    <script src="quad-built.js"></script>
+    <script>
+     // Start loading the title music early
+     var xhr= new XMLHttpRequest();
+     xhr.open("GET", "assets/sounds/title.mp3", true);
+     xhr.responseType = "arraybuffer";
+     TITLE_AUDIO_REQUEST = xhr;
+     xhr.send();
+    </script>
+    <script data-main="app" src="js/lib/require.js"></script>
   </head>
   <body>
     <div id="menu-cover" style="display:none;"></div>

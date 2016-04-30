@@ -3,8 +3,8 @@
  * phase of Phaser js startup
  * @module app/state/create
  */
-define(["app/background", "app/music"],
-function(background, music){
+define(["app/background", "app/music", "jquery"],
+function(background, music, $){
     "use strict";
 
     /**
@@ -28,17 +28,18 @@ function(background, music){
     };
 
     var playTitleMusic = function(game) {
-        var titleMusic = $("#title-music")[0];
+        $(document).ready(function(){
+            var titleMusic = $("#title-music")[0];
 
-        var finishedLoadingTitle = function() {
-            music.playTag(titleMusic);
-        };
+            var finishedLoadingTitle = function() {
+                music.playTag(titleMusic);
+            };
 
-        if (titleMusic.readyState == 4) {
-            finishedLoadingTitle();
-        } else {
-            titleMusic.canplaythrough = finishedLoadingTitle;
-        }
+            titleMusic.oncanplaythrough = finishedLoadingTitle;
+            if (titleMusic.readyState == 4) {
+                finishedLoadingTitle();
+            }
+        });
     };
 
     return create;

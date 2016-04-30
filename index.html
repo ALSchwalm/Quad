@@ -8,14 +8,7 @@
     <link rel="stylesheet" type="text/css" href="css/fancybox.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
 
-    <script>
-     // Start loading the title music early
-     var xhr= new XMLHttpRequest();
-     xhr.open("GET", "assets/sounds/title.mp3", true);
-     xhr.responseType = "arraybuffer";
-     TITLE_AUDIO_REQUEST = xhr;
-     xhr.send();
-    </script>
+    <audio id="title-music" src="assets/sounds/title.mp3"></audio>
     <script data-main="app" src="js/lib/require.js"></script>
   </head>
   <body>

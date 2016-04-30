@@ -50,10 +50,12 @@ define(["app/config"], function(config){
          * @type {function[]}
          */
         this.onBeat = [];
+        this.music = null;
 
         if (music)
             this.play(music);
-    }
+    };
+
 
     /**
      * Begin loading background music asyncronously. This method should be called
@@ -67,7 +69,24 @@ define(["app/config"], function(config){
                                  'assets/sounds/background' + (i+1) + '.mp3');
         }
         this.game.load.start();
-    }
+    };
+
+    /**
+     * For loading speed, some music is loaded from <audio> tags instead
+     * of through Phaser, so it must be handled differently.
+     *
+     * @param {element} elem - An <audio> tag. When called, elem.readyState
+     *                         must be 4.
+     */
+    MusicManager.prototype.playTag = function(elem) {
+        var source = this.game.sound.context.createMediaElementSource(elem);
+        source.connect(this.gain);
+        this.gain.connect(this.analyser);
+        this.analyser.connect(this.game.sound.masterGain);
+        this.fade("in", this.crossfadeDuration*3);
+        this.music = elem;
+        elem.play();
+    };
 
     /**
      * Play music loaded with the given id
@@ -82,7 +101,11 @@ define(["app/config"], function(config){
             if (oldMusic) {
                 oldMusic.externalNode = null;
                 this.analyser.disconnect();
-                oldMusic.destroy();
+                if (oldMusic.destroy !== undefined) {
+                    oldMusic.destroy();
+                } else {
+                    oldMusic.pause();
+                }
             }
 
             this.music = this.game.add.audio(music, 0, true);
@@ -119,7 +142,7 @@ define(["app/config"], function(config){
             }.bind(this));
         }
         return this;
-    }
+    };
 
     MusicManager.prototype.fade = function(direction, duration, steps) {
         var steps = steps || 100;
@@ -138,7 +161,7 @@ define(["app/config"], function(config){
                 if (count == 100) timer.stop();
             }.bind(this));
         timer.start();
-    }
+    };
 
     /**
      * Update the analyzer (and do beat detection)

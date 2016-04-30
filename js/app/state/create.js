@@ -5,7 +5,7 @@
  */
 define(["app/background", "app/music"],
 function(background, music){
-    "use strict"
+    "use strict";
 
     /**
      * Function which will be executed by Phaser after 'preload' is finished
@@ -17,7 +17,8 @@ function(background, music){
         music.start(game);
         background.start(game);
 
-        loadTitleMusic(game);
+        playTitleMusic(game);
+        music.loadBackgroundMusic();
 
         game.load.audio('attach', 'assets/sounds/attach.wav');
         game.load.audio('destroy', 'assets/sounds/destroy.wav');
@@ -26,32 +27,17 @@ function(background, music){
         game.load.start();
     };
 
-    var loadTitleMusic = function(game) {
-        var file = {
-            type: "audio",
-            key: "title",
-            path: "/",
-            url: 'assets/sounds/title.mp3',
-            syncPoint: false,
-            data: null,
-            loading: false,
-            loaded: false,
-            error: false
-        };
+    var playTitleMusic = function(game) {
+        var titleMusic = $("#title-music")[0];
 
         var finishedLoadingTitle = function() {
-            file.data = TITLE_AUDIO_REQUEST.response;
-            file.data.name = file.key;
-            game.cache.addSound(file.key, file.url, file.data, true, false);
-            game.sound.decode(file.key);
-            music.play('title');
-            music.loadBackgroundMusic();
+            music.playTag(titleMusic);
         };
 
-        if (TITLE_AUDIO_REQUEST.readyState == 4) {
+        if (titleMusic.readyState == 4) {
             finishedLoadingTitle();
         } else {
-            TITLE_AUDIO_REQUEST.onload = finishedLoadingTitle;
+            titleMusic.canplaythrough = finishedLoadingTitle;
         }
     };
 

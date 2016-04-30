@@ -34,10 +34,9 @@ function(background, music){
             music.playTag(titleMusic);
         };
 
+        titleMusic.canplaythrough = finishedLoadingTitle;
         if (titleMusic.readyState == 4) {
             finishedLoadingTitle();
-        } else {
-            titleMusic.canplaythrough = finishedLoadingTitle;
         }
     };
 

@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="css/fancybox.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
 
-    <audio id="title-music" src="assets/sounds/title.mp3"></audio>
+    <audio loop id="title-music" src="assets/sounds/title.mp3"></audio>
     <script data-main="app" src="js/lib/require.js"></script>
   </head>
   <body>
@@ -89,7 +89,8 @@
              preload="none"
              title="Groups of blocks (called quads) spawn at the top of the screen
                     and 'drop' when the timer in the central block runs out. Notice
-                    that blocks cannot pass through each other.">
+                    that blocks cannot pass through each other. The 'ghost' quad
+                    shows where the waiting one will drop.">
         <source src="assets/videos/part1.mp4" type="video/mp4">
       </video>
       <video class="tutorial-item"
@@ -138,7 +139,7 @@
               <td>Rotate the waiting quad clockwise/counter-clockwise</td>
             </tr>
             <tr>
-              <td>WASD</td><td>Shift the contents of the grid</td>
+              <td>W/A/S/D</td><td>Shift the contents of the grid</td>
             </tr>
             <tr>
               <td>Space</td><td>Drop the waiting quad immediately</td>

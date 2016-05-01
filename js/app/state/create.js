@@ -35,7 +35,7 @@ function(background, music, $){
                 music.playTag(titleMusic);
             };
 
-            titleMusic.canplaythrough = finishedLoadingTitle;
+            titleMusic.oncanplaythrough = finishedLoadingTitle;
             if (titleMusic.readyState == 4) {
                 finishedLoadingTitle();
             }

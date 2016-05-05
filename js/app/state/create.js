@@ -32,7 +32,9 @@ function(background, music, $){
             var titleMusic = $("#title-music")[0];
 
             var finishedLoadingTitle = function() {
-                music.playTag(titleMusic);
+                if (!music.playing()) {
+                    music.playTag(titleMusic);
+                }
             };
 
             titleMusic.oncanplaythrough = finishedLoadingTitle;

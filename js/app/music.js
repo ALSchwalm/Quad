@@ -72,13 +72,41 @@ define(["app/config"], function(config){
     };
 
     /**
+     * Returns 'true' if some music is currently playing, otherwise, 'false'
+     */
+    MusicManager.prototype.playing = function() {
+        return this.music !== null;
+    };
+
+    /**
+     * Immediately stop playing the current music.
+     */
+    MusicManager.prototype.stop = function() {
+        if (!this.playing()) {
+            return;
+        }
+
+        this.music.externalNode = null;
+        this.analyser.disconnect();
+        if (this.music.destroy !== undefined) {
+            this.music.destroy();
+        } else {
+            this.music.pause();
+        }
+        this.music = null;
+    };
+
+    /**
      * For loading speed, some music is loaded from <audio> tags instead
-     * of through Phaser, so it must be handled differently.
+     * of through Phaser, so it must be handled differently. Note that this
+     * stops the currently playing music.
      *
      * @param {element} elem - An <audio> tag. When called, elem.readyState
      *                         must be 4.
      */
     MusicManager.prototype.playTag = function(elem) {
+        this.stop();
+
         var source = this.game.sound.context.createMediaElementSource(elem);
         source.connect(this.gain);
         this.gain.connect(this.analyser);
@@ -89,7 +117,8 @@ define(["app/config"], function(config){
     };
 
     /**
-     * Play music loaded with the given id
+     * Play music loaded with the given id. Note that this stops the currently
+     * playing music.
      *
      * @param {string} music - The key used to load the sound asset in 'preload'
      */
@@ -98,16 +127,7 @@ define(["app/config"], function(config){
         var loaded = this.game.cache.checkSoundKey(music);
 
         var playNow = function() {
-            if (oldMusic) {
-                oldMusic.externalNode = null;
-                this.analyser.disconnect();
-                if (oldMusic.destroy !== undefined) {
-                    oldMusic.destroy();
-                } else {
-                    oldMusic.pause();
-                }
-            }
-
+            this.stop();
             this.music = this.game.add.audio(music, 0, true);
             this.music.externalNode = this.gain;
             this.analyser.connect(this.music.masterGainNode);
